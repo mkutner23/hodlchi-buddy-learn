@@ -4,6 +4,25 @@ import { useHodlchi } from "@/lib/hodlchi-store";
 
 export const Route = createFileRoute("/")({
   component: Landing,
+  head: () => ({
+    meta: [
+      { title: "Hodlchi — Learn money. Raise your Hodlchi." },
+      {
+        name: "description",
+        content:
+          "Hodlchi is the Duolingo of Money. Hatch a cute companion and level it up with 3-minute lessons on saving, investing, credit, and more.",
+      },
+      { property: "og:title", content: "Hodlchi — Learn money. Raise your Hodlchi." },
+      {
+        property: "og:description",
+        content:
+          "Hatch a cute companion and grow it with bite-size money lessons. Fun, friendly, 100% educational.",
+      },
+      { property: "og:url", content: "https://demo.hodlchi.com/" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://demo.hodlchi.com/" }],
+  }),
 });
 
 function Landing() {

@@ -11,6 +11,25 @@ import {
 
 export const Route = createFileRoute("/home")({
   component: Home,
+  head: () => ({
+    meta: [
+      { title: "Your Hodlchi — Home" },
+      {
+        name: "description",
+        content:
+          "Feed your Hodlchi with a lesson, keep your streak alive, and evolve from Egg to Wealth Sage.",
+      },
+      { property: "og:title", content: "Your Hodlchi — Home" },
+      {
+        property: "og:description",
+        content: "Daily lessons feed your Hodlchi. Come back tomorrow to keep the streak alive.",
+      },
+      { property: "og:url", content: "https://demo.hodlchi.com/home" },
+      { property: "og:type", content: "website" },
+      { name: "robots", content: "noindex, follow" },
+    ],
+    links: [{ rel: "canonical", href: "https://demo.hodlchi.com/home" }],
+  }),
 });
 
 const MOOD_LINE: Record<Mood, string> = {
