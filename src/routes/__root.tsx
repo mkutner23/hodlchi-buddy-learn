@@ -80,6 +80,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Hodlchi — Learn money. Raise your Hodlchi." },
+      { name: "description", content: "Hodlchi: The Duolingo of Money — hatch a companion, feed it lessons, level up your financial life." },
+      { property: "og:description", content: "Hodlchi: The Duolingo of Money — hatch a companion, feed it lessons, level up your financial life." },
+      { name: "twitter:description", content: "Hodlchi: The Duolingo of Money — hatch a companion, feed it lessons, level up your financial life." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/20ab0595-ac2e-479d-b0cb-9cb546813e21" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/20ab0595-ac2e-479d-b0cb-9cb546813e21" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
