@@ -73,11 +73,12 @@ export function stageForLevel(level: number): Stage {
   if (level <= 3) return "Baby Hodlchi";
   if (level <= 6) return "Learner";
   if (level <= 10) return "Builder";
-  return "Wealth Sage";
+  if (level <= 16) return "Wealth Sage";
+  return "Money Legend";
 }
 
 export function progressToNextStage(level: number, xp: number) {
-  const thresholds = [0, 100, 300, 600, 1000, 1600]; // stage boundaries
+  const thresholds = [0, 100, 300, 600, 1000, 1600, 2400]; // stage boundaries
   const stageIdx = Math.min(
     thresholds.length - 2,
     thresholds.findIndex((t, i) => xp < (thresholds[i + 1] ?? Infinity)),
