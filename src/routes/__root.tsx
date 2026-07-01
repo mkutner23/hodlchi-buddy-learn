@@ -66,26 +66,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#8fe36b" },
-      { title: "Hodlchi — Learn money. Raise your Hodlchi." },
-      {
-        name: "description",
-        content:
-          "Hodlchi is the Duolingo of Money. Hatch a cute companion and level it up with fun, beginner-friendly lessons on saving, investing, credit, entrepreneurship, and crypto basics.",
-      },
-      { property: "og:title", content: "Hodlchi — Learn money. Raise your Hodlchi." },
-      {
-        property: "og:description",
-        content:
-          "Bite-size money lessons that grow your virtual companion. Fun, friendly, and 100% educational.",
-      },
+      { property: "og:site_name", content: "Hodlchi" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Hodlchi — Learn money. Raise your Hodlchi." },
-      { name: "description", content: "Hodlchi: The Duolingo of Money — hatch a companion, feed it lessons, level up your financial life." },
-      { property: "og:description", content: "Hodlchi: The Duolingo of Money — hatch a companion, feed it lessons, level up your financial life." },
-      { name: "twitter:description", content: "Hodlchi: The Duolingo of Money — hatch a companion, feed it lessons, level up your financial life." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/20ab0595-ac2e-479d-b0cb-9cb546813e21" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/20ab0595-ac2e-479d-b0cb-9cb546813e21" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -95,6 +78,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              name: "Hodlchi",
+              url: "https://demo.hodlchi.com",
+              description:
+                "Hodlchi is the Duolingo of Money — bite-size financial literacy lessons that grow a cute virtual companion.",
+            },
+            {
+              "@type": "WebSite",
+              name: "Hodlchi",
+              url: "https://demo.hodlchi.com",
+            },
+          ],
+        }),
       },
     ],
   }),

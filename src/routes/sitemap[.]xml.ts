@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { PATHS } from "@/lib/lessons-data";
 
-const BASE_URL = "";
+const BASE_URL = "https://demo.hodlchi.com";
 
 interface SitemapEntry {
   path: string;
@@ -18,7 +18,18 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/onboarding", changefreq: "monthly", priority: "0.6" },
           { path: "/home", changefreq: "weekly", priority: "0.8" },
-          ...PATHS.map((p) => ({ path: `/path/${p.id}`, changefreq: "monthly" as const, priority: "0.7" })),
+          ...PATHS.map((p) => ({
+            path: `/path/${p.id}`,
+            changefreq: "monthly" as const,
+            priority: "0.7",
+          })),
+          ...PATHS.flatMap((p) =>
+            p.lessons.map((l) => ({
+              path: `/lesson/${p.id}/${l.id}`,
+              changefreq: "monthly" as const,
+              priority: "0.6",
+            })),
+          ),
         ];
         const urls = entries
           .map(

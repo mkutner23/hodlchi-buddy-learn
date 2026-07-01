@@ -5,6 +5,24 @@ import { useHodlchi, type EggColor, type Personality } from "@/lib/hodlchi-store
 
 export const Route = createFileRoute("/onboarding")({
   component: Onboarding,
+  head: () => ({
+    meta: [
+      { title: "Hatch your Hodlchi — Onboarding" },
+      {
+        name: "description",
+        content:
+          "Pick an egg, name your companion, and choose a personality. Your Hodlchi hatches in under a minute.",
+      },
+      { property: "og:title", content: "Hatch your Hodlchi" },
+      {
+        property: "og:description",
+        content: "Choose an egg, a name, and a personality to start your money-learning journey.",
+      },
+      { property: "og:url", content: "https://demo.hodlchi.com/onboarding" },
+      { property: "og:type", content: "website" },
+    ],
+    links: [{ rel: "canonical", href: "https://demo.hodlchi.com/onboarding" }],
+  }),
 });
 
 function Onboarding() {
@@ -75,6 +93,7 @@ function Onboarding() {
                 onChange={(e) => setName(e.target.value)}
                 maxLength={20}
                 placeholder="e.g. Pip, Sage, Nugget"
+                aria-label="Hodlchi name"
                 className="mt-8 w-full rounded-2xl border-2 border-foreground/15 bg-white/80 px-5 py-4 text-lg font-semibold outline-none focus:border-foreground"
               />
             </div>

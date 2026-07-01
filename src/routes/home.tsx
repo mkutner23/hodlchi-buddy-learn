@@ -11,6 +11,25 @@ import {
 
 export const Route = createFileRoute("/home")({
   component: Home,
+  head: () => ({
+    meta: [
+      { title: "Your Hodlchi — Home" },
+      {
+        name: "description",
+        content:
+          "Feed your Hodlchi with a lesson, keep your streak alive, and evolve from Egg to Wealth Sage.",
+      },
+      { property: "og:title", content: "Your Hodlchi — Home" },
+      {
+        property: "og:description",
+        content: "Daily lessons feed your Hodlchi. Come back tomorrow to keep the streak alive.",
+      },
+      { property: "og:url", content: "https://demo.hodlchi.com/home" },
+      { property: "og:type", content: "website" },
+      { name: "robots", content: "noindex, follow" },
+    ],
+    links: [{ rel: "canonical", href: "https://demo.hodlchi.com/home" }],
+  }),
 });
 
 const MOOD_LINE: Record<Mood, string> = {
@@ -61,7 +80,8 @@ function Home() {
   return (
     <main className="min-h-screen bg-gradient-sky pb-16">
       <div className="mx-auto max-w-md px-5 pt-5">
-        {/* Slim top bar: identity + core signals */}
+        <h1 className="sr-only">Your Hodlchi — {state.name}</h1>
+
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="grid h-8 w-8 place-items-center rounded-lg bg-foreground text-primary text-sm font-black">
