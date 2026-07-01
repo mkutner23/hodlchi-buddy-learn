@@ -1,4 +1,4 @@
-import type { Personality, EggColor, Stage } from "./hodlchi-store";
+import type { Personality, EggColor, Stage } from "@/lib/hodlchi-store";
 
 const PERSONALITY_META: Record<Personality, { name: string; face: string; body: string; accent: string }> = {
   ape: { name: "Brave Ape", face: "🦍", body: "🟫", accent: "oklch(0.55 0.14 60)" },
