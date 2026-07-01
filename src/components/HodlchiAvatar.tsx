@@ -38,7 +38,7 @@ export function HodlchiAvatar({ egg, personality, stage, size = 160, bob = true 
 
   // Scale features based on stage
   const stageScale =
-    { Egg: 0.9, "Baby Hodlchi": 1, Learner: 1.05, Builder: 1.1, "Wealth Sage": 1.15 }[stage] ?? 1;
+    ({ Egg: 0.9, "Baby Hodlchi": 1, Learner: 1.05, Builder: 1.1, "Wealth Sage": 1.15 } as Record<Stage, number>)[stage] ?? 1;
 
   return (
     <div
