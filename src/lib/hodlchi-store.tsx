@@ -10,6 +10,7 @@ export const EVOLUTION_STAGES = [
   "Learner",
   "Builder",
   "Wealth Sage",
+  "Money Legend",
 ] as const;
 
 export type Stage = (typeof EVOLUTION_STAGES)[number];
