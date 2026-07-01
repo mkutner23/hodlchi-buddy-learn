@@ -1,24 +1,78 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { HodlchiAvatar } from "@/components/HodlchiAvatar";
+import { useHodlchi } from "@/lib/hodlchi-store";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  component: Landing,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Landing() {
+  const { state, demoMode } = useHodlchi();
+  const primaryCta = state.onboarded ? { to: "/home", label: "Open my Hodlchi" } : { to: "/onboarding", label: "Hatch my Hodlchi" };
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <main className="min-h-screen bg-gradient-hero">
+      <div className="mx-auto max-w-md px-5 pt-10 pb-16">
+        <header className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="grid h-9 w-9 place-items-center rounded-xl bg-foreground text-primary text-lg font-black">H</div>
+            <span className="font-display text-xl font-extrabold">Hodlchi</span>
+          </div>
+          <button
+            onClick={() => {
+              demoMode();
+              window.location.href = "/home";
+            }}
+            className="rounded-full border border-foreground/20 bg-white/60 px-3 py-1.5 text-xs font-semibold backdrop-blur"
+          >
+            Mentor demo
+          </button>
+        </header>
+
+        <section className="mt-10 text-center">
+          <div className="mx-auto w-fit rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-primary-deep shadow-soft">
+            The Duolingo of Money
+          </div>
+          <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
+            Learn money.<br />Raise your <span className="text-primary-deep">Hodlchi.</span>
+          </h1>
+          <p className="mx-auto mt-4 max-w-sm text-base text-foreground/70">
+            Hatch a cute companion and help it grow with 3-minute lessons on saving, credit, investing, and more.
+          </p>
+
+          <div className="mt-8 grid place-items-center">
+            <HodlchiAvatar egg="mint" personality="fox" stage="Baby Hodlchi" size={200} />
+          </div>
+
+          <Link
+            to={primaryCta.to}
+            className="mt-8 inline-flex w-full items-center justify-center rounded-2xl bg-foreground px-6 py-4 text-base font-bold text-primary shadow-pop transition active:scale-[0.98]"
+          >
+            {primaryCta.label} →
+          </Link>
+          <p className="mt-3 text-xs text-foreground/60">
+            Educational only. No trading, wallets, or investment advice.
+          </p>
+        </section>
+
+        <section className="mt-14 grid gap-3">
+          <FeatureRow emoji="🥚" title="Hatch & name your companion" body="Pick an egg and a personality. Every lesson helps it grow." />
+          <FeatureRow emoji="📚" title="5 learning paths, bite-size" body="Saving, Investing, Credit, Entrepreneurship, and Crypto basics." />
+          <FeatureRow emoji="🔥" title="Streaks & daily challenges" body="Show up daily, earn XP, evolve from Egg to Wealth Sage." />
+        </section>
+      </div>
+    </main>
+  );
+}
+
+function FeatureRow({ emoji, title, body }: { emoji: string; title: string; body: string }) {
+  return (
+    <div className="flex items-start gap-3 rounded-2xl bg-white/70 p-4 shadow-soft backdrop-blur">
+      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-primary/30 text-xl">{emoji}</div>
+      <div>
+        <div className="font-semibold">{title}</div>
+        <div className="text-sm text-foreground/70">{body}</div>
+      </div>
     </div>
   );
 }
