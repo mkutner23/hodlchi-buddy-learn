@@ -40,27 +40,36 @@ function PathView() {
             const complete = state.completedLessons.includes(`${path.id}:${lesson.id}`);
             const prev = idx === 0 || state.completedLessons.includes(`${path.id}:${path.lessons[idx - 1].id}`);
             const locked = !prev && !complete;
+            const inner = (
+              <div
+                className={`flex items-center gap-4 rounded-2xl bg-white p-4 shadow-soft transition ${locked ? "opacity-50" : "active:scale-[0.99]"}`}
+              >
+                <div
+                  className={`grid h-12 w-12 shrink-0 place-items-center rounded-full text-lg font-black ${complete ? "bg-primary text-primary-foreground" : locked ? "bg-foreground/10" : "bg-foreground text-primary"}`}
+                >
+                  {complete ? "✓" : locked ? "🔒" : idx + 1}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="font-bold">{lesson.title}</div>
+                  <div className="text-xs text-foreground/60">
+                    {lesson.minutes} min · {lesson.quiz.length} questions
+                  </div>
+                </div>
+                {!locked && <span className="text-lg">→</span>}
+              </div>
+            );
             return (
               <li key={lesson.id}>
-                <Link
-                  to="/lesson/$pathId/$lessonId"
-                  params={{ pathId: path.id, lessonId: lesson.id }}
-                  disabled={locked}
-                  className={`flex items-center gap-4 rounded-2xl bg-white p-4 shadow-soft transition ${locked ? "pointer-events-none opacity-50" : "active:scale-[0.99]"}`}
-                >
-                  <div
-                    className={`grid h-12 w-12 shrink-0 place-items-center rounded-full text-lg font-black ${complete ? "bg-primary text-primary-foreground" : locked ? "bg-foreground/10" : "bg-foreground text-primary"}`}
+                {locked ? (
+                  inner
+                ) : (
+                  <Link
+                    to="/lesson/$pathId/$lessonId"
+                    params={{ pathId: path.id, lessonId: lesson.id }}
                   >
-                    {complete ? "✓" : locked ? "🔒" : idx + 1}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="font-bold">{lesson.title}</div>
-                    <div className="text-xs text-foreground/60">
-                      {lesson.minutes} min · {lesson.quiz.length} questions
-                    </div>
-                  </div>
-                  {!locked && <span className="text-lg">→</span>}
-                </Link>
+                    {inner}
+                  </Link>
+                )}
               </li>
             );
           })}
