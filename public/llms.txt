@@ -1,0 +1,13 @@
+# Hodlchi
+
+> Hodlchi is the Duolingo of Money — hatch a cute virtual companion and grow it by completing short, beginner-friendly financial literacy lessons on saving, investing, credit, entrepreneurship, and crypto basics. Educational only; no trading, wallets, or investment advice.
+
+## Pages
+
+- [Home](/): Landing page. What Hodlchi is and how the hatch → learn → feed → evolve loop works.
+- [Onboarding](/onboarding): Hatch a Hodlchi — pick an egg, name your companion, choose a personality.
+- [Saving path](/path/saving): 4 short lessons on building the habit of keeping more than you spend.
+- [Investing path](/path/investing): 4 short lessons on long-term investing basics and risk.
+- [Credit path](/path/credit): 4 short lessons on credit scores, borrowing, and healthy credit habits.
+- [Entrepreneurship path](/path/entrepreneurship): 4 short lessons on starting and running a small venture.
+- [Crypto path](/path/crypto): 4 short lessons on crypto fundamentals from a neutral, educational angle.
