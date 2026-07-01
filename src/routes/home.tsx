@@ -80,7 +80,8 @@ function Home() {
   return (
     <main className="min-h-screen bg-gradient-sky pb-16">
       <div className="mx-auto max-w-md px-5 pt-5">
-        {/* Slim top bar: identity + core signals */}
+        <h1 className="sr-only">Your Hodlchi — {state.name}</h1>
+
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="grid h-8 w-8 place-items-center rounded-lg bg-foreground text-primary text-sm font-black">

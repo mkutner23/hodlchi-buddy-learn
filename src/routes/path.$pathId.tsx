@@ -4,6 +4,44 @@ import { useHodlchi } from "@/lib/hodlchi-store";
 
 export const Route = createFileRoute("/path/$pathId")({
   component: PathView,
+  head: ({ params }) => {
+    const path = PATHS.find((p) => p.id === params.pathId);
+    const title = path ? `${path.title} — Hodlchi lessons` : "Learning path — Hodlchi";
+    const description = path
+      ? `${path.tagline} ${path.lessons.length} short, beginner-friendly lessons in Hodlchi.`
+      : "Bite-size financial literacy lessons in Hodlchi.";
+    const url = `https://demo.hodlchi.com/path/${params.pathId}`;
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "website" },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: path
+        ? [
+            {
+              type: "application/ld+json",
+              children: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Course",
+                name: `${path.title} — Hodlchi`,
+                description: path.tagline,
+                provider: { "@type": "Organization", name: "Hodlchi", url: "https://demo.hodlchi.com" },
+                hasCourseInstance: path.lessons.map((l) => ({
+                  "@type": "CourseInstance",
+                  name: l.title,
+                  courseMode: "online",
+                })),
+              }),
+            },
+          ]
+        : [],
+    };
+  },
 });
 
 function PathView() {

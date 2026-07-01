@@ -7,6 +7,45 @@ import { stageForLevel } from "@/lib/hodlchi-store";
 
 export const Route = createFileRoute("/lesson/$pathId/$lessonId")({
   component: LessonView,
+  head: ({ params }) => {
+    const path = PATHS.find((p) => p.id === params.pathId);
+    const lesson = path?.lessons.find((l) => l.id === params.lessonId);
+    const title = lesson ? `${lesson.title} — ${path!.title} · Hodlchi` : "Lesson — Hodlchi";
+    const description = lesson
+      ? `${lesson.intro.slice(0, 150)}${lesson.intro.length > 150 ? "…" : ""}`
+      : "A short financial literacy lesson in Hodlchi.";
+    const url = `https://demo.hodlchi.com/lesson/${params.pathId}/${params.lessonId}`;
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "article" },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: lesson
+        ? [
+            {
+              type: "application/ld+json",
+              children: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "LearningResource",
+                name: lesson.title,
+                description: lesson.intro,
+                timeRequired: `PT${lesson.minutes}M`,
+                learningResourceType: "Lesson",
+                educationalLevel: "beginner",
+                inLanguage: "en",
+                isPartOf: { "@type": "Course", name: `${path!.title} — Hodlchi` },
+                provider: { "@type": "Organization", name: "Hodlchi", url: "https://demo.hodlchi.com" },
+              }),
+            },
+          ]
+        : [],
+    };
+  },
 });
 
 type Phase = "intro" | "quiz" | "done";
