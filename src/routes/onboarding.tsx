@@ -271,7 +271,7 @@ function Onboarding() {
           >
             {step === 0 && "Continue"}
             {step === 1 && "Hatch!"}
-            {step === 2 && (hatchPhase === "revealed" ? `Meet ${displayName} →` : "Hatching…")}
+            {step === 2 && (hatchCTAReady ? `Meet ${displayName} →` : "Hatching…")}
             {step === 3 && "Start my journey"}
           </button>
         </div>
