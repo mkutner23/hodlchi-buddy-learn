@@ -191,8 +191,13 @@ function Home() {
         >
           <div className="min-w-0 flex-1">
             <div className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
-              {isFirstTime ? "Start here" : "Today's Lesson"}
+              {isFirstTime
+                ? "⭐ Start here"
+                : nextLesson
+                  ? `⭐ Today's Lesson · ${nextLesson.lesson.minutes} min`
+                  : "You're all caught up"}
             </div>
+
             <div className="mt-1 truncate font-display text-xl font-extrabold leading-tight">
               {nextLesson
                 ? `${nextLesson.path.emoji}  ${nextLesson.lesson.title}`
