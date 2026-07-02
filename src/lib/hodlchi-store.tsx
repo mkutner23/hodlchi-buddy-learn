@@ -247,6 +247,17 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
         }),
       isLessonComplete: (pathId, lessonId) =>
         state.completedLessons.includes(`${pathId}:${lessonId}`),
+      addReflection: (pathId, lessonId, text) => {
+        const trimmed = text.trim();
+        if (!trimmed) return;
+        setState((s) => ({
+          ...s,
+          reflections: [
+            { lessonKey: `${pathId}:${lessonId}`, text: trimmed, ts: Date.now() },
+            ...s.reflections,
+          ].slice(0, 50),
+        }));
+      },
     }),
     [state],
   );
