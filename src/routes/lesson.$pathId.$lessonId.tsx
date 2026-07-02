@@ -192,13 +192,13 @@ function LessonView() {
               <HodlchiAvatar
                 egg={state.egg}
                 personality={state.personality}
-                stage={stageForLevel(state.level)}
+                stage={state.acknowledgedStage}
                 size={170}
               />
             </div>
-            <h1 className="mt-4 text-3xl font-extrabold">Lesson complete!</h1>
+            <h1 className="mt-4 text-3xl font-extrabold">🍎 {state.name} enjoyed that lesson!</h1>
             <p className="mt-1 text-foreground/70">
-              {state.name} feels {correctCount === lesson.quiz.length ? "amazing" : "a little wiser"}.
+              +{xpGained} XP · {state.name} feels {correctCount === lesson.quiz.length ? "amazing" : "a little wiser"}.
             </p>
             <div className="mt-6 grid grid-cols-3 gap-2">
               <Stat label="Correct" value={`${correctCount}/${lesson.quiz.length}`} />
@@ -221,6 +221,7 @@ function LessonView() {
             </div>
           </div>
         )}
+
       </div>
     </main>
   );
