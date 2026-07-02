@@ -1,4 +1,6 @@
 import type { Personality, EggColor, Stage, Mood } from "@/lib/hodlchi-store";
+import type { PathId } from "@/lib/lessons-data";
+
 
 const PERSONALITY_META: Record<
   Personality,
