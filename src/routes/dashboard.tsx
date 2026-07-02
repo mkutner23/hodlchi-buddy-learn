@@ -110,6 +110,7 @@ function Home() {
 
   const goNext = () => {
     if (!nextLesson) return;
+    sfx.pop();
     nav({
       to: "/lesson/$pathId/$lessonId",
       params: { pathId: nextLesson.path.id, lessonId: nextLesson.lesson.id },
