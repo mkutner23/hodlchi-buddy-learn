@@ -135,6 +135,8 @@ function Home() {
   }, [state.completedLessons]);
 
   if (!state.onboarded) return null;
+  if (!mounted) return <main className="min-h-screen bg-gradient-sky pb-16 font-sans" />;
+
 
   const goNext = () => {
     if (!nextLesson) return;
