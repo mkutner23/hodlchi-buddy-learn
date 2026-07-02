@@ -226,7 +226,28 @@ function LessonView() {
         )}
 
         {phase === "done" && (
-          <div className="mt-8 animate-pop text-center">
+          <div className="relative mt-8 animate-pop text-center">
+            {/* Path-specific fruit rain celebration */}
+            <div className="pointer-events-none absolute inset-x-0 -top-4 h-64 overflow-hidden" aria-hidden="true">
+              {Array.from({ length: 14 }).map((_, i) => {
+                const left = (i / 14) * 100 + (Math.random() * 6 - 3);
+                const delay = Math.random() * 0.9;
+                const size = 22 + Math.random() * 16;
+                return (
+                  <span
+                    key={i}
+                    className="absolute top-0 animate-fruit-rain"
+                    style={{
+                      left: `${left}%`,
+                      fontSize: `${size}px`,
+                      animationDelay: `${delay}s`,
+                    }}
+                  >
+                    {PATH_FRUIT[path.id]}
+                  </span>
+                );
+              })}
+            </div>
             <div className="mx-auto grid place-items-center">
               <div className="animate-bounce-happy">
                 <HodlchiAvatar

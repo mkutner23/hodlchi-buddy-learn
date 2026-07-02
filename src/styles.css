@@ -337,6 +337,95 @@
 }
 @utility animate-evolve-text {
   animation: evolve-text 2s ease-out both;
+  animation-delay: 1.6s;
 }
+
+/* ---- Fruit micro-animations (one per learning path) ---- */
+@keyframes fruit-apple-sparkle {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.08); filter: brightness(1.18) drop-shadow(0 0 6px rgba(255,220,120,0.8)); }
+}
+@utility animate-fruit-sparkle {
+  animation: fruit-apple-sparkle 2.4s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes fruit-banana-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-9deg); }
+  75% { transform: rotate(9deg); }
+}
+@utility animate-fruit-wiggle {
+  animation: fruit-banana-wiggle 2.2s ease-in-out infinite;
+  display: inline-block;
+  transform-origin: 50% 80%;
+}
+
+@keyframes fruit-orange-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@utility animate-fruit-bounce {
+  animation: fruit-orange-bounce 1.6s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes fruit-blueberry-squish {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.18, 0.82); }
+}
+@utility animate-fruit-squish {
+  animation: fruit-blueberry-squish 2s ease-in-out infinite;
+  display: inline-block;
+  transform-origin: 50% 100%;
+}
+
+@keyframes fruit-grapes-shake {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  25% { transform: translateX(-2px) rotate(-3deg); }
+  75% { transform: translateX(2px) rotate(3deg); }
+}
+@utility animate-fruit-shake {
+  animation: fruit-grapes-shake 1.8s ease-in-out infinite;
+  display: inline-block;
+  transform-origin: 50% 20%;
+}
+
+/* Path-specific completion rain (falling fruits on lesson done) */
+@keyframes fruit-rain {
+  0% { transform: translateY(-30px) rotate(0deg); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateY(360px) rotate(540deg); opacity: 0; }
+}
+@utility animate-fruit-rain {
+  animation: fruit-rain 2.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+/* ---- Cinematic Evolve extras: shell crack + XP fly-out ---- */
+@keyframes evolve-shell-crack {
+  0% { transform: scale(0.4); opacity: 0; }
+  20% { transform: scale(1) rotate(-6deg); opacity: 1; }
+  35% { transform: scale(1.05) rotate(6deg); }
+  50% { transform: scale(1.1) rotate(-8deg); }
+  62% { transform: scale(1.25) rotate(0deg); opacity: 1; }
+  75% { transform: scale(1.8); opacity: 0.4; filter: blur(2px); }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+@utility animate-evolve-shell {
+  animation: evolve-shell-crack 1.4s ease-out forwards;
+}
+
+@keyframes evolve-xp {
+  0% { transform: translate(0, 0) scale(0.4); opacity: 0; }
+  20% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% {
+    transform: translate(var(--xpx, 0), var(--xpy, 0)) scale(1.4) rotate(180deg);
+    opacity: 0;
+  }
+}
+@utility animate-evolve-xp {
+  animation: evolve-xp 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 
 

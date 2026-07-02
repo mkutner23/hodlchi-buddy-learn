@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { PATHS, PATH_FRUIT, PATH_ACCENT } from "@/lib/lessons-data";
+import { PATHS, PATH_ACCENT } from "@/lib/lessons-data";
+import { PathFruit } from "@/components/PathFruit";
 import { useHodlchi } from "@/lib/hodlchi-store";
 
 export const Route = createFileRoute("/path/$pathId")({
@@ -116,9 +117,7 @@ function PathView() {
                   }}
                 >
                   {complete ? (
-                    <span className="text-2xl leading-none" aria-label="completed">
-                      {PATH_FRUIT[path.id]}
-                    </span>
+                    <PathFruit pathId={path.id} className="text-2xl leading-none" />
                   ) : locked ? (
                     "🔒"
                   ) : (

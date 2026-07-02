@@ -251,7 +251,7 @@ function Home() {
               </div>
               {nextLesson && (
                 <div className="mt-1 text-[11px] font-semibold text-primary/70">
-                  {nextLesson.lesson.minutes} min · +30 XP · feed {state.name} 🍎
+                  {nextLesson.lesson.minutes} min · +30 XP · feed {state.name} {PATH_FRUIT[nextLesson.path.id]}
                 </div>
               )}
             </div>

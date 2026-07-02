@@ -11,11 +11,14 @@ interface Props {
   onDone: () => void;
 }
 
-// Signature "Evolve" moment: darken → glow → shell burst → confetti reveal.
-// Duration ~3.2s, then auto-dismisses.
+// Signature "Evolve" moment (Pokémon-style):
+// darken → shaking shell → shell burst → glow halo → avatar reveal with
+// particles + confetti → XP stars fly out → name reveal. Auto-dismisses.
+const TOTAL_MS = 4200;
+
 export function EvolveCinematic({ name, egg, personality, toStage, onDone }: Props) {
   useEffect(() => {
-    const t = setTimeout(onDone, 3200);
+    const t = setTimeout(onDone, TOTAL_MS);
     return () => clearTimeout(t);
   }, [onDone]);
 
@@ -24,7 +27,7 @@ export function EvolveCinematic({ name, egg, personality, toStage, onDone }: Pro
       Array.from({ length: 22 }, (_, i) => ({
         left: 50 + (Math.random() * 60 - 30),
         top: 50 + (Math.random() * 60 - 30),
-        delay: Math.random() * 0.4,
+        delay: 0.9 + Math.random() * 0.4,
         hue: [140, 60, 45, 200, 320][i % 5],
         size: 6 + Math.random() * 10,
       })),
@@ -33,9 +36,9 @@ export function EvolveCinematic({ name, egg, personality, toStage, onDone }: Pro
 
   const confetti = useMemo(
     () =>
-      Array.from({ length: 28 }, (_, i) => ({
+      Array.from({ length: 32 }, (_, i) => ({
         left: Math.random() * 100,
-        delay: Math.random() * 0.6,
+        delay: 1.0 + Math.random() * 0.8,
         rot: Math.random() * 360,
         color: ["#22c55e", "#eab308", "#3b82f6", "#a855f7", "#f97316", "#ec4899"][i % 6],
         w: 6 + Math.random() * 6,
@@ -44,10 +47,26 @@ export function EvolveCinematic({ name, egg, personality, toStage, onDone }: Pro
     [],
   );
 
+  // XP stars fly outward in 12 directions after the reveal.
+  const xpStars = useMemo(
+    () =>
+      Array.from({ length: 14 }, (_, i) => {
+        const angle = (i / 14) * Math.PI * 2;
+        const dist = 180 + Math.random() * 80;
+        return {
+          x: Math.cos(angle) * dist,
+          y: Math.sin(angle) * dist,
+          delay: 2.4 + Math.random() * 0.3,
+          emoji: i % 3 === 0 ? "⭐" : i % 3 === 1 ? "✨" : "💫",
+        };
+      }),
+    [],
+  );
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden animate-evolve-fade"
-      style={{ background: "radial-gradient(circle at center, rgba(15,23,42,0.55), rgba(0,0,0,0.92))" }}
+      style={{ background: "radial-gradient(circle at center, rgba(15,23,42,0.55), rgba(0,0,0,0.94))" }}
       aria-live="polite"
       role="dialog"
     >
@@ -74,7 +93,8 @@ export function EvolveCinematic({ name, egg, personality, toStage, onDone }: Pro
           className="absolute inset-0 -m-16 rounded-full animate-evolve-glow"
           style={{
             background:
-              "radial-gradient(circle, rgba(255,255,200,0.85) 0%, rgba(163,230,53,0.5) 30%, rgba(34,197,94,0) 70%)",
+              "radial-gradient(circle, rgba(255,255,200,0.9) 0%, rgba(163,230,53,0.55) 30%, rgba(34,197,94,0) 70%)",
+            animationDelay: "0.9s",
           }}
         />
         {particles.map((p, i) => (
@@ -93,13 +113,49 @@ export function EvolveCinematic({ name, egg, personality, toStage, onDone }: Pro
           />
         ))}
 
-        <div className="relative z-10 animate-evolve-avatar">
+        {/* Cracking shell — plays first, then bursts */}
+        <div
+          className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center animate-evolve-shell"
+          style={{ animationDelay: "0.2s" }}
+        >
+          <span className="text-8xl drop-shadow-2xl">🥚</span>
+        </div>
+
+        {/* Avatar reveal (delayed until after shell bursts) */}
+        <div
+          className="relative z-10 animate-evolve-avatar"
+          style={{ animationDelay: "1.4s" }}
+        >
           <HodlchiAvatar egg={egg} personality={personality} stage={toStage} size={220} />
         </div>
 
-        {/* Shell burst */}
+        {/* Sparkle burst on emergence */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <span className="text-6xl animate-evolve-burst">✨</span>
+          <span
+            className="text-6xl animate-evolve-burst"
+            style={{ animationDelay: "1.4s" }}
+          >
+            ✨
+          </span>
+        </div>
+
+        {/* XP stars fly outward from the avatar */}
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          {xpStars.map((s, i) => (
+            <span
+              key={`xp${i}`}
+              className="absolute text-2xl animate-evolve-xp"
+              style={
+                {
+                  ["--xpx" as string]: `${s.x}px`,
+                  ["--xpy" as string]: `${s.y}px`,
+                  animationDelay: `${s.delay}s`,
+                } as React.CSSProperties
+              }
+            >
+              {s.emoji}
+            </span>
+          ))}
         </div>
       </div>
 
