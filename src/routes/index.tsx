@@ -74,17 +74,20 @@ function Landing() {
           </p>
         </section>
 
-        <section className="mt-14 grid gap-3">
-          <FeatureRow emoji="🥚" title="Hatch & name your companion" body="Pick an egg and a personality. Every lesson helps it grow." />
-          <FeatureRow emoji="📚" title="5 learning paths, bite-size" body="Saving, Investing, Credit, Entrepreneurship, and Crypto basics." />
-          <FeatureRow emoji="🔥" title="Streaks & daily challenges" body="Show up daily, earn XP, evolve from Egg to Wealth Sage." />
+        <section className="mt-14">
+          <h2 className="text-center text-2xl font-extrabold tracking-tight">Why learn with Hodlchi?</h2>
+          <div className="mt-5 grid gap-3">
+            <FeatureRow emoji="🥚" title="Hatch & name your companion" body="Pick an egg and a personality. Every lesson helps it grow." />
+            <FeatureRow emoji="📚" title="5 learning paths, bite-size" body="Saving, Investing, Credit, Entrepreneurship, and Crypto basics." />
+            <FeatureRow emoji="🔥" title="Streaks & daily challenges" body="Show up daily, earn XP, evolve from Egg to Wealth Sage." />
+          </div>
         </section>
 
         <section className="mt-8 rounded-2xl bg-white/80 p-4 text-center shadow-soft backdrop-blur">
           <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-            For students & parents
+            For students, parents, and teachers
           </div>
-          <div className="mt-1 font-bold">A free financial literacy course for teens</div>
+          <h2 className="mt-1 text-lg font-bold">A free financial literacy course for teens</h2>
           <Link
             to="/financial-literacy-for-teens"
             className="mt-2 inline-block text-sm font-semibold text-primary-deep underline underline-offset-2"
