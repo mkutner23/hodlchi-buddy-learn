@@ -56,7 +56,10 @@ function Landing() {
             Learn money.<br />Raise your <span className="text-primary-deep">Hodlchi.</span>
           </h1>
           <p className="mx-auto mt-4 max-w-sm text-base text-foreground/70">
-            Hatch a cute companion and help it grow with 3-minute lessons on saving, credit, investing, and more.
+            Learn real money skills in just 3 minutes a day. Every lesson helps your Hodlchi evolve — and helps you build your financial future.
+          </p>
+          <p className="mx-auto mt-3 max-w-sm text-sm font-semibold text-primary-deep">
+            Come back every day to keep your streak alive and unlock new evolutions.
           </p>
 
           <div className="mt-8 grid place-items-center">
@@ -72,22 +75,25 @@ function Landing() {
           <p className="mt-3 text-xs text-foreground/60">
             Educational only. No trading, wallets, or investment advice.
           </p>
+          <p className="mt-2 text-[11px] font-semibold uppercase tracking-widest text-foreground/50">
+            Your Money Companion
+          </p>
         </section>
 
         <section className="mt-14">
           <h2 className="text-center text-2xl font-extrabold tracking-tight">Why learn with Hodlchi?</h2>
           <div className="mt-5 grid gap-3">
-            <FeatureRow emoji="🥚" title="Hatch & name your companion" body="Pick an egg and a personality. Every lesson helps it grow." />
-            <FeatureRow emoji="📚" title="5 learning paths, bite-size" body="Saving, Investing, Credit, Entrepreneurship, and Crypto basics." />
-            <FeatureRow emoji="🔥" title="Streaks & daily challenges" body="Show up daily, earn XP, evolve from Egg to Wealth Sage." />
+            <FeatureRow emoji="🥚" title="Learn by raising a companion you'll actually care about" body="Hatch, name, and grow a Hodlchi that evolves with every lesson you finish." />
+            <FeatureRow emoji="📚" title="Master the money skills schools rarely teach" body="Saving, investing, credit, entrepreneurship, and crypto basics — in plain English." />
+            <FeatureRow emoji="🔥" title="Build a daily money habit that lasts" body="Streaks, daily challenges, and evolutions turn 3 minutes a day into real confidence." />
           </div>
         </section>
 
         <section className="mt-8 rounded-2xl bg-white/80 p-4 text-center shadow-soft backdrop-blur">
           <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-            For students, parents, and teachers
+            For students, parents, teachers & anyone learning money
           </div>
-          <h2 className="mt-1 text-lg font-bold">A free financial literacy course for teens</h2>
+          <h2 className="mt-1 text-lg font-bold">Financial literacy for everyone</h2>
           <div className="mt-2 flex flex-col items-center gap-1 text-sm">
             <Link
               to="/financial-literacy-for-teens"
