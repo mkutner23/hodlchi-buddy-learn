@@ -1,8 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
-import { PATHS, PATH_FRUIT, PATH_ACCENT, getDailyChallenge } from "@/lib/lessons-data";
+import { PathFruit } from "@/components/PathFruit";
+import { PATHS, PATH_ACCENT, getDailyChallenge } from "@/lib/lessons-data";
 import { EvolveCinematic } from "@/components/EvolveCinematic";
 import {
   useHodlchi,
@@ -10,6 +11,7 @@ import {
   progressToNextStage,
   stageIndex,
 } from "@/lib/hodlchi-store";
+
 
 
 export const Route = createFileRoute("/dashboard")({
