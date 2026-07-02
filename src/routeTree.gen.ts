@@ -19,6 +19,7 @@ import { Route as PathPathIdRouteImport } from './routes/path.$pathId'
 import { Route as CompareKhanAcademyRouteImport } from './routes/compare.khan-academy'
 import { Route as BlogWhatIsFinancialLiteracyForTeensRouteImport } from './routes/blog.what-is-financial-literacy-for-teens'
 import { Route as LessonPathIdLessonIdRouteImport } from './routes/lesson.$pathId.$lessonId'
+import { Route as ApiPublicHeroSfxRouteImport } from './routes/api/public/hero-sfx'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -72,6 +73,11 @@ const LessonPathIdLessonIdRoute = LessonPathIdLessonIdRouteImport.update({
   path: '/lesson/$pathId/$lessonId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHeroSfxRoute = ApiPublicHeroSfxRouteImport.update({
+  id: '/api/public/hero-sfx',
+  path: '/api/public/hero-sfx',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -83,6 +89,7 @@ export interface FileRoutesByFullPath {
   '/blog/what-is-financial-literacy-for-teens': typeof BlogWhatIsFinancialLiteracyForTeensRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
   '/path/$pathId': typeof PathPathIdRoute
+  '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
 }
 export interface FileRoutesByTo {
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/blog/what-is-financial-literacy-for-teens': typeof BlogWhatIsFinancialLiteracyForTeensRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
   '/path/$pathId': typeof PathPathIdRoute
+  '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
 }
 export interface FileRoutesById {
@@ -108,6 +116,7 @@ export interface FileRoutesById {
   '/blog/what-is-financial-literacy-for-teens': typeof BlogWhatIsFinancialLiteracyForTeensRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
   '/path/$pathId': typeof PathPathIdRoute
+  '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
 }
 export interface FileRouteTypes {
@@ -122,6 +131,7 @@ export interface FileRouteTypes {
     | '/blog/what-is-financial-literacy-for-teens'
     | '/compare/khan-academy'
     | '/path/$pathId'
+    | '/api/public/hero-sfx'
     | '/lesson/$pathId/$lessonId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -134,6 +144,7 @@ export interface FileRouteTypes {
     | '/blog/what-is-financial-literacy-for-teens'
     | '/compare/khan-academy'
     | '/path/$pathId'
+    | '/api/public/hero-sfx'
     | '/lesson/$pathId/$lessonId'
   id:
     | '__root__'
@@ -146,6 +157,7 @@ export interface FileRouteTypes {
     | '/blog/what-is-financial-literacy-for-teens'
     | '/compare/khan-academy'
     | '/path/$pathId'
+    | '/api/public/hero-sfx'
     | '/lesson/$pathId/$lessonId'
   fileRoutesById: FileRoutesById
 }
@@ -159,6 +171,7 @@ export interface RootRouteChildren {
   BlogWhatIsFinancialLiteracyForTeensRoute: typeof BlogWhatIsFinancialLiteracyForTeensRoute
   CompareKhanAcademyRoute: typeof CompareKhanAcademyRoute
   PathPathIdRoute: typeof PathPathIdRoute
+  ApiPublicHeroSfxRoute: typeof ApiPublicHeroSfxRoute
   LessonPathIdLessonIdRoute: typeof LessonPathIdLessonIdRoute
 }
 
@@ -234,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LessonPathIdLessonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hero-sfx': {
+      id: '/api/public/hero-sfx'
+      path: '/api/public/hero-sfx'
+      fullPath: '/api/public/hero-sfx'
+      preLoaderRoute: typeof ApiPublicHeroSfxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -248,6 +268,7 @@ const rootRouteChildren: RootRouteChildren = {
     BlogWhatIsFinancialLiteracyForTeensRoute,
   CompareKhanAcademyRoute: CompareKhanAcademyRoute,
   PathPathIdRoute: PathPathIdRoute,
+  ApiPublicHeroSfxRoute: ApiPublicHeroSfxRoute,
   LessonPathIdLessonIdRoute: LessonPathIdLessonIdRoute,
 }
 export const routeTree = rootRouteImport
