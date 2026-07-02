@@ -114,6 +114,7 @@ interface Ctx {
   state: HodlchiState;
   setOnboarding: (data: { name: string; egg: EggColor; personality: Personality }) => void;
   completeLesson: (pathId: string, lessonId: string, correctCount: number, total: number) => void;
+  flashMood: (mood: Mood, durationMs?: number) => void;
   evolve: () => void;
   reset: () => void;
   demoMode: () => void;
@@ -123,6 +124,41 @@ interface Ctx {
 export function stageIndex(stage: Stage): number {
   return EVOLUTION_STAGES.indexOf(stage);
 }
+
+/**
+ * Derive the mood Penny should show right now.
+ *
+ * Priority:
+ * 1. A short-lived "flash" mood (excited/confused/proud/celebrating) that was
+ *    set by a recent interaction and hasn't expired yet.
+ * 2. A contextual mood derived from streak, XP progress, and last-active day.
+ */
+export function deriveMood(state: HodlchiState, now: number = Date.now()): Mood {
+  if (state.moodExpiresAt && now < state.moodExpiresAt) return state.mood;
+
+  const today = new Date(now).toISOString().slice(0, 10);
+  const lastActive = state.lastActiveDay;
+
+  // No lesson yet today — Penny nudges the user.
+  if (lastActive !== today) {
+    if (!lastActive) return "hungry"; // brand new
+    const daysAgo = Math.floor(
+      (now - new Date(lastActive + "T12:00:00Z").getTime()) / 86400000,
+    );
+    if (daysAgo >= 2) return "sleepy"; // been ignored — dozing off
+    return "hungry"; // one day gap, ready to be fed a lesson
+  }
+
+  // Already active today.
+  const prog = progressToNextStage(state.level, state.xp);
+  const xpToNext = Math.max(0, prog.end - state.xp);
+  if (stageForLevel(state.level) !== state.acknowledgedStage) return "celebrating";
+  if (xpToNext > 0 && xpToNext <= 30) return "excited";
+  if (state.streak >= 3) return "proud";
+  return "happy";
+}
+
+
 
 
 const HodlchiContext = createContext<Ctx | null>(null);
