@@ -474,3 +474,21 @@ function LoopStep({ n, emoji, label }: { n: string; emoji: string; label: string
     </li>
   );
 }
+
+function MuteButton() {
+  const [muted, setMuted] = useState(() => sfx.isMuted());
+  return (
+    <button
+      onClick={() => {
+        const next = sfx.toggle();
+        setMuted(next);
+        if (!next) sfx.pop();
+      }}
+      className="grid h-7 w-7 place-items-center rounded-full bg-white text-sm shadow-soft"
+      aria-label={muted ? "Unmute sounds" : "Mute sounds"}
+      title={muted ? "Sounds off" : "Sounds on"}
+    >
+      {muted ? "🔇" : "🔊"}
+    </button>
+  );
+}
