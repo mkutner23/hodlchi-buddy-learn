@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
-import { PATHS, getDailyChallenge } from "@/lib/lessons-data";
+import { PATHS, PATH_FRUIT, getDailyChallenge } from "@/lib/lessons-data";
 import {
   useHodlchi,
   stageForLevel,
