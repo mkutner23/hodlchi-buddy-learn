@@ -90,7 +90,7 @@ function Landing() {
             Educational only. No trading, wallets, or investment advice.
           </p>
           <p className="mt-2 text-[11px] font-semibold uppercase tracking-widest text-foreground/50">
-            Your Money Companion
+            Meet your Money Companion
           </p>
         </section>
 
