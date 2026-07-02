@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
-import { PATHS, getDailyChallenge } from "@/lib/lessons-data";
+import { PATHS, PATH_FRUIT, getDailyChallenge } from "@/lib/lessons-data";
 import {
   useHodlchi,
   stageForLevel,
@@ -41,13 +41,14 @@ function greetingFor(
   doneLessons: number,
   xpToNext: number,
   nextStage: string,
+  fruit: string,
 ) {
   const hour = new Date().getHours();
   const timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
   if (doneToday) {
     if (xpToNext > 0 && xpToNext <= 30) return `Almost to ${nextStage} — ${xpToNext} XP to go! ✨`;
     if (streak >= 3) return `Nice — ${streak} days in a row! 🔥`;
-    return `Thanks for feeding me, ${name}! 🍎`;
+    return `Thanks for feeding me! ${fruit}`;
   }
   if (doneLessons === 0) return `Hi! I'm ${name}. Feed me my first lesson?`;
   if (xpToNext > 0 && xpToNext <= 30) return `So close to ${nextStage}! Just ${xpToNext} XP left.`;
@@ -103,6 +104,10 @@ function Home() {
 
   const xpToNext = Math.max(0, prog.end - state.xp);
   const atMaxStage = prog.nextStage === stage;
+  const lastCompletedPath = state.completedLessons.length > 0
+    ? (state.completedLessons[state.completedLessons.length - 1].split(":")[0] as keyof typeof PATH_FRUIT)
+    : "saving";
+  const fruit = PATH_FRUIT[lastCompletedPath] ?? "🍎";
   const speech = readyToEvolve
     ? `🎉 We did it! I'm ready to become a ${naturalStage}!`
     : greetingFor(
@@ -112,6 +117,7 @@ function Home() {
         doneLessons,
         atMaxStage ? 0 : xpToNext,
         prog.nextStage,
+        fruit,
       );
 
   const handleEvolve = () => {
