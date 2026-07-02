@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 const URL = "https://demo.hodlchi.com/blog/what-is-financial-literacy-for-teens";
 const TITLE = "What is Financial Literacy for Teens? A Simple Guide";
 const DESCRIPTION =
-  "Learn what financial literacy means for teens and why it matters. This beginner-friendly guide covers saving, budgeting, credit, investing, and entrepreneurship — no jargon, no pressure.";
+  "A beginner-friendly guide to financial literacy for teens: saving, budgeting, credit, investing, and entrepreneurship — no jargon.";
 
 const FAQ = [
   {
