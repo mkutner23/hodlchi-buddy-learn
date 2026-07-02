@@ -335,7 +335,7 @@ function Home() {
         {readyToEvolve ? (
           <button
             onClick={handleEvolve}
-            className={`mt-5 flex w-full items-center justify-between rounded-3xl bg-gradient-primary px-5 py-5 text-left font-bold text-primary-foreground shadow-pop transition active:scale-[0.98] ${celebrating ? "animate-wobble" : ""}`}
+            className={`btn-squish mt-5 flex w-full items-center justify-between rounded-3xl bg-gradient-primary px-5 py-5 text-left font-bold text-primary-foreground shadow-pop ${celebrating ? "animate-wobble" : ""}`}
           >
             <div className="min-w-0 flex-1">
               <div className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/80">
