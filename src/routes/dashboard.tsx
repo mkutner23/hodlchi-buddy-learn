@@ -191,7 +191,7 @@ function Home() {
 
   const handleEvolve = () => {
     setCelebrating(true);
-    setShakeKey((k) => k + 1);
+    
     sfx.penny.excited();
     sfx.sparkle();
   };
