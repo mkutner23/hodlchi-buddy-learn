@@ -5,7 +5,7 @@
 ## Pages
 
 - [Home](/): Landing page. What Hodlchi is and how the hatch → learn → feed → evolve loop works.
-- [Financial Literacy for Teens](/financial-literacy-for-teens): Free gamified financial literacy course for teens and beginners — full curriculum overview.
+- [Financial Literacy for Everyone](/financial-literacy-for-everyone): Free gamified financial literacy course for everyone — full curriculum overview.
 - [Hodlchi vs Khan Academy](/compare/khan-academy): Side-by-side comparison of Hodlchi and Khan Academy for financial literacy — gamified 3-minute lessons vs traditional video courses.
 - [What is Financial Literacy for Teens?](/blog/what-is-financial-literacy-for-teens): A beginner-friendly guide to the financial literacy definition and money basics for teens, with a clear path into the free Hodlchi course.
 - [Onboarding](/onboarding): Hatch a Hodlchi — pick an egg, name your companion, choose a personality.

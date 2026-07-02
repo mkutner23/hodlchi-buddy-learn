@@ -137,7 +137,7 @@ function Landing() {
           </div>
           <h2 className="mt-1 text-lg font-bold">Financial literacy for everyone</h2>
           <div className="mt-2 flex flex-col items-center gap-1 text-sm">
-            <Link to="/financial-literacy-for-teens" className="font-semibold text-primary-deep underline underline-offset-2">
+            <Link to="/financial-literacy-for-everyone" className="font-semibold text-primary-deep underline underline-offset-2">
               See the curriculum →
             </Link>
             <Link to="/certificate" className="font-semibold text-primary-deep underline underline-offset-2">

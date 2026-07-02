@@ -76,7 +76,7 @@ function GuidePage() {
             <span className="font-display text-xl font-extrabold">Hodlchi</span>
           </Link>
           <Link
-            to="/financial-literacy-for-teens"
+            to="/financial-literacy-for-everyone"
             className="text-xs font-semibold text-primary-deep underline underline-offset-2"
           >
             Curriculum
