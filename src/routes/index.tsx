@@ -52,22 +52,25 @@ function Landing() {
               Build confidence with money in just 3 minutes a day.
             </p>
             <p className="text-base text-foreground/70 whitespace-nowrap">
-              Every lesson helps your Hodlchi evolve — and helps you build your financial future.
+              Every lesson helps your Hodlchi evolve — and helps you
+            </p>
+            <p className="text-base text-foreground/70 whitespace-nowrap">
+              build your financial future.
             </p>
           </div>
           <div className="mx-auto mt-2 max-w-xl text-center">
-            <p className="text-sm text-foreground/80 italic whitespace-nowrap">
+            <p className="text-sm font-bold text-foreground/80 italic whitespace-nowrap">
               From financial beginner to financial confidence —
             </p>
-            <p className="text-sm text-foreground/80 italic whitespace-nowrap">
+            <p className="text-sm font-bold text-foreground/80 italic whitespace-nowrap">
               3 minutes at a time.
             </p>
           </div>
           <div className="mx-auto mt-2 max-w-xl text-center">
-            <p className="text-sm text-primary-deep whitespace-nowrap">
+            <p className="text-sm font-bold text-primary-deep whitespace-nowrap">
               Come back every day to keep your streak alive
             </p>
-            <p className="text-sm text-primary-deep whitespace-nowrap">
+            <p className="text-sm font-bold text-primary-deep whitespace-nowrap">
               and unlock new evolutions.
             </p>
           </div>
