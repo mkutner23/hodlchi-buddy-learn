@@ -5,6 +5,7 @@ import { HodlchiLogo } from "@/components/HodlchiLogo";
 import { PathFruit } from "@/components/PathFruit";
 import { PATHS, PATH_ACCENT, getDailyChallenge, type PathId } from "@/lib/lessons-data";
 import { EvolveCinematic } from "@/components/EvolveCinematic";
+import { sfx } from "@/lib/sfx";
 import {
   useHodlchi,
   stageForLevel,
