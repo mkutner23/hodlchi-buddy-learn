@@ -1,6 +1,6 @@
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { PATHS } from "@/lib/lessons-data";
+import { PATHS, PATH_FRUIT } from "@/lib/lessons-data";
 import { useHodlchi } from "@/lib/hodlchi-store";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 
