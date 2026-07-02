@@ -109,7 +109,7 @@ function TeensPage() {
             Free · Beginner-friendly
           </div>
           <h1 className="mt-2 text-3xl font-black leading-tight">
-            Financial Literacy Course for Teens
+            Financial Literacy Course for Everyone
           </h1>
           <p className="mt-3 text-sm text-foreground/70">
             {totalLessons} bite-size lessons · ~{totalMinutes} minutes total. Hatch a Hodlchi and
