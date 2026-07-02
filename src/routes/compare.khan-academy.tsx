@@ -113,7 +113,7 @@ function ComparePage() {
       <div className="mx-auto max-w-2xl px-5 pt-10 pb-16">
         <header className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-foreground text-primary text-lg font-black">H</div>
+            <HodlchiLogo size={36} className="drop-shadow-sm" />
             <span className="font-display text-xl font-extrabold">Hodlchi</span>
           </Link>
           <Link to="/financial-literacy-for-everyone" className="text-xs font-semibold text-primary-deep underline underline-offset-2">
@@ -154,7 +154,7 @@ function ComparePage() {
             Traditional courses like Khan Academy's personal-finance track deliver depth: full lectures on taxes, compound interest, and budgeting frameworks. That structure is powerful — if you can sit down and press play consistently.
           </p>
           <p className="mt-3 text-foreground/75">
-            Hodlchi is built for the moments in between. A 3-minute lesson feeds your companion, keeps your streak alive, and drops one useful money idea. The daily loop is the whole point: hatch → learn → feed → level up → return tomorrow.
+            Hodlchi is built for the moments in between. A 5-minute lesson feeds your companion, keeps your streak alive, and drops one useful money idea. The daily loop is the whole point: hatch → learn → feed → level up → return tomorrow.
           </p>
         </section>
 
@@ -172,7 +172,7 @@ function ComparePage() {
             <div className="rounded-2xl bg-primary/20 p-4 shadow-soft backdrop-blur">
               <div className="text-xs font-bold uppercase tracking-widest text-primary-deep">Pick Hodlchi if…</div>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-foreground/80">
-                <li>You want a fun 3-minute daily money habit.</li>
+                <li>You want a fun 5-minute daily money habit.</li>
                 <li>You (or your teen) bounce off long videos.</li>
                 <li>Streaks, XP, and a cute companion keep you coming back.</li>
               </ul>
@@ -193,7 +193,7 @@ function ComparePage() {
         </section>
 
         <section className="mt-10 rounded-2xl bg-foreground p-6 text-center text-primary shadow-pop">
-          <h2 className="text-xl font-extrabold">Try the 3-minute money habit</h2>
+          <h2 className="text-xl font-extrabold">Try the 5-minute money habit</h2>
           <p className="mt-2 text-sm text-primary/80">Hatch your Hodlchi and finish your first lesson today.</p>
           <Link
             to="/onboarding"
