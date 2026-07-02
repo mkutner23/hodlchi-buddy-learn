@@ -174,9 +174,12 @@ function Home() {
                 style={{ width: `${prog.pct}%` }}
               />
             </div>
-            <div className="mt-1 text-right text-[11px] font-semibold text-foreground/50">
-              {prog.pct}% to evolve
+            <div className="mt-1 text-right text-[11px] font-semibold text-foreground/60">
+              {atMaxStage
+                ? "Max stage reached ✨"
+                : `${xpToNext} XP until ${prog.nextStage}`}
             </div>
+
           </div>
         </section>
 
