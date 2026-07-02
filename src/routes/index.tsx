@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
+import { ProductWalkthrough } from "@/components/ProductWalkthrough";
 import { useHodlchi } from "@/lib/hodlchi-store";
 
 export const Route = createFileRoute("/")({
@@ -80,7 +81,20 @@ function Landing() {
           </p>
         </section>
 
+        <section className="mt-12">
+          <div className="mb-3 text-center">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
+              30-second product tour
+            </div>
+            <h2 className="mt-1 text-xl font-extrabold tracking-tight">
+              See the core loop in action
+            </h2>
+          </div>
+          <ProductWalkthrough />
+        </section>
+
         <section className="mt-14">
+
           <h2 className="text-center text-2xl font-extrabold tracking-tight">Why learn with Hodlchi?</h2>
           <div className="mt-5 grid gap-3">
             <FeatureRow emoji="🥚" title="Learn by raising a companion you'll actually care about" body="Hatch, name, and grow a Hodlchi that evolves with every lesson you finish." />
