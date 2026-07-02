@@ -355,7 +355,7 @@ function Home() {
           <button
             onClick={goNext}
             disabled={!nextLesson}
-            className="mt-5 flex w-full items-center justify-between rounded-3xl bg-foreground px-5 py-5 text-left font-bold text-primary shadow-pop transition active:scale-[0.98] disabled:opacity-40"
+            className="btn-squish mt-5 flex w-full items-center justify-between rounded-3xl bg-foreground px-5 py-5 text-left font-bold text-primary shadow-pop disabled:opacity-40"
           >
             <div className="min-w-0 flex-1">
               <div className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
