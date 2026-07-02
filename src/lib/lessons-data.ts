@@ -25,10 +25,19 @@ export interface LearningPath {
 
 export const PATH_FRUIT: Record<PathId, string> = {
   saving: "🍎",
-  investing: "🥜",
+  investing: "🍌",
   credit: "🫐",
-  crypto: "🍌",
   entrepreneurship: "🍇",
+  crypto: "🍊",
+};
+
+// Each fruit has a signature idle micro-animation for personality.
+export const PATH_FRUIT_ANIM: Record<PathId, string> = {
+  saving: "animate-fruit-sparkle",       // apple — tiny scale + brighten
+  investing: "animate-fruit-wiggle",     // banana — peel wiggle
+  credit: "animate-fruit-squish",        // blueberry — squish
+  entrepreneurship: "animate-fruit-shake", // grapes — cluster shake
+  crypto: "animate-fruit-bounce",        // orange — bounce
 };
 
 export interface PathAccent {
