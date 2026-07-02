@@ -313,7 +313,7 @@ function XpScene() {
 }
 
 function EvolveScene() {
-  const [stage, setStage] = useState<"Baby Hodlchi" | "Learner">("Baby Hodlchi");
+  const [stage, setStage] = useState<"Baby Hodlchi" | "Student">("Baby Hodlchi");
   const [flash, setFlash] = useState(false);
   useEffect(() => {
     setStage("Baby Hodlchi");

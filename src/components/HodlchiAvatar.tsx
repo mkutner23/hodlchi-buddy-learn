@@ -56,9 +56,9 @@ interface Props {
 const STAGE_INDEX: Record<Stage, number> = {
   Egg: 0,
   "Baby Hodlchi": 1,
-  Learner: 2,
+  Student: 2,
   Builder: 3,
-  "Wealth Sage": 4,
+  Investor: 4,
   "Money Legend": 5,
 };
 
@@ -320,30 +320,46 @@ function FoxBody({ p, idx }: { p: (typeof PERSONALITY_META)["fox"]; idx: number 
 
 // ------------- ACCESSORIES per stage -------------
 function StageAccessory({ idx }: { idx: number }) {
-  if (idx === 3) {
-    // Builder — hard-hat / graduation-ish cap
+  if (idx === 2) {
+    // Student — graduation cap
     return (
       <g>
-        <rect x="70" y="52" width="60" height="8" rx="2" fill="oklch(0.3 0.05 155)" />
-        <path d="M 78 52 Q 100 34 122 52 Z" fill="oklch(0.35 0.05 155)" />
-        <circle cx="100" cy="42" r="3" fill="oklch(0.82 0.24 145)" />
+        <rect x="70" y="54" width="60" height="6" rx="1" fill="oklch(0.25 0.03 260)" />
+        <path d="M 62 54 L 100 40 L 138 54 L 100 68 Z" fill="oklch(0.2 0.03 260)" />
+        <line x1="128" y1="50" x2="132" y2="66" stroke="oklch(0.82 0.24 145)" strokeWidth="1.5" />
+        <circle cx="132" cy="68" r="2.5" fill="oklch(0.82 0.24 145)" />
+      </g>
+    );
+  }
+  if (idx === 3) {
+    // Builder — hard hat
+    return (
+      <g>
+        <rect x="66" y="58" width="68" height="6" rx="2" fill="oklch(0.55 0.18 55)" />
+        <path d="M 74 58 Q 100 32 126 58 Z" fill="oklch(0.68 0.2 55)" />
+        <rect x="97" y="38" width="6" height="18" fill="oklch(0.5 0.16 55)" opacity="0.6" />
       </g>
     );
   }
   if (idx === 4) {
-    // Wealth Sage — glasses + subtle crown of coins
+    // Investor — glasses + upward chart + coins
     return (
       <g>
         <circle cx="88" cy="90" r="9" fill="none" stroke="oklch(0.25 0.02 155)" strokeWidth="2" />
         <circle cx="112" cy="90" r="9" fill="none" stroke="oklch(0.25 0.02 155)" strokeWidth="2" />
         <line x1="97" y1="90" x2="103" y2="90" stroke="oklch(0.25 0.02 155)" strokeWidth="2" />
-        {/* coin trio floating above */}
-        <circle cx="82" cy="46" r="6" fill="oklch(0.82 0.18 85)" stroke="oklch(0.55 0.14 70)" strokeWidth="1.5" />
-        <circle cx="100" cy="40" r="7" fill="oklch(0.85 0.2 85)" stroke="oklch(0.55 0.14 70)" strokeWidth="1.5" />
-        <circle cx="118" cy="46" r="6" fill="oklch(0.82 0.18 85)" stroke="oklch(0.55 0.14 70)" strokeWidth="1.5" />
-        <text x="100" y="44" textAnchor="middle" fontSize="9" fontWeight="900" fill="oklch(0.35 0.08 70)">
-          $
-        </text>
+        {/* upward trend line above head */}
+        <polyline
+          points="72,54 88,48 100,40 116,32 130,26"
+          fill="none"
+          stroke="oklch(0.6 0.2 145)"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <polygon points="130,26 122,26 130,22" fill="oklch(0.6 0.2 145)" />
+        <circle cx="76" cy="60" r="5" fill="oklch(0.85 0.2 85)" stroke="oklch(0.55 0.14 70)" strokeWidth="1.2" />
+        <text x="76" y="63" textAnchor="middle" fontSize="7" fontWeight="900" fill="oklch(0.35 0.08 70)">$</text>
       </g>
     );
   }
