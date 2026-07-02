@@ -217,7 +217,8 @@ function LessonView() {
             <button
               onClick={locked ? nextQ : check}
               disabled={selected === null}
-              className="mt-5 w-full rounded-2xl bg-foreground px-5 py-4 font-bold text-primary shadow-pop transition active:scale-[0.98] disabled:opacity-40"
+              className="mt-5 w-full rounded-2xl px-5 py-4 font-bold text-white shadow-pop transition active:scale-[0.98] disabled:opacity-40"
+              style={{ backgroundColor: accent.hex, boxShadow: `0 12px 30px -10px ${accent.ring}` }}
             >
               {locked ? (qIdx + 1 < lesson.quiz.length ? "Next question" : "Finish lesson") : "Check answer"}
             </button>
