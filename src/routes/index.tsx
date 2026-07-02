@@ -57,7 +57,7 @@ function Landing() {
             Learn money.<br />Raise your <span className="text-primary-deep">Hodlchi.</span>
           </h1>
           <p className="mx-auto mt-4 max-w-sm text-base text-foreground/70">
-            Learn real money skills in just 3 minutes a day. Every lesson helps your Hodlchi evolve — and helps you build your financial future.
+            Build real money skills in just 3 minutes a day. Every lesson helps your Hodlchi evolve — and helps you build your financial future.
           </p>
           <p className="mx-auto mt-3 max-w-sm text-sm font-semibold text-foreground/80 italic">
             From financial beginner to financial confidence — 3 minutes at a time.
