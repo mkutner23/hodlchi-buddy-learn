@@ -101,10 +101,16 @@ interface Ctx {
   state: HodlchiState;
   setOnboarding: (data: { name: string; egg: EggColor; personality: Personality }) => void;
   completeLesson: (pathId: string, lessonId: string, correctCount: number, total: number) => void;
+  evolve: () => void;
   reset: () => void;
   demoMode: () => void;
   isLessonComplete: (pathId: string, lessonId: string) => boolean;
 }
+
+export function stageIndex(stage: Stage): number {
+  return EVOLUTION_STAGES.indexOf(stage);
+}
+
 
 const HodlchiContext = createContext<Ctx | null>(null);
 
