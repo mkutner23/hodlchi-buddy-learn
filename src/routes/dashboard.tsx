@@ -9,7 +9,7 @@ import {
   type Mood,
 } from "@/lib/hodlchi-store";
 
-export const Route = createFileRoute("/demo")({
+export const Route = createFileRoute("/dashboard")({
   component: Home,
   head: () => ({
     meta: [

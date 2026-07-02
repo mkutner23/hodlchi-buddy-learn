@@ -12,7 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as FinancialLiteracyForTeensRouteImport } from './routes/financial-literacy-for-teens'
-import { Route as DemoRouteImport } from './routes/demo'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CertificateRouteImport } from './routes/certificate'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PathPathIdRouteImport } from './routes/path.$pathId'
@@ -36,9 +36,9 @@ const FinancialLiteracyForTeensRoute =
     path: '/financial-literacy-for-teens',
     getParentRoute: () => rootRouteImport,
   } as any)
-const DemoRoute = DemoRouteImport.update({
-  id: '/demo',
-  path: '/demo',
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CertificateRoute = CertificateRouteImport.update({
@@ -76,7 +76,7 @@ const LessonPathIdLessonIdRoute = LessonPathIdLessonIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
-  '/demo': typeof DemoRoute
+  '/dashboard': typeof DashboardRoute
   '/financial-literacy-for-teens': typeof FinancialLiteracyForTeensRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -88,7 +88,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
-  '/demo': typeof DemoRoute
+  '/dashboard': typeof DashboardRoute
   '/financial-literacy-for-teens': typeof FinancialLiteracyForTeensRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -101,7 +101,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
-  '/demo': typeof DemoRoute
+  '/dashboard': typeof DashboardRoute
   '/financial-literacy-for-teens': typeof FinancialLiteracyForTeensRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -115,7 +115,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/certificate'
-    | '/demo'
+    | '/dashboard'
     | '/financial-literacy-for-teens'
     | '/onboarding'
     | '/sitemap.xml'
@@ -127,7 +127,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/certificate'
-    | '/demo'
+    | '/dashboard'
     | '/financial-literacy-for-teens'
     | '/onboarding'
     | '/sitemap.xml'
@@ -139,7 +139,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/certificate'
-    | '/demo'
+    | '/dashboard'
     | '/financial-literacy-for-teens'
     | '/onboarding'
     | '/sitemap.xml'
@@ -152,7 +152,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CertificateRoute: typeof CertificateRoute
-  DemoRoute: typeof DemoRoute
+  DashboardRoute: typeof DashboardRoute
   FinancialLiteracyForTeensRoute: typeof FinancialLiteracyForTeensRoute
   OnboardingRoute: typeof OnboardingRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -185,11 +185,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FinancialLiteracyForTeensRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo': {
-      id: '/demo'
-      path: '/demo'
-      fullPath: '/demo'
-      preLoaderRoute: typeof DemoRouteImport
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/certificate': {
@@ -240,7 +240,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CertificateRoute: CertificateRoute,
-  DemoRoute: DemoRoute,
+  DashboardRoute: DashboardRoute,
   FinancialLiteracyForTeensRoute: FinancialLiteracyForTeensRoute,
   OnboardingRoute: OnboardingRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
@@ -253,13 +253,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

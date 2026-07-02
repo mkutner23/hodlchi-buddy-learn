@@ -55,7 +55,7 @@ function PathView() {
   return (
     <main className="min-h-screen bg-gradient-sky pb-16">
       <div className="mx-auto max-w-md px-5 pt-6">
-        <Link to="/demo" className="text-sm font-semibold text-foreground/60">
+        <Link to="/dashboard" className="text-sm font-semibold text-foreground/60">
           ← Back
         </Link>
         <header className="mt-4 rounded-3xl bg-white p-5 shadow-soft">
