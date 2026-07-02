@@ -433,6 +433,96 @@ function LegendAura() {
   );
 }
 
+// ------------- PATH CHARMS (memory made visible) -------------
+// Tiny visual callbacks — no menus, no stats. Two users with identical XP
+// end up with visibly different Pennys based on what they've studied.
+const CHARM_ORDER: PathId[] = ["saving", "investing", "credit", "entrepreneurship", "crypto"];
+
+function PathCharms({ paths }: { paths: PathId[] }) {
+  // Dedupe & preserve deterministic order so charms don't jump around.
+  const set = new Set(paths);
+  const shown = CHARM_ORDER.filter((p) => set.has(p));
+  return (
+    <g>
+      {shown.map((id) => {
+        switch (id) {
+          case "saving":
+            return <PiggyCharm key={id} />;
+          case "investing":
+            return <SproutCharm key={id} />;
+          case "credit":
+            return <WalletCharm key={id} />;
+          case "entrepreneurship":
+            return <ToolBeltCharm key={id} />;
+          case "crypto":
+            return <CoinNecklaceCharm key={id} />;
+          default:
+            return null;
+        }
+      })}
+    </g>
+  );
+}
+
+// Piggy-bank charm on lower left of belly.
+function PiggyCharm() {
+  return (
+    <g transform="translate(70 152)" className="animate-charm-in">
+      <ellipse cx="0" cy="0" rx="9" ry="7" fill="#f9a8d4" stroke="#be185d" strokeWidth="1.2" />
+      <circle cx="6" cy="-2" r="2.4" fill="#f9a8d4" stroke="#be185d" strokeWidth="1" />
+      <circle cx="6.6" cy="-2" r="0.6" fill="#be185d" />
+      <rect x="-3" y="-4.5" width="4" height="1.2" rx="0.4" fill="#be185d" />
+      <line x1="-6" y1="5" x2="-6" y2="7.5" stroke="#be185d" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="3" y1="5" x2="3" y2="7.5" stroke="#be185d" strokeWidth="1.2" strokeLinecap="round" />
+    </g>
+  );
+}
+
+// Green sprout "backpack" over the right shoulder.
+function SproutCharm() {
+  return (
+    <g transform="translate(140 108)" className="animate-charm-in">
+      <path d="M 0 6 Q 0 -4 -6 -8 Q -2 -6 0 -1 Q 2 -6 6 -8 Q 0 -4 0 6 Z" fill="#22c55e" stroke="#166534" strokeWidth="1" />
+      <line x1="0" y1="6" x2="0" y2="10" stroke="#166534" strokeWidth="1.4" strokeLinecap="round" />
+    </g>
+  );
+}
+
+// Small blue wallet clipped to the right hip.
+function WalletCharm() {
+  return (
+    <g transform="translate(128 150)" className="animate-charm-in">
+      <rect x="-7" y="-5" width="14" height="10" rx="1.6" fill="#3b82f6" stroke="#1e3a8a" strokeWidth="1.2" />
+      <rect x="1" y="-1.5" width="4.5" height="3" rx="0.6" fill="#dbeafe" stroke="#1e3a8a" strokeWidth="0.8" />
+      <circle cx="3.25" cy="0" r="0.7" fill="#1e3a8a" />
+    </g>
+  );
+}
+
+// Purple entrepreneurship tool belt across the waist.
+function ToolBeltCharm() {
+  return (
+    <g transform="translate(100 158)" className="animate-charm-in">
+      <rect x="-22" y="-3" width="44" height="6" rx="1.4" fill="#a855f7" stroke="#6b21a8" strokeWidth="1.2" />
+      <rect x="-3" y="-3.5" width="6" height="7" rx="1" fill="#c084fc" stroke="#6b21a8" strokeWidth="1" />
+      <circle cx="-14" cy="0" r="1.4" fill="#f3e8ff" stroke="#6b21a8" strokeWidth="0.8" />
+      <rect x="9" y="-1.5" width="4" height="3" rx="0.5" fill="#f3e8ff" stroke="#6b21a8" strokeWidth="0.8" />
+    </g>
+  );
+}
+
+// Orange pixel-coin necklace on the chest.
+function CoinNecklaceCharm() {
+  return (
+    <g transform="translate(100 128)" className="animate-charm-in">
+      <path d="M -18 -6 Q 0 6 18 -6" fill="none" stroke="#9a3412" strokeWidth="1" strokeLinecap="round" />
+      <circle cx="0" cy="4" r="4.4" fill="#f97316" stroke="#7c2d12" strokeWidth="1.2" />
+      <text x="0" y="7" textAnchor="middle" fontSize="6" fontWeight="900" fill="#7c2d12" fontFamily="monospace">₿</text>
+    </g>
+  );
+}
+
+
 export function EggPreview({ egg, size = 100 }: { egg: EggColor; size?: number }) {
   return <HodlchiAvatar egg={egg} personality="fox" stage="Egg" size={size} bob={false} />;
 }
