@@ -1,13 +1,20 @@
 // Procedural sound effects — Web Audio API only, no assets, no network.
-// Redesigned to feel Nintendo / Duolingo / Animal Crossing: layered voices
-// (wood click + bell + shimmer, coin + chime, downward marimba + puff, etc.)
-// so every sound carries *emotion*, not just information. All sounds share a
-// master gain + gentle compressor so layered voices stay warm, never harsh.
+// Every "instance" sound (pop / ding / xp / crunch / chirp) has 8–12 subtle
+// variations (pitch, timing, harmonic jitter) so nothing ever sounds identical
+// twice — the trick Duolingo / Animal Crossing / Mario use so your brain never
+// gets tired of them. Penny also has a tiny set of wordless vocalizations
+// (happy/sleepy/hungry/proud/excited/confused) so her voice becomes brand.
+//
+// The two "hero" moments — evolve sparkle & level-up fanfare — try to play a
+// cached ElevenLabs clip first (fetched once from `/api/public/hero-sfx` and
+// stored in-memory + localStorage), and fall back to the procedural version if
+// the network isn't there or the clip hasn't loaded yet.
 
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
 let muted = false;
 const STORAGE_KEY = "hodlchi-sfx-muted";
+const HERO_CACHE_PREFIX = "hodlchi-hero-sfx:";
 
 if (typeof window !== "undefined") {
   try {
@@ -43,6 +50,13 @@ function dest(): AudioNode {
   return master ?? getCtx()!.destination;
 }
 
+// ---------- small helpers ----------
+
+const rand = (min: number, max: number) => min + Math.random() * (max - min);
+const pick = <T,>(arr: readonly T[]): T => arr[Math.floor(Math.random() * arr.length)];
+// small pitch jitter in cents → ratio
+const jitter = (cents: number) => Math.pow(2, rand(-cents, cents) / 1200);
+
 interface ToneOptions {
   freq: number;
   endFreq?: number;
@@ -50,7 +64,7 @@ interface ToneOptions {
   type?: OscillatorType;
   volume?: number;
   attack?: number;
-  release?: number; // fraction of duration used for tail
+  release?: number;
   delay?: number;
   detune?: number;
   ramp?: "exp" | "lin";
@@ -90,20 +104,20 @@ function tone({
   osc.stop(start + duration + 0.02);
 }
 
-// A plucked-bell / marimba-ish voice: sine with a very fast attack and a long
-// gentle exponential tail. Layer a fifth above at low volume for shimmer.
 function bell({
   freq,
   duration = 0.6,
   volume = 0.14,
   delay = 0,
   shimmer = true,
+  partial = 3.01,
 }: {
   freq: number;
   duration?: number;
   volume?: number;
   delay?: number;
   shimmer?: boolean;
+  partial?: number;
 }) {
   const ac = getCtx();
   if (!ac) return;
@@ -122,7 +136,7 @@ function bell({
     const osc2 = ac.createOscillator();
     const g2 = ac.createGain();
     osc2.type = "sine";
-    osc2.frequency.value = freq * 3.01; // inharmonic partial → glassy
+    osc2.frequency.value = freq * partial;
     g2.gain.setValueAtTime(0.0001, start);
     g2.gain.exponentialRampToValueAtTime(volume * 0.35, start + 0.005);
     g2.gain.exponentialRampToValueAtTime(0.0001, start + duration * 0.7);
@@ -162,10 +176,8 @@ function noiseBurst(
   src.stop(start + duration + 0.02);
 }
 
-// Tiny wooden click — very short filtered noise transient. Great as the
-// "attack" layer on taps and successes so they feel physical.
-function woodClick(delay = 0, volume = 0.09) {
-  noiseBurst(0.018, volume, 3200, delay, "bandpass", 4);
+function woodClick(delay = 0, volume = 0.09, freq = 3200) {
+  noiseBurst(0.018, volume, freq, delay, "bandpass", 4);
 }
 
 function play(fn: () => void) {
@@ -176,6 +188,320 @@ function play(fn: () => void) {
     /* audio failures are non-fatal */
   }
 }
+
+// ---------- Hero-moment sample cache (ElevenLabs) ----------
+
+type HeroKey = "sparkle" | "levelUp";
+const heroBuffers: Partial<Record<HeroKey, AudioBuffer>> = {};
+const heroFetching: Partial<Record<HeroKey, Promise<void>>> = {};
+
+async function decodeToBuffer(ac: AudioContext, bytes: ArrayBuffer): Promise<AudioBuffer> {
+  return await new Promise((resolve, reject) => {
+    // Safari needs the callback form.
+    ac.decodeAudioData(bytes.slice(0), resolve, reject);
+  });
+}
+
+function b64ToBytes(b64: string): ArrayBuffer {
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out.buffer;
+}
+
+async function ensureHero(key: HeroKey) {
+  if (heroBuffers[key]) return;
+  if (heroFetching[key]) return heroFetching[key];
+  if (typeof window === "undefined") return;
+  heroFetching[key] = (async () => {
+    const ac = getCtx();
+    if (!ac) return;
+    // 1. try localStorage
+    try {
+      const cached = window.localStorage.getItem(HERO_CACHE_PREFIX + key);
+      if (cached) {
+        const buf = await decodeToBuffer(ac, b64ToBytes(cached));
+        heroBuffers[key] = buf;
+        return;
+      }
+    } catch {
+      /* ignore */
+    }
+    // 2. fetch from server
+    try {
+      const res = await fetch(`/api/public/hero-sfx?name=${key}`);
+      if (!res.ok) return;
+      const bytes = await res.arrayBuffer();
+      const buf = await decodeToBuffer(ac, bytes);
+      heroBuffers[key] = buf;
+      // cache
+      try {
+        let bin = "";
+        const view = new Uint8Array(bytes);
+        for (let i = 0; i < view.length; i++) bin += String.fromCharCode(view[i]);
+        window.localStorage.setItem(HERO_CACHE_PREFIX + key, btoa(bin));
+      } catch {
+        /* quota — skip */
+      }
+    } catch {
+      /* offline / no key — fall back to procedural */
+    }
+  })();
+  return heroFetching[key];
+}
+
+function playHero(key: HeroKey, volume = 0.9): boolean {
+  const ac = getCtx();
+  const buf = heroBuffers[key];
+  if (!ac || !buf) return false;
+  const src = ac.createBufferSource();
+  src.buffer = buf;
+  const g = ac.createGain();
+  g.gain.value = volume;
+  src.connect(g).connect(dest());
+  src.start();
+  return true;
+}
+
+// Kick off hero prefetch as soon as the module loads on the client.
+if (typeof window !== "undefined") {
+  setTimeout(() => {
+    ensureHero("sparkle");
+    ensureHero("levelUp");
+  }, 500);
+}
+
+// ---------- Procedural voices (with variation) ----------
+
+// Bubble/pop tap. 10 variants — different click freq, bubble pitch center, tail.
+function proceduralPop() {
+  const clickFreq = rand(2600, 3600);
+  const bubbleBase = rand(560, 700);
+  const bubbleEnd = bubbleBase * rand(1.35, 1.55);
+  const overtone = bubbleEnd * rand(1.9, 2.15);
+  woodClick(0, 0.07, clickFreq);
+  tone({ freq: bubbleBase, endFreq: bubbleEnd, duration: 0.07, type: "sine", volume: 0.09, delay: 0.005 });
+  tone({ freq: overtone, duration: 0.05, type: "sine", volume: 0.04, delay: 0.005 });
+}
+
+// Correct-answer ding. Variants pick from a small set of "sparkle" note pairs
+// within C major and re-jitter the shimmer envelope.
+const DING_PAIRS: Array<[number, number]> = [
+  [659.25, 987.77], // E5 → B5
+  [698.46, 1046.5], // F5 → C6
+  [783.99, 1174.66], // G5 → D6
+  [880.0, 1318.51], // A5 → E6
+  [739.99, 1108.73], // F#5 → C#6
+];
+function proceduralDing() {
+  const [n1, n2] = pick(DING_PAIRS);
+  const j = jitter(8);
+  woodClick(0, 0.08, rand(2800, 3400));
+  bell({ freq: n1 * j, duration: 0.42, volume: 0.15, delay: 0.02 });
+  bell({ freq: n2 * j, duration: 0.5, volume: 0.13, delay: rand(0.09, 0.13) });
+  // Shimmer tail — 20% longer than before, per feedback.
+  const ac = getCtx();
+  if (ac) {
+    const dur = 0.32;
+    const start = ac.currentTime + 0.18;
+    const buf = ac.createBuffer(1, Math.floor(ac.sampleRate * dur), ac.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    const src = ac.createBufferSource();
+    src.buffer = buf;
+    const f = ac.createBiquadFilter();
+    f.type = "bandpass";
+    f.Q.value = 8;
+    const fStart = rand(2800, 3200);
+    f.frequency.setValueAtTime(fStart, start);
+    f.frequency.exponentialRampToValueAtTime(fStart * rand(2.4, 3.1), start + dur);
+    const g = ac.createGain();
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(0.05, start + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    src.connect(f).connect(g).connect(dest());
+    src.start(start);
+    src.stop(start + dur + 0.02);
+  }
+}
+
+// Downward marimba — a few tuning variants inside F major/minor territory.
+const WRONG_PAIRS: Array<[number, number]> = [
+  [349.23, 261.63], // F4 → C4
+  [329.63, 246.94], // E4 → B3
+  [369.99, 277.18], // F#4 → C#4
+  [311.13, 233.08], // Eb4 → Bb3
+];
+function proceduralWrong() {
+  const [n1, n2] = pick(WRONG_PAIRS);
+  bell({ freq: n1, duration: 0.35, volume: 0.11, shimmer: false });
+  bell({ freq: n2, duration: 0.42, volume: 0.09, delay: 0.09, shimmer: false });
+  noiseBurst(0.14, 0.035, 500, 0.18, "lowpass", 0.7);
+}
+
+// Crunch — layered "wooden bite" using two short bandpass noise transients
+// plus a tiny wooden knock for the initial break. More texture, less "digital".
+function proceduralCrunch() {
+  const ac = getCtx();
+  if (!ac) return;
+  // Initial break — a wooden knock (short bandpass noise).
+  noiseBurst(0.03, 0.14, rand(1400, 2000), 0, "bandpass", 6);
+  // Cracker/cookie body — mid noise with a light pitch drop.
+  noiseBurst(0.07, 0.11, rand(900, 1300), 0.02, "bandpass", 2.5);
+  // Wet chew tail — quieter low noise.
+  noiseBurst(0.08, 0.07, rand(400, 700), 0.06, "lowpass", 1);
+  // Micro-crackles — 2–4 tiny bandpass ticks in the tail for texture.
+  const crackles = 2 + Math.floor(Math.random() * 3);
+  for (let i = 0; i < crackles; i++) {
+    noiseBurst(0.008, rand(0.03, 0.06), rand(2500, 5500), rand(0.03, 0.13), "bandpass", 8);
+  }
+}
+
+// XP — magic coin. Brighter than v2 + shimmer harmonics + tiny star ping.
+const XP_ROOTS = [1568, 1661.22, 1760, 1567.98]; // G6, G#6, A6, G6
+function proceduralXp() {
+  const root = pick(XP_ROOTS) * jitter(10);
+  // Coin body (bright square).
+  tone({ freq: root, duration: 0.08, type: "square", volume: 0.06 });
+  tone({ freq: root * 1.335, duration: 0.14, type: "square", volume: 0.06, delay: 0.06 }); // ~perfect 4th up
+  // Glass shimmer higher partials — three bells instead of two.
+  bell({ freq: root * 1.68, duration: 0.32, volume: 0.07, delay: 0.02, partial: 3.5 });
+  bell({ freq: root * 2.0, duration: 0.3, volume: 0.06, delay: 0.09, partial: 4.0 });
+  bell({ freq: root * 2.52, duration: 0.28, volume: 0.05, delay: 0.14, partial: 4.5 });
+  // Tiny "star" high ping for the magical top.
+  bell({ freq: root * 3.0, duration: 0.22, volume: 0.04, delay: 0.18, partial: 2.0 });
+}
+
+// Chirp — Penny idle pet chirp. Variants tweak sweep range, formant, tail.
+function proceduralChirp() {
+  const base = rand(1300, 1550);
+  const peak = base * rand(1.4, 1.6);
+  tone({ freq: base, endFreq: peak, duration: 0.09, type: "triangle", volume: 0.11 });
+  tone({ freq: peak * 0.95, endFreq: base * 1.05, duration: 0.08, type: "triangle", volume: 0.09, delay: 0.08 });
+  tone({ freq: rand(850, 950), endFreq: rand(1250, 1400), duration: 0.05, type: "sine", volume: 0.06, delay: 0.14 });
+}
+
+// ---------- Penny wordless vocalizations (formant-shaped blips) ----------
+// Very short (0.15–0.4s), triangle+sine layered, no words — pure emotion.
+// Each mood has 2–3 micro-variants for variation.
+
+interface PennyVoice {
+  base: number;      // starting pitch (Hz)
+  end: number;       // ending pitch (Hz)
+  duration: number;  // seconds
+  wobble?: number;   // small vibrato depth in Hz
+  breath?: boolean;  // add tiny breathy noise
+}
+function pennyVoice({ base, end, duration, wobble = 0, breath = false }: PennyVoice) {
+  const ac = getCtx();
+  if (!ac) return;
+  const start = ac.currentTime;
+  const osc = ac.createOscillator();
+  const osc2 = ac.createOscillator(); // 2nd formant an octave up, quieter
+  const gain = ac.createGain();
+  const gain2 = ac.createGain();
+  osc.type = "triangle";
+  osc2.type = "sine";
+  osc.frequency.setValueAtTime(base, start);
+  osc.frequency.exponentialRampToValueAtTime(Math.max(20, end), start + duration);
+  osc2.frequency.setValueAtTime(base * 2, start);
+  osc2.frequency.exponentialRampToValueAtTime(Math.max(20, end * 2), start + duration);
+  // Small vibrato via detune LFO.
+  if (wobble > 0) {
+    const lfo = ac.createOscillator();
+    const lfoGain = ac.createGain();
+    lfo.frequency.value = 6;
+    lfoGain.gain.value = wobble;
+    lfo.connect(lfoGain).connect(osc.detune);
+    lfo.start(start);
+    lfo.stop(start + duration + 0.02);
+  }
+  // Attack + release envelope — quick in, gentle out.
+  const atk = 0.02;
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(0.14, start + atk);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+  gain2.gain.setValueAtTime(0.0001, start);
+  gain2.gain.exponentialRampToValueAtTime(0.05, start + atk);
+  gain2.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+  osc.connect(gain).connect(dest());
+  osc2.connect(gain2).connect(dest());
+  osc.start(start);
+  osc.stop(start + duration + 0.02);
+  osc2.start(start);
+  osc2.stop(start + duration + 0.02);
+  if (breath) noiseBurst(duration * 0.9, 0.02, 1200, 0, "bandpass", 2);
+}
+
+const PENNY_VARIANTS: Record<
+  "happy" | "sleepy" | "hungry" | "proud" | "excited" | "confused",
+  PennyVoice[]
+> = {
+  // "mm!" — short, rising.
+  happy: [
+    { base: 520, end: 720, duration: 0.22, wobble: 4 },
+    { base: 560, end: 780, duration: 0.24, wobble: 3 },
+    { base: 500, end: 700, duration: 0.2, wobble: 5 },
+  ],
+  // "yawn..." — long, downward, breathy.
+  sleepy: [
+    { base: 380, end: 240, duration: 0.42, wobble: 2, breath: true },
+    { base: 360, end: 220, duration: 0.4, wobble: 3, breath: true },
+  ],
+  // "mmm..." — mid, dips down then back up slightly.
+  hungry: [
+    { base: 400, end: 360, duration: 0.34, wobble: 6 },
+    { base: 420, end: 380, duration: 0.32, wobble: 5 },
+    { base: 380, end: 340, duration: 0.36, wobble: 7 },
+  ],
+  // "hm!" — short punchy, small pitch rise.
+  proud: [
+    { base: 480, end: 620, duration: 0.18, wobble: 2 },
+    { base: 500, end: 640, duration: 0.2, wobble: 3 },
+  ],
+  // "eee!" — bright, higher, rising fast.
+  excited: [
+    { base: 680, end: 1020, duration: 0.2, wobble: 8 },
+    { base: 720, end: 1080, duration: 0.22, wobble: 7 },
+    { base: 660, end: 980, duration: 0.18, wobble: 9 },
+  ],
+  // "huh?" — dip then rise (question intonation).
+  confused: [
+    { base: 500, end: 640, duration: 0.28, wobble: 3 },
+    { base: 480, end: 620, duration: 0.3, wobble: 4 },
+  ],
+};
+
+// ---------- Hero moments (ElevenLabs preferred, procedural fallback) ----------
+
+function proceduralSparkle() {
+  const notes = [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98];
+  notes.forEach((f, i) => bell({ freq: f, duration: 0.55, volume: 0.11, delay: i * 0.06 }));
+  tone({
+    freq: 220,
+    endFreq: 660,
+    duration: 0.7,
+    type: "sawtooth",
+    volume: 0.05,
+    attack: 0.15,
+    ramp: "lin",
+  });
+  bell({ freq: 2093, duration: 0.5, volume: 0.13, delay: 0.6 });
+  bell({ freq: 2637, duration: 0.5, volume: 0.11, delay: 0.68 });
+  noiseBurst(0.35, 0.04, 6000, 0.62, "bandpass", 6);
+}
+
+function proceduralLevelUp() {
+  const notes = [523.25, 659.25, 783.99, 1046.5, 1318.51];
+  notes.forEach((f, i) => bell({ freq: f, duration: 0.5, volume: 0.15, delay: i * 0.08 }));
+  tone({ freq: 261.63, duration: 0.9, type: "triangle", volume: 0.06, attack: 0.05, delay: 0.05 });
+  tone({ freq: 392, duration: 0.9, type: "triangle", volume: 0.05, attack: 0.05, delay: 0.05 });
+  bell({ freq: 1975.53, duration: 0.6, volume: 0.14, delay: 0.55 });
+  bell({ freq: 2637, duration: 0.6, volume: 0.11, delay: 0.63 });
+  noiseBurst(0.4, 0.045, 7000, 0.55, "bandpass", 6);
+}
+
+// ---------- Public API ----------
 
 export const sfx = {
   isMuted: () => muted,
@@ -194,148 +520,32 @@ export const sfx = {
     return muted;
   },
 
-  // Button tap: Animal-Crossing menu — tiny wooden click + bubble pop.
-  pop: () =>
-    play(() => {
-      woodClick(0, 0.07);
-      tone({ freq: 620, endFreq: 880, duration: 0.07, type: "sine", volume: 0.09, delay: 0.005 });
-      tone({ freq: 1240, duration: 0.05, type: "sine", volume: 0.04, delay: 0.005 });
-    }),
+  pop: () => play(proceduralPop),
+  ding: () => play(proceduralDing),
+  wrong: () => play(proceduralWrong),
+  crunch: () => play(proceduralCrunch),
+  xp: () => play(proceduralXp),
+  chirp: () => play(proceduralChirp),
 
-  // Correct answer: wooden click → two rising sparkling bells → shimmer tail.
-  // Feels clever, not lucky.
-  ding: () =>
-    play(() => {
-      woodClick(0, 0.08);
-      // Two-note bell rise (E5 → B5), a bright perfect-fifth.
-      bell({ freq: 659.25, duration: 0.42, volume: 0.15, delay: 0.02 });
-      bell({ freq: 987.77, duration: 0.5, volume: 0.13, delay: 0.11 });
-      // Magical shimmer tail: filtered noise sweep.
-      const ac = getCtx();
-      if (ac) {
-        const start = ac.currentTime + 0.18;
-        const buf = ac.createBuffer(1, Math.floor(ac.sampleRate * 0.25), ac.sampleRate);
-        const d = buf.getChannelData(0);
-        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-        const src = ac.createBufferSource();
-        src.buffer = buf;
-        const f = ac.createBiquadFilter();
-        f.type = "bandpass";
-        f.Q.value = 8;
-        f.frequency.setValueAtTime(3000, start);
-        f.frequency.exponentialRampToValueAtTime(8000, start + 0.25);
-        const g = ac.createGain();
-        g.gain.setValueAtTime(0.0001, start);
-        g.gain.exponentialRampToValueAtTime(0.05, start + 0.02);
-        g.gain.exponentialRampToValueAtTime(0.0001, start + 0.25);
-        src.connect(f).connect(g).connect(dest());
-        src.start(start);
-        src.stop(start + 0.27);
-      }
-    }),
-
-  // Wrong answer: gentle downward marimba pluck + tiny muted puff. "...oops."
-  wrong: () =>
-    play(() => {
-      bell({ freq: 349.23, duration: 0.35, volume: 0.11, shimmer: false }); // F4
-      bell({ freq: 261.63, duration: 0.42, volume: 0.09, delay: 0.09, shimmer: false }); // C4
-      noiseBurst(0.14, 0.035, 500, 0.18, "lowpass", 0.7); // muted puff
-    }),
-
-  // Fruit crunch — layered noise for a juicy bite. Slightly softened.
-  crunch: () =>
-    play(() => {
-      noiseBurst(0.07, 0.12, 1600, 0, "lowpass", 1);
-      noiseBurst(0.06, 0.09, 800, 0.05, "lowpass", 1);
-    }),
-
-  // XP earned: tiny shower of magical coins — glassy harmonics rising fast.
-  xp: () =>
-    play(() => {
-      // Coin ping (classic Mario-ish two-note but tuned bright and short).
-      tone({ freq: 1568, duration: 0.08, type: "square", volume: 0.06 }); // G6
-      tone({ freq: 2093, duration: 0.14, type: "square", volume: 0.06, delay: 0.06 }); // C7
-      // Glass shimmer above.
-      bell({ freq: 2637, duration: 0.32, volume: 0.07, delay: 0.02 }); // E7
-      bell({ freq: 3136, duration: 0.28, volume: 0.05, delay: 0.09 }); // G7
-    }),
-
-  // Pet Penny: baby red-panda chirp — tiny whistle + soft pop.
-  chirp: () =>
-    play(() => {
-      // Quick "brrrp!" whistle sweep.
-      tone({
-        freq: 1400,
-        endFreq: 2100,
-        duration: 0.09,
-        type: "triangle",
-        volume: 0.11,
-      });
-      tone({
-        freq: 1900,
-        endFreq: 1500,
-        duration: 0.08,
-        type: "triangle",
-        volume: 0.09,
-        delay: 0.08,
-      });
-      // Soft pop tail.
-      tone({ freq: 900, endFreq: 1300, duration: 0.05, type: "sine", volume: 0.06, delay: 0.14 });
-    }),
-
-  // Evolution sparkle: shimmering crystal arpeggio + rising swell + burst.
-  // Pokémon-evolution feeling compressed into ~1s.
+  // Hero moments — try ElevenLabs sample first, fall back to procedural.
   sparkle: () =>
     play(() => {
-      // Shimmering crystal arpeggio (C major, ascending, glassy bells).
-      const notes = [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98];
-      notes.forEach((f, i) =>
-        bell({ freq: f, duration: 0.55, volume: 0.11, delay: i * 0.06 }),
-      );
-      // Rising orchestral swell underneath.
-      tone({
-        freq: 220,
-        endFreq: 660,
-        duration: 0.7,
-        type: "sawtooth",
-        volume: 0.05,
-        attack: 0.15,
-        ramp: "lin",
-      });
-      // Triumphant sparkle burst at the top.
-      bell({ freq: 2093, duration: 0.5, volume: 0.13, delay: 0.6 });
-      bell({ freq: 2637, duration: 0.5, volume: 0.11, delay: 0.68 });
-      noiseBurst(0.35, 0.04, 6000, 0.62, "bandpass", 6);
+      ensureHero("sparkle");
+      if (!playHero("sparkle", 0.85)) proceduralSparkle();
     }),
-
-  // Level-up / milestone: Mario-Star sized. Bright bells → crescendo → sparkle.
   levelUp: () =>
     play(() => {
-      // Bright bell fanfare: C E G C rising major arpeggio, twice.
-      const notes = [523.25, 659.25, 783.99, 1046.5, 1318.51];
-      notes.forEach((f, i) =>
-        bell({ freq: f, duration: 0.5, volume: 0.15, delay: i * 0.08 }),
-      );
-      // Warm synth harmony pad.
-      tone({
-        freq: 261.63,
-        duration: 0.9,
-        type: "triangle",
-        volume: 0.06,
-        attack: 0.05,
-        delay: 0.05,
-      });
-      tone({
-        freq: 392,
-        duration: 0.9,
-        type: "triangle",
-        volume: 0.05,
-        attack: 0.05,
-        delay: 0.05,
-      });
-      // Celebratory sparkle tail.
-      bell({ freq: 1975.53, duration: 0.6, volume: 0.14, delay: 0.55 });
-      bell({ freq: 2637, duration: 0.6, volume: 0.11, delay: 0.63 });
-      noiseBurst(0.4, 0.045, 7000, 0.55, "bandpass", 6);
+      ensureHero("levelUp");
+      if (!playHero("levelUp", 0.85)) proceduralLevelUp();
     }),
+
+  // Penny's voice — wordless vocalizations, tied to mood.
+  penny: {
+    happy: () => play(() => pennyVoice(pick(PENNY_VARIANTS.happy))),
+    sleepy: () => play(() => pennyVoice(pick(PENNY_VARIANTS.sleepy))),
+    hungry: () => play(() => pennyVoice(pick(PENNY_VARIANTS.hungry))),
+    proud: () => play(() => pennyVoice(pick(PENNY_VARIANTS.proud))),
+    excited: () => play(() => pennyVoice(pick(PENNY_VARIANTS.excited))),
+    confused: () => play(() => pennyVoice(pick(PENNY_VARIANTS.confused))),
+  },
 };
