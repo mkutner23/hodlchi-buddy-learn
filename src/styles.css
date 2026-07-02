@@ -609,3 +609,10 @@
   transform-origin: center;
 }
 
+@keyframes tour-float {
+  0%, 100% { transform: translateY(0) rotate(-0.4deg); }
+  50% { transform: translateY(-8px) rotate(0.4deg); }
+}
+@utility animate-tour-float {
+  animation: tour-float 6s ease-in-out infinite;
+}
