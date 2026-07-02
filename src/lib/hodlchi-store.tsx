@@ -26,6 +26,7 @@ export interface HodlchiState {
   lastActiveDay: string | null;
   completedLessons: string[]; // "pathId:lessonId"
   mood: Mood;
+  acknowledgedStage: Stage;
 }
 
 const DEFAULT_STATE: HodlchiState = {
@@ -39,6 +40,7 @@ const DEFAULT_STATE: HodlchiState = {
   lastActiveDay: null,
   completedLessons: [],
   mood: "hungry",
+  acknowledgedStage: "Baby",
 };
 
 const STORAGE_KEY = "hodlchi-state-v1";
@@ -99,10 +101,16 @@ interface Ctx {
   state: HodlchiState;
   setOnboarding: (data: { name: string; egg: EggColor; personality: Personality }) => void;
   completeLesson: (pathId: string, lessonId: string, correctCount: number, total: number) => void;
+  evolve: () => void;
   reset: () => void;
   demoMode: () => void;
   isLessonComplete: (pathId: string, lessonId: string) => boolean;
 }
+
+export function stageIndex(stage: Stage): number {
+  return EVOLUTION_STAGES.indexOf(stage);
+}
+
 
 const HodlchiContext = createContext<Ctx | null>(null);
 
@@ -157,6 +165,8 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
           };
         });
       },
+      evolve: () =>
+        setState((s) => ({ ...s, acknowledgedStage: stageForLevel(s.level), mood: "happy" })),
       reset: () => setState({ ...DEFAULT_STATE }),
       demoMode: () =>
         setState({
