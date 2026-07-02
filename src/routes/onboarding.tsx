@@ -203,7 +203,25 @@ function Onboarding() {
               <p className="mt-2 text-foreground/70">
                 Pick a learning style. You'll unlock the others as you grow.
               </p>
-              <div className="mt-6 space-y-3">
+
+              <div key={personality} className="mt-5 flex items-start gap-3 animate-pop">
+                <HodlchiAvatar
+                  egg={egg}
+                  personality={personality}
+                  stage="Baby Hodlchi"
+                  size={56}
+                  bob
+                />
+                <div className="relative rounded-2xl border-2 border-foreground/10 bg-white/90 px-4 py-2.5 text-sm font-semibold shadow-soft">
+                  <span
+                    className="absolute left-[-8px] top-4 h-3 w-3 rotate-45 border-b-2 border-l-2 border-foreground/10 bg-white/90"
+                    aria-hidden
+                  />
+                  {PERSONALITY_GREETINGS[personality]}
+                </div>
+              </div>
+
+              <div className="mt-5 space-y-3">
                 {PERSONALITIES.map((p) => {
                   const meta = getPersonalityMeta(p);
                   const active = personality === p;
@@ -234,6 +252,7 @@ function Onboarding() {
               </div>
             </div>
           )}
+
         </div>
 
         <div className="mt-6 flex gap-3">
