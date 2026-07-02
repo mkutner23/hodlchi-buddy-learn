@@ -23,6 +23,14 @@ export interface LearningPath {
   lessons: Lesson[];
 }
 
+export const PATH_FRUIT: Record<PathId, string> = {
+  saving: "🍎",
+  investing: "🥜",
+  credit: "🫐",
+  crypto: "🍌",
+  entrepreneurship: "🍇",
+};
+
 export const PATHS: LearningPath[] = [
   {
     id: "saving",

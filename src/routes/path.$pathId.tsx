@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { PATHS } from "@/lib/lessons-data";
+import { PATHS, PATH_FRUIT } from "@/lib/lessons-data";
 import { useHodlchi } from "@/lib/hodlchi-store";
 
 export const Route = createFileRoute("/path/$pathId")({
@@ -83,9 +83,17 @@ function PathView() {
                 className={`flex items-center gap-4 rounded-2xl bg-white p-4 shadow-soft transition ${locked ? "opacity-50" : "active:scale-[0.99]"}`}
               >
                 <div
-                  className={`grid h-12 w-12 shrink-0 place-items-center rounded-full text-lg font-black ${complete ? "bg-primary text-primary-foreground" : locked ? "bg-foreground/10" : "bg-foreground text-primary"}`}
+                  className={`grid h-12 w-12 shrink-0 place-items-center rounded-full text-lg font-black ${complete ? "bg-primary/25" : locked ? "bg-foreground/10" : "bg-foreground text-primary"}`}
                 >
-                  {complete ? "✓" : locked ? "🔒" : idx + 1}
+                  {complete ? (
+                    <span className="text-2xl leading-none" aria-label="completed">
+                      {PATH_FRUIT[path.id]}
+                    </span>
+                  ) : locked ? (
+                    "🔒"
+                  ) : (
+                    idx + 1
+                  )}
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="font-bold">{lesson.title}</div>
