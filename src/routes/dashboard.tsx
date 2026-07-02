@@ -58,9 +58,11 @@ function greetingFor(
 
 function Home() {
   const nav = useNavigate();
-  const { state, reset, demoMode } = useHodlchi();
+  const { state, reset, demoMode, evolve } = useHodlchi();
   const [showTools, setShowTools] = useState(false);
   const [wobble, setWobble] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+
 
   useEffect(() => {
     if (!state.onboarded) nav({ to: "/onboarding" });
