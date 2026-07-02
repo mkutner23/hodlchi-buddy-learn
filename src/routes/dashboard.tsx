@@ -162,6 +162,7 @@ function Home() {
           <div className="flex items-center gap-2">
             <Stat icon="🔥" value={state.streak} shortLabel="streak" fullLabel="day streak" />
             <Stat icon="⭐" value={state.xp} shortLabel="xp" fullLabel="XP earned" />
+            <MuteButton />
           </div>
         </div>
 
