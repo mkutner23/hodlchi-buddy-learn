@@ -12,7 +12,7 @@ type Scene = {
 const SCENES: Scene[] = [
   { key: "hatch", emoji: "🥚", label: "Step 1", caption: "Hatch your egg", duration: 5000 },
   { key: "name", emoji: "🦊", label: "Step 2", caption: "Name your companion", duration: 5000 },
-  { key: "lesson", emoji: "📚", label: "Step 3", caption: "Finish a 3-minute lesson", duration: 7000 },
+  { key: "lesson", emoji: "📚", label: "Step 3", caption: "Finish a 5-minute lesson", duration: 7000 },
   { key: "xp", emoji: "✨", label: "Step 4", caption: "Earn XP — they smile", duration: 5000 },
   { key: "evolve", emoji: "🌱", label: "Step 5", caption: "Evolve to the next stage", duration: 6000 },
 ];
