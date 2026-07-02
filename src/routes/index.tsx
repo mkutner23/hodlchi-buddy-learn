@@ -63,7 +63,7 @@ function Landing() {
               From financial beginner to financial confidence —
             </p>
             <p className="text-sm font-bold text-foreground/80 italic whitespace-nowrap">
-              five minutes at a time.
+              5 minutes at a time.
             </p>
           </div>
           <div className="mx-auto mt-2 max-w-xl text-center">
