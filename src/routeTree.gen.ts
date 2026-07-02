@@ -13,6 +13,7 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as FinancialLiteracyForTeensRouteImport } from './routes/financial-literacy-for-teens'
+import { Route as CertificateRouteImport } from './routes/certificate'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PathPathIdRouteImport } from './routes/path.$pathId'
 import { Route as CompareKhanAcademyRouteImport } from './routes/compare.khan-academy'
@@ -40,6 +41,11 @@ const FinancialLiteracyForTeensRoute =
     path: '/financial-literacy-for-teens',
     getParentRoute: () => rootRouteImport,
   } as any)
+const CertificateRoute = CertificateRouteImport.update({
+  id: '/certificate',
+  path: '/certificate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -69,6 +75,7 @@ const LessonPathIdLessonIdRoute = LessonPathIdLessonIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/certificate': typeof CertificateRoute
   '/financial-literacy-for-teens': typeof FinancialLiteracyForTeensRoute
   '/home': typeof HomeRoute
   '/onboarding': typeof OnboardingRoute
@@ -80,6 +87,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/certificate': typeof CertificateRoute
   '/financial-literacy-for-teens': typeof FinancialLiteracyForTeensRoute
   '/home': typeof HomeRoute
   '/onboarding': typeof OnboardingRoute
@@ -92,6 +100,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/certificate': typeof CertificateRoute
   '/financial-literacy-for-teens': typeof FinancialLiteracyForTeensRoute
   '/home': typeof HomeRoute
   '/onboarding': typeof OnboardingRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/certificate'
     | '/financial-literacy-for-teens'
     | '/home'
     | '/onboarding'
@@ -116,6 +126,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/certificate'
     | '/financial-literacy-for-teens'
     | '/home'
     | '/onboarding'
@@ -127,6 +138,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/certificate'
     | '/financial-literacy-for-teens'
     | '/home'
     | '/onboarding'
@@ -139,6 +151,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CertificateRoute: typeof CertificateRoute
   FinancialLiteracyForTeensRoute: typeof FinancialLiteracyForTeensRoute
   HomeRoute: typeof HomeRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -177,6 +190,13 @@ declare module '@tanstack/react-router' {
       path: '/financial-literacy-for-teens'
       fullPath: '/financial-literacy-for-teens'
       preLoaderRoute: typeof FinancialLiteracyForTeensRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/certificate': {
+      id: '/certificate'
+      path: '/certificate'
+      fullPath: '/certificate'
+      preLoaderRoute: typeof CertificateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -219,6 +239,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CertificateRoute: CertificateRoute,
   FinancialLiteracyForTeensRoute: FinancialLiteracyForTeensRoute,
   HomeRoute: HomeRoute,
   OnboardingRoute: OnboardingRoute,

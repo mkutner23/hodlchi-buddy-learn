@@ -96,6 +96,12 @@ function Landing() {
               See the curriculum →
             </Link>
             <Link
+              to="/certificate"
+              className="font-semibold text-primary-deep underline underline-offset-2"
+            >
+              Free financial literacy certificate →
+            </Link>
+            <Link
               to="/blog/what-is-financial-literacy-for-teens"
               className="font-semibold text-foreground/70 underline underline-offset-2"
             >
