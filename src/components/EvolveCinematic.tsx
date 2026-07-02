@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import type { EggColor, Personality, Stage } from "@/lib/hodlchi-store";
+import type { PathId } from "@/lib/lessons-data";
 
 interface Props {
   name: string;
@@ -9,7 +10,9 @@ interface Props {
   fromStage: Stage;
   toStage: Stage;
   onDone: () => void;
+  studiedPaths?: PathId[];
 }
+
 
 // Signature "Evolve" moment (Pokémon-style):
 // darken → shaking shell → shell burst → glow halo → avatar reveal with
