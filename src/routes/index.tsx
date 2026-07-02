@@ -144,6 +144,24 @@ function Landing() {
             </Link>
           </div>
         </section>
+
+        <section className="mt-10 border-t border-foreground/10 pt-6 text-center">
+          <p className="text-xs uppercase tracking-widest text-foreground/50 font-semibold">
+            Just want to look around?
+          </p>
+          <button
+            onClick={() => {
+              demoMode();
+              nav({ to: "/demo" });
+            }}
+            className="mt-2 rounded-full border border-foreground/20 bg-white/60 px-4 py-2 text-xs font-semibold backdrop-blur"
+          >
+            Try the Mentor demo →
+          </button>
+          <p className="mt-2 text-[11px] text-foreground/50">
+            Preview a fully-grown Hodlchi with sample progress.
+          </p>
+        </section>
       </div>
     </main>
   );
