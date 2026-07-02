@@ -5,6 +5,7 @@ import { HodlchiLogo } from "@/components/HodlchiLogo";
 import { PathFruit } from "@/components/PathFruit";
 import { PATHS, PATH_ACCENT, getDailyChallenge, type PathId } from "@/lib/lessons-data";
 import { EvolveCinematic } from "@/components/EvolveCinematic";
+import { sfx } from "@/lib/sfx";
 import {
   useHodlchi,
   stageForLevel,
@@ -109,6 +110,7 @@ function Home() {
 
   const goNext = () => {
     if (!nextLesson) return;
+    sfx.pop();
     nav({
       to: "/lesson/$pathId/$lessonId",
       params: { pathId: nextLesson.path.id, lessonId: nextLesson.lesson.id },
@@ -136,6 +138,7 @@ function Home() {
 
   const handleEvolve = () => {
     setCelebrating(true);
+    sfx.sparkle();
   };
   const finishEvolve = () => {
     evolve();
@@ -159,6 +162,7 @@ function Home() {
           <div className="flex items-center gap-2">
             <Stat icon="🔥" value={state.streak} shortLabel="streak" fullLabel="day streak" />
             <Stat icon="⭐" value={state.xp} shortLabel="xp" fullLabel="XP earned" />
+            <MuteButton />
           </div>
         </div>
 
@@ -167,6 +171,7 @@ function Home() {
           <button
             onClick={() => {
               setWobble(true);
+              sfx.chirp();
               setTimeout(() => setWobble(false), 600);
             }}
             className="mx-auto block"
@@ -467,5 +472,23 @@ function LoopStep({ n, emoji, label }: { n: string; emoji: string; label: string
       <div className="text-lg leading-none">{emoji}</div>
       <div className="mt-1 text-[10px] font-bold">{label}</div>
     </li>
+  );
+}
+
+function MuteButton() {
+  const [muted, setMuted] = useState(() => sfx.isMuted());
+  return (
+    <button
+      onClick={() => {
+        const next = sfx.toggle();
+        setMuted(next);
+        if (!next) sfx.pop();
+      }}
+      className="grid h-7 w-7 place-items-center rounded-full bg-white text-sm shadow-soft"
+      aria-label={muted ? "Unmute sounds" : "Mute sounds"}
+      title={muted ? "Sounds off" : "Sounds on"}
+    >
+      {muted ? "🔇" : "🔊"}
+    </button>
   );
 }
