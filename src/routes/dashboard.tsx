@@ -17,7 +17,7 @@ export const Route = createFileRoute("/dashboard")({
       {
         name: "description",
         content:
-          "Feed your Hodlchi with a lesson, keep your streak alive, and evolve from Baby Hodlchi to Money Legend.",
+          "Feed your Hodlchi with a lesson, keep your streak alive, and evolve from Baby to Money Legend.",
       },
       { property: "og:title", content: "Your Hodlchi — Dashboard" },
       {
@@ -32,17 +32,27 @@ export const Route = createFileRoute("/dashboard")({
   }),
 });
 
-function greetingFor(name: string, streak: number, doneToday: boolean, doneLessons: number) {
+function greetingFor(
+  name: string,
+  streak: number,
+  doneToday: boolean,
+  doneLessons: number,
+  xpToNext: number,
+  nextStage: string,
+) {
   const hour = new Date().getHours();
   const timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
   if (doneToday) {
+    if (xpToNext > 0 && xpToNext <= 30) return `Almost to ${nextStage} — ${xpToNext} XP to go! ✨`;
     if (streak >= 3) return `Nice — ${streak} days in a row! 🔥`;
-    return `You're getting good at this, ${name}!`;
+    return `Thanks for feeding me, ${name}! 🍎`;
   }
   if (doneLessons === 0) return `Hi! I'm ${name}. Feed me my first lesson?`;
+  if (xpToNext > 0 && xpToNext <= 30) return `So close to ${nextStage}! Just ${xpToNext} XP left.`;
   if (streak >= 2) return `Good ${timeOfDay}! Keep your ${streak}-day streak alive?`;
   return `Good ${timeOfDay}! Ready for today's lesson?`;
 }
+
 
 function Home() {
   const nav = useNavigate();
@@ -83,7 +93,17 @@ function Home() {
     });
   };
 
-  const speech = greetingFor(state.name, state.streak, doneToday, doneLessons);
+  const xpToNext = Math.max(0, prog.end - state.xp);
+  const atMaxStage = prog.nextStage === stage;
+  const speech = greetingFor(
+    state.name,
+    state.streak,
+    doneToday,
+    doneLessons,
+    atMaxStage ? 0 : xpToNext,
+    prog.nextStage,
+  );
+
 
   return (
     <main className="min-h-screen bg-gradient-sky pb-16 font-sans">
@@ -154,9 +174,12 @@ function Home() {
                 style={{ width: `${prog.pct}%` }}
               />
             </div>
-            <div className="mt-1 text-right text-[11px] font-semibold text-foreground/50">
-              {prog.pct}% to evolve
+            <div className="mt-1 text-right text-[11px] font-semibold text-foreground/60">
+              {atMaxStage
+                ? "Max stage reached ✨"
+                : `${xpToNext} XP until ${prog.nextStage}`}
             </div>
+
           </div>
         </section>
 
@@ -168,8 +191,13 @@ function Home() {
         >
           <div className="min-w-0 flex-1">
             <div className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
-              {isFirstTime ? "Start here" : "Today's Lesson"}
+              {isFirstTime
+                ? "⭐ Start here"
+                : nextLesson
+                  ? `⭐ Today's Lesson · ${nextLesson.lesson.minutes} min`
+                  : "You're all caught up"}
             </div>
+
             <div className="mt-1 truncate font-display text-xl font-extrabold leading-tight">
               {nextLesson
                 ? `${nextLesson.path.emoji}  ${nextLesson.lesson.title}`

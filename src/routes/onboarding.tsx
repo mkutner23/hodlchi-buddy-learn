@@ -208,7 +208,7 @@ function Onboarding() {
                 <HodlchiAvatar
                   egg={egg}
                   personality={personality}
-                  stage="Baby Hodlchi"
+                  stage="Baby"
                   size={56}
                   bob
                 />
@@ -235,7 +235,7 @@ function Onboarding() {
                         <HodlchiAvatar
                           egg={egg}
                           personality={p}
-                          stage="Baby Hodlchi"
+                          stage="Baby"
                           size={72}
                           bob={false}
                         />
@@ -332,7 +332,7 @@ function HatchScene({
             <HodlchiAvatar
               egg={egg}
               personality={personality}
-              stage="Baby Hodlchi"
+              stage="Baby"
               size={180}
               bob
             />
