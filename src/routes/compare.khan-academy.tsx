@@ -4,7 +4,7 @@ import { HodlchiLogo } from "@/components/HodlchiLogo";
 const URL_ = "https://demo.hodlchi.com/compare/khan-academy";
 const TITLE = "Hodlchi vs Khan Academy: Financial Literacy Compared";
 const DESCRIPTION =
-  "Compare Hodlchi and Khan Academy for financial literacy. Gamified 3-minute lessons vs traditional video courses — see which fits teens and beginners best.";
+  "Compare Hodlchi and Khan Academy for financial literacy. Gamified 5-minute lessons vs traditional video courses — see which fits beginners best.";
 
 type Row = { feature: string; hodlchi: string; khan: string };
 
