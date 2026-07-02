@@ -136,7 +136,7 @@ export function EvolveCinematic({ name, egg, personality, toStage, onDone, studi
           className="relative z-10 animate-evolve-avatar"
           style={{ animationDelay: "1.4s" }}
         >
-          <HodlchiAvatar egg={egg} personality={personality} stage={toStage} size={220} />
+          <HodlchiAvatar egg={egg} personality={personality} stage={toStage} size={220} studiedPaths={studiedPaths} />
         </div>
 
         {/* Sparkle burst on emergence */}
