@@ -88,12 +88,20 @@ function Landing() {
             For students, parents, and teachers
           </div>
           <h2 className="mt-1 text-lg font-bold">A free financial literacy course for teens</h2>
-          <Link
-            to="/financial-literacy-for-teens"
-            className="mt-2 inline-block text-sm font-semibold text-primary-deep underline underline-offset-2"
-          >
-            See the curriculum →
-          </Link>
+          <div className="mt-2 flex flex-col items-center gap-1 text-sm">
+            <Link
+              to="/financial-literacy-for-teens"
+              className="font-semibold text-primary-deep underline underline-offset-2"
+            >
+              See the curriculum →
+            </Link>
+            <Link
+              to="/blog/what-is-financial-literacy-for-teens"
+              className="font-semibold text-foreground/70 underline underline-offset-2"
+            >
+              What is financial literacy? →
+            </Link>
+          </div>
         </section>
       </div>
     </main>
