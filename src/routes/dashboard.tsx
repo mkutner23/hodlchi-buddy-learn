@@ -543,8 +543,10 @@ function Home() {
           fromStage={displayStage}
           toStage={naturalStage}
           onDone={finishEvolve}
+          studiedPaths={studiedPaths}
         />
       )}
+
     </main>
   );
 }
