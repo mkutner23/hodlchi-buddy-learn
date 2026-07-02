@@ -199,8 +199,11 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
             const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
             streak = s.lastActiveDay === yesterday ? s.streak + 1 : 1;
           }
+          const pct = total > 0 ? correctCount / total : 0;
+          // Celebrate a perfect run; feel proud on a strong pass;
+          // look a bit confused on a shaky one.
           const mood: Mood =
-            correctCount === total ? "happy" : correctCount >= total / 2 ? "focused" : "tired";
+            pct === 1 ? "celebrating" : pct >= 0.5 ? "proud" : "confused";
           return {
             ...s,
             xp,
@@ -208,10 +211,14 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
             streak,
             lastActiveDay: today,
             mood,
+            moodExpiresAt: Date.now() + 8000,
+            lastQuizPct: pct,
             completedLessons: already ? s.completedLessons : [...s.completedLessons, key],
           };
         });
       },
+      flashMood: (mood, durationMs = 1500) =>
+        setState((s) => ({ ...s, mood, moodExpiresAt: Date.now() + durationMs })),
       evolve: () =>
         setState((s) => ({ ...s, acknowledgedStage: stageForLevel(s.level), mood: "happy" })),
       reset: () => setState({ ...DEFAULT_STATE }),
