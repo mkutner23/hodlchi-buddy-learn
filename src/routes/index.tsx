@@ -169,6 +169,37 @@ function Landing() {
             Preview a Hodlchi with sample progress.
           </p>
         </section>
+
+        <footer className="mt-12 border-t border-foreground/10 pt-6">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
+            Resources
+          </div>
+          <ul className="mt-3 grid gap-2 text-sm">
+            <li>
+              <Link to="/financial-literacy-for-everyone" className="font-semibold text-foreground/80 underline underline-offset-2">
+                Curriculum
+              </Link>
+            </li>
+            <li>
+              <Link to="/certificate" className="font-semibold text-foreground/80 underline underline-offset-2">
+                Financial Literacy Certificate
+              </Link>
+            </li>
+            <li>
+              <Link to="/blog/what-is-financial-literacy" className="font-semibold text-foreground/80 underline underline-offset-2">
+                What is Financial Literacy?
+              </Link>
+            </li>
+            <li>
+              <Link to="/compare/khan-academy" className="font-semibold text-foreground/80 underline underline-offset-2">
+                Compare to Khan Academy
+              </Link>
+            </li>
+          </ul>
+          <p className="mt-6 text-[11px] text-foreground/50">
+            © Hodlchi · Educational only. No trading, wallets, or investment advice.
+          </p>
+        </footer>
       </div>
     </main>
   );
