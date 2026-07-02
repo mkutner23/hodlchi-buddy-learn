@@ -244,7 +244,15 @@ function LessonView() {
               +{xpGained} XP · {state.name} feels {correctCount === lesson.quiz.length ? "amazing" : "a little wiser"}.
             </p>
             <div className="mt-6 grid grid-cols-3 gap-2">
-              <Stat label="XP" value={`⭐ +${xpGained}`} />
+              <div
+                className="rounded-2xl p-3 shadow-soft"
+                style={{ backgroundColor: accent.soft }}
+              >
+                <div className="text-xs font-semibold" style={{ color: accent.deep }}>XP</div>
+                <div className="mt-0.5 text-lg font-extrabold" style={{ color: accent.deep }}>
+                  ⭐ +{xpGained}
+                </div>
+              </div>
               <Stat label="Streak" value={`🔥 ${state.streak}`} />
               <Stat label="Correct" value={`✅ ${correctCount}/${lesson.quiz.length}`} />
             </div>
