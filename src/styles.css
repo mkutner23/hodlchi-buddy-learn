@@ -273,4 +273,70 @@
   animation: bounce-happy 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* ---- Cinematic Evolve ---- */
+@keyframes evolve-fade {
+  0% { opacity: 0; backdrop-filter: blur(0); }
+  100% { opacity: 1; backdrop-filter: blur(6px); }
+}
+@utility animate-evolve-fade {
+  animation: evolve-fade 0.35s ease-out both;
+  backdrop-filter: blur(6px);
+}
+
+@keyframes evolve-glow {
+  0% { transform: scale(0.4); opacity: 0; }
+  40% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+@utility animate-evolve-glow {
+  animation: evolve-glow 2.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes evolve-avatar {
+  0% { transform: scale(0.2) rotate(-30deg); opacity: 0; filter: brightness(2); }
+  30% { transform: scale(1.4) rotate(8deg); opacity: 1; filter: brightness(1.6); }
+  55% { transform: scale(0.95) rotate(-4deg); filter: brightness(1.1); }
+  80% { transform: scale(1.05) rotate(2deg); filter: brightness(1); }
+  100% { transform: scale(1) rotate(0); filter: brightness(1); }
+}
+@utility animate-evolve-avatar {
+  animation: evolve-avatar 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes evolve-burst {
+  0% { transform: scale(0); opacity: 0; }
+  40% { transform: scale(2.4); opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
+}
+@utility animate-evolve-burst {
+  animation: evolve-burst 0.9s ease-out forwards;
+}
+
+@keyframes evolve-particle {
+  0% { transform: translate(0, 0) scale(0); opacity: 0; }
+  30% { opacity: 1; transform: translate(var(--px, 0), var(--py, 0)) scale(1); }
+  100% { transform: translate(calc(var(--px, 0) * 4), calc(var(--py, 0) * 4)) scale(0.2); opacity: 0; }
+}
+@utility animate-evolve-particle {
+  animation: evolve-particle 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes evolve-confetti {
+  0% { transform: translateY(-40px) rotate(0); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0.9; }
+}
+@utility animate-evolve-confetti {
+  animation: evolve-confetti 2.8s linear forwards;
+}
+
+@keyframes evolve-text {
+  0%, 30% { opacity: 0; transform: translateY(20px); }
+  60% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@utility animate-evolve-text {
+  animation: evolve-text 2s ease-out both;
+}
+
 
