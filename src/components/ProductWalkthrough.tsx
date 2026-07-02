@@ -65,82 +65,112 @@ export function ProductWalkthrough() {
   };
 
   return (
-    <div
-      className="relative overflow-hidden rounded-3xl border border-foreground/10 bg-white/80 shadow-pop backdrop-blur"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      aria-label="Hodlchi product walkthrough"
-    >
-      {/* Top bar */}
-      <div className="flex items-center justify-between border-b border-foreground/10 bg-foreground/[0.03] px-4 py-2">
-        <div className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-green-400/70" />
-        </div>
-        <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
-          See the core loop
-        </div>
-        <button
-          onClick={() => setPaused((p) => !p)}
-          className="text-[11px] font-semibold text-foreground/60 hover:text-foreground"
-          aria-label={paused ? "Play walkthrough" : "Pause walkthrough"}
-        >
-          {paused ? "▶ Play" : "❚❚ Pause"}
-        </button>
-      </div>
+    <div className="relative mx-auto max-w-[380px]">
+      {/* Soft ambient glow behind the phone */}
+      <div
+        className="pointer-events-none absolute inset-0 -z-10 blur-3xl"
+        style={{
+          background:
+            "radial-gradient(60% 60% at 50% 40%, rgba(80,220,140,0.35), transparent 70%)",
+        }}
+        aria-hidden
+      />
 
-      {/* Stage */}
-      <div className="relative h-[340px] bg-gradient-hero">
-        {SCENES.map((s, i) => (
-          <div
-            key={s.key}
-            className={`absolute inset-0 grid place-items-center px-6 transition-opacity duration-500 ${
-              i === idx ? "opacity-100" : "pointer-events-none opacity-0"
-            }`}
-          >
-            {i === idx && <SceneView sceneKey={s.key} />}
-          </div>
-        ))}
+      {/* Phone device frame */}
+      <div
+        className="relative animate-tour-float select-none rounded-[44px] bg-foreground p-3 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.45),0_10px_25px_-10px_rgba(0,0,0,0.3)]"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+        aria-label="Hodlchi product walkthrough"
+      >
+        {/* Notch */}
+        <div className="pointer-events-none absolute left-1/2 top-3 z-20 h-6 w-32 -translate-x-1/2 rounded-b-2xl bg-foreground" />
 
-        {/* Caption */}
-        <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-gradient-to-t from-foreground/80 via-foreground/40 to-transparent p-4 text-white">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-white/80">
-            {scene.label}
+        {/* Screen */}
+        <div className="relative overflow-hidden rounded-[32px] bg-white">
+          {/* Status bar */}
+          <div className="flex items-center justify-between px-6 pt-3 pb-1 text-[10px] font-bold text-foreground/70">
+            <span>9:41</span>
+            <span className="flex items-center gap-1">
+              <span>●●●●</span>
+              <span>▲</span>
+              <span className="rounded-sm border border-foreground/40 px-1">100</span>
+            </span>
           </div>
-          <div className="text-lg font-extrabold leading-tight">
-            <span className="mr-1.5">{scene.emoji}</span>
-            {scene.caption}
-          </div>
-        </div>
-      </div>
 
-      {/* Progress + dots */}
-      <div className="px-4 py-3">
-        <div className="h-1 w-full overflow-hidden rounded-full bg-foreground/10">
-          <div
-            className="h-full rounded-full bg-primary-deep transition-[width] duration-100 ease-linear"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        <div className="mt-2 flex justify-between">
-          {SCENES.map((s, i) => (
-            <button
-              key={s.key}
-              onClick={() => jumpTo(i)}
-              className={`text-base leading-none transition ${
-                i === idx ? "scale-110 opacity-100" : "opacity-40 hover:opacity-80"
-              }`}
-              aria-label={`Jump to ${s.caption}`}
-            >
-              {s.emoji}
-            </button>
-          ))}
+          {/* Stage */}
+          <div className="relative h-[380px] bg-gradient-hero">
+            {/* Subtle top highlight sweep */}
+            <div
+              className="pointer-events-none absolute inset-x-0 top-0 h-24 opacity-60"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.6), transparent)",
+              }}
+              aria-hidden
+            />
+
+            {SCENES.map((s, i) => (
+              <div
+                key={s.key}
+                className={`absolute inset-0 grid place-items-center px-6 transition-opacity duration-500 ${
+                  i === idx ? "opacity-100" : "pointer-events-none opacity-0"
+                }`}
+              >
+                {i === idx && <SceneView sceneKey={s.key} />}
+              </div>
+            ))}
+
+            {/* Caption */}
+            <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-gradient-to-t from-foreground/85 via-foreground/40 to-transparent p-4 text-white">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-white/80">
+                {scene.label}
+              </div>
+              <div className="text-lg font-extrabold leading-tight">
+                <span className="mr-1.5">{scene.emoji}</span>
+                {scene.caption}
+              </div>
+            </div>
+          </div>
+
+          {/* Progress + dots */}
+          <div className="bg-white px-5 py-4">
+            <div className="h-1 w-full overflow-hidden rounded-full bg-foreground/10">
+              <div
+                className="h-full rounded-full bg-primary-deep transition-[width] duration-100 ease-linear"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <div className="mt-2.5 flex items-center justify-between">
+              <div className="flex gap-3">
+                {SCENES.map((s, i) => (
+                  <button
+                    key={s.key}
+                    onClick={() => jumpTo(i)}
+                    className={`text-base leading-none transition ${
+                      i === idx ? "scale-110 opacity-100" : "opacity-40 hover:opacity-80"
+                    }`}
+                    aria-label={`Jump to ${s.caption}`}
+                  >
+                    {s.emoji}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setPaused((p) => !p)}
+                className="text-[11px] font-semibold text-foreground/60 hover:text-foreground"
+                aria-label={paused ? "Play walkthrough" : "Pause walkthrough"}
+              >
+                {paused ? "▶" : "❚❚"}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
 
 function SceneView({ sceneKey }: { sceneKey: string }) {
   switch (sceneKey) {

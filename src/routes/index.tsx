@@ -191,6 +191,11 @@ function Landing() {
               </Link>
             </li>
             <li>
+              <Link to="/money-basics" className="font-semibold text-foreground/80 underline underline-offset-2">
+                Money Basics glossary
+              </Link>
+            </li>
+            <li>
               <Link to="/compare/khan-academy" className="font-semibold text-foreground/80 underline underline-offset-2">
                 Compare to Khan Academy
               </Link>

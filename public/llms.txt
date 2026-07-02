@@ -15,3 +15,4 @@
 - [Entrepreneurship path](/path/entrepreneurship): 4 short lessons on starting and running a small venture.
 - [Crypto path](/path/crypto): 4 short lessons on crypto fundamentals from a neutral, educational angle.
 - [Financial Literacy Certificate](/certificate): Free certificate of completion for finishing all 5 Hodlchi learning paths.
+- [Money Basics glossary](/money-basics): Plain-English definitions for core money terms (budgeting, APR, compound interest, credit score, and more), each linking to the relevant Hodlchi learning path.

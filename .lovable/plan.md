@@ -1,56 +1,51 @@
-Ship a "character-alive" pass for Penny across three fronts, in one batch.
+# Four bigger builds for Hodlchi
 
-## 1. Penny reacts before you do (contextual greetings)
+Four independent workstreams. I'll ship them in this order so each unlocks something visible before the next.
 
-Extend `src/lib/hodlchi-store.tsx` with tracked signals: `lastVisitAt`, `streak`, `sessionCorrectStreak`, `totalCorrect`, `lastAcknowledgedGreetingKey`.
+## 1. Money Basics hub (SEO)
 
-New helper `getContextualGreeting(state)` in `src/lib/penny-greetings.ts` picks the highest-priority line:
-- Streak ≥ 6 & first visit today → "I've been waiting for you!"
-- Same-day return within 2h → "Back so soon? Let's go."
-- Missed yesterday (streak just broken) → "I saved your seat."
-- 20+ session correct → "You're getting scary good at this."
-- New day, streak 2-5 → "Day {n}. Let's keep it going."
-- Fallback → existing dynamic bubble.
+Goal: capture "what is X" search intent and funnel to onboarding.
 
-Dashboard shows greeting bubble on mount with a 400ms delay + `sfx.penny.happy/excited` matched to tone. Greeting stored so it doesn't repeat within the session.
+- New index route `/money-basics` listing all topics in a clean card grid, with hub-level metadata + `CollectionPage` JSON-LD.
+- New leaf route `/money-basics/$topic` with 8 topics: `budgeting`, `saving`, `investing`, `compound-interest`, `apr`, `credit-score`, `inflation`, `diversification`.
+- Each leaf: unique title/description/canonical, `DefinitionText` + `FAQPage` JSON-LD, ~350–500 word plain-English explainer, a "Learn this in 5 minutes with Hodlchi →" CTA linking to the most relevant `/path/*`, and internal links to 2–3 sibling topics.
+- Wire hub into homepage footer Resources, `llms.txt`, and `sitemap.xml.ts`.
 
-## 2. Random idle sounds & animations (Animal Crossing feel)
+## 2. Post-lesson reflection
 
-New `src/hooks/useIdleLife.ts`:
-- Runs only when dashboard tab is visible and user hasn't interacted for 8s.
-- Every 20-90s (random) picks from: stretch, yawn, tail-swish, sigh, soft-chirp.
-- Fires a matching `sfx.penny.*` or `sfx.chirp` at low volume + sets a transient `idleAction` on the avatar for 1.2s.
+Goal: bridge learning to real life without grading.
 
-`HodlchiAvatar` gains idle overlay animations in `src/styles.css`:
-- `animate-penny-stretch` (scaleY 1.08 then settle)
-- `animate-penny-yawn` (mouth-o emoji fade)
-- `animate-penny-tail` (subtle rotate)
-- `animate-penny-sigh` (tiny puff)
+- After the quiz results screen in `lesson.$pathId.$lessonId.tsx`, insert one optional reflection step before returning to the dashboard.
+- Penny asks one topic-appropriate question (e.g. Saving → "What's one thing you might save for this month?"). Question bank keyed by `pathId` + lesson index in `lessons-data.ts`.
+- Free-text input, "Save reflection" and "Skip" buttons. No validation, no scoring.
+- Reflections stored in the local Hodlchi store (`reflections: {lessonKey, text, ts}[]`) so future greetings can reference them ("Still thinking about that savings goal?").
+- New dashboard card "Your reflections" showing the last 3, collapsible.
 
-Pauses during evolve cinematic, during lesson nav, and when tab hidden (`document.visibilityState`).
+## 3. Social proof (framework + honest placeholders)
 
-## 3. Game feel polish
+Goal: build the trust surface now so real numbers slot in later.
 
-- **Button squish**: new `.btn-squish` utility (active:scale-95 + ease-out spring). Applied to primary CTAs on dashboard and lesson.
-- **XP particles**: enhance existing `+50 XP` on lesson-complete with 6 tiny star spans radiating out (`animate-xp-particle` with random rotate via inline style).
-- **Spring progress bars**: replace linear width transition on evolution progress with a cubic-bezier spring (`cubic-bezier(.34,1.56,.64,1)`, 700ms).
-- **Subtle evolution screen shake**: add `animate-screen-shake` (translate ±3px, 400ms) triggered inside `EvolveCinematic` at the crack moment.
-- **Penny looks toward taps**: track last tap X on dashboard; avatar container gets `--look: -1|0|1` CSS var and eyes/head translate 2-3px horizontally.
-- **Pet interaction**: already squishes; add tiny heart particle burst.
+- New `src/lib/social-proof.ts` central config with `enabled` flags per stat so nothing shows until it's real.
+- Homepage stat strip below the hero: hatched Hodlchis, lessons completed, average lesson length, star rating. Hidden by default; renders only when `enabled: true`.
+- Testimonial section (parents/teachers/learners) driven by the same config, hidden until populated.
+- Certificate + curriculum pages get a small trust row when enabled.
+- No fake numbers shipped — every stat starts disabled with a TODO comment.
 
-## Quiet fix
+## 4. Polished product-tour frame
 
-Fix the dashboard hydration mismatch by gating the client-only greeting/idle work behind a mounted flag so SSR renders a stable shell.
+Goal: make `ProductWalkthrough` visually match the rest of the brand.
 
-## Files touched
+- Replace the generic browser chrome with a phone-style device frame (rounded bezel, subtle notch, layered shadow, soft gradient background).
+- Add a slow floating idle animation (~6s ease-in-out) and a subtle parallax highlight.
+- Tighten spacing so the frame reads as a hero artifact, not a screenshot.
+- Reuse existing shadow tokens (`shadow-pop`, `shadow-soft`) and path accent colors — no new palette.
 
-- `src/lib/hodlchi-store.tsx` (new signals)
-- `src/lib/penny-greetings.ts` (new)
-- `src/hooks/useIdleLife.ts` (new)
-- `src/components/HodlchiAvatar.tsx` (idle overlays, look-toward)
-- `src/routes/dashboard.tsx` (wire greetings, idle, squish, shake, mounted flag)
-- `src/routes/lesson.$pathId.$lessonId.tsx` (XP particles, squish)
-- `src/components/EvolveCinematic.tsx` (screen shake)
-- `src/styles.css` (new keyframes + utilities)
+## Technical notes
 
-No new deps. Pure CSS + Web Audio. Should ship in one build.
+- All routes use the standard TanStack pattern: `createFileRoute` + `head()` with title/description/canonical/og tags, leaf-only og:image where relevant.
+- Money Basics topics stored as a typed const map so the leaf route validates `$topic` and 404s cleanly for unknown slugs (`notFoundComponent` + `errorComponent`).
+- Reflections and social-proof config live client-side (localStorage / static config) — no backend changes.
+- Add each new URL to `sitemap.xml.ts` and `llms.txt` in the same edit batch that creates the route.
+- Typecheck after each workstream.
+
+Reply "go" to start, or tell me to reorder / drop any of the four.

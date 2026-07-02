@@ -6,6 +6,7 @@ import { useHodlchi, deriveMood } from "@/lib/hodlchi-store";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { PathFruit } from "@/components/PathFruit";
 import { sfx } from "@/lib/sfx";
+import { getReflectionPrompt } from "@/lib/reflections";
 
 
 
@@ -57,7 +58,7 @@ type Phase = "intro" | "quiz" | "done";
 function LessonView() {
   const { pathId, lessonId } = Route.useParams();
   const nav = useNavigate();
-  const { state, completeLesson, flashMood } = useHodlchi();
+  const { state, completeLesson, flashMood, addReflection } = useHodlchi();
   const path = PATHS.find((p) => p.id === pathId);
   const lesson = path?.lessons.find((l) => l.id === lessonId);
   if (!path || !lesson) throw notFound();
@@ -67,6 +68,9 @@ function LessonView() {
   const [selected, setSelected] = useState<number | null>(null);
   const [locked, setLocked] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
+  const [reflection, setReflection] = useState("");
+  const [reflectionSaved, setReflectionSaved] = useState(false);
+  const lessonIdx = path.lessons.findIndex((l) => l.id === lesson.id);
 
   const q = lesson.quiz[qIdx];
   const isCorrect = selected !== null && selected === q?.answer;
@@ -318,6 +322,53 @@ function LessonView() {
               <Stat label="Streak" value={`🔥 ${state.streak}`} />
               <Stat label="Correct" value={`✅ ${correctCount}/${lesson.quiz.length}`} />
             </div>
+
+            {/* Optional, non-graded reflection — bridges lesson to real life */}
+            <div className="mt-6 rounded-3xl bg-white p-5 text-left shadow-soft">
+              <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: accent.deep }}>
+                A quick reflection · optional
+              </div>
+              <p className="mt-1 text-[15px] font-bold leading-snug">
+                {getReflectionPrompt(path.id, lessonIdx)}
+              </p>
+              {reflectionSaved ? (
+                <div className="mt-3 rounded-2xl bg-primary/15 p-3 text-sm font-semibold text-primary-deep">
+                  💚 Saved. {state.name} will remember this.
+                </div>
+              ) : (
+                <>
+                  <textarea
+                    value={reflection}
+                    onChange={(e) => setReflection(e.target.value)}
+                    placeholder="Type anything — no right or wrong answer."
+                    maxLength={280}
+                    rows={3}
+                    className="mt-3 w-full resize-none rounded-2xl border-2 border-foreground/15 bg-white p-3 text-sm outline-none focus:border-foreground/40"
+                  />
+                  <div className="mt-2 flex gap-2">
+                    <button
+                      onClick={() => {
+                        addReflection(path.id, lesson.id, reflection);
+                        setReflectionSaved(true);
+                        sfx.pop();
+                      }}
+                      disabled={!reflection.trim()}
+                      className="flex-1 rounded-2xl px-4 py-2.5 text-sm font-bold text-white shadow-pop disabled:opacity-40"
+                      style={{ backgroundColor: accent.hex }}
+                    >
+                      Save reflection
+                    </button>
+                    <button
+                      onClick={() => setReflectionSaved(true)}
+                      className="rounded-2xl border-2 border-foreground/15 px-4 py-2.5 text-sm font-bold text-foreground/70"
+                    >
+                      Skip
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
             <div className="mt-6 flex gap-3">
               <button
                 onClick={() => nav({ to: "/path/$pathId", params: { pathId: path.id } })}

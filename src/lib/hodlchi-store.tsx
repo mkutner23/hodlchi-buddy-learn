@@ -24,6 +24,12 @@ export const EVOLUTION_STAGES = [
 
 export type Stage = (typeof EVOLUTION_STAGES)[number];
 
+export interface Reflection {
+  lessonKey: string; // "pathId:lessonId"
+  text: string;
+  ts: number;
+}
+
 export interface HodlchiState {
   onboarded: boolean;
   name: string;
@@ -38,6 +44,7 @@ export interface HodlchiState {
   moodExpiresAt: number | null; // timestamp; after this, mood is derived from context
   lastQuizPct: number | null; // 0..1 last quiz score
   acknowledgedStage: Stage;
+  reflections: Reflection[];
 }
 
 const DEFAULT_STATE: HodlchiState = {
@@ -54,6 +61,7 @@ const DEFAULT_STATE: HodlchiState = {
   moodExpiresAt: null,
   lastQuizPct: null,
   acknowledgedStage: "Baby",
+  reflections: [],
 };
 
 const STORAGE_KEY = "hodlchi-state-v1";
@@ -119,6 +127,7 @@ interface Ctx {
   reset: () => void;
   demoMode: () => void;
   isLessonComplete: (pathId: string, lessonId: string) => boolean;
+  addReflection: (pathId: string, lessonId: string, text: string) => void;
 }
 
 export function stageIndex(stage: Stage): number {
@@ -238,6 +247,17 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
         }),
       isLessonComplete: (pathId, lessonId) =>
         state.completedLessons.includes(`${pathId}:${lessonId}`),
+      addReflection: (pathId, lessonId, text) => {
+        const trimmed = text.trim();
+        if (!trimmed) return;
+        setState((s) => ({
+          ...s,
+          reflections: [
+            { lessonKey: `${pathId}:${lessonId}`, text: trimmed, ts: Date.now() },
+            ...s.reflections,
+          ].slice(0, 50),
+        }));
+      },
     }),
     [state],
   );

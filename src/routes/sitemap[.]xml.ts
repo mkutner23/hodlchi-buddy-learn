@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { PATHS } from "@/lib/lessons-data";
+import { MONEY_BASICS_TOPICS } from "@/lib/money-basics";
 
 const BASE_URL = "https://demo.hodlchi.com";
 
@@ -22,6 +23,12 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/blog/what-is-financial-literacy", changefreq: "monthly", priority: "0.8" },
           { path: "/compare/khan-academy", changefreq: "monthly", priority: "0.7" },
           { path: "/certificate", changefreq: "monthly", priority: "0.8" },
+          { path: "/money-basics", changefreq: "monthly", priority: "0.85" },
+          ...MONEY_BASICS_TOPICS.map((t) => ({
+            path: `/money-basics/${t.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.7",
+          })),
           ...PATHS.map((p) => ({
             path: `/path/${p.id}`,
             changefreq: "monthly" as const,

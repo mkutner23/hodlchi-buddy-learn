@@ -15,7 +15,9 @@ import { Route as FinancialLiteracyForEveryoneRouteImport } from './routes/finan
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CertificateRouteImport } from './routes/certificate'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MoneyBasicsIndexRouteImport } from './routes/money-basics.index'
 import { Route as PathPathIdRouteImport } from './routes/path.$pathId'
+import { Route as MoneyBasicsTopicRouteImport } from './routes/money-basics.$topic'
 import { Route as CompareKhanAcademyRouteImport } from './routes/compare.khan-academy'
 import { Route as BlogWhatIsFinancialLiteracyRouteImport } from './routes/blog.what-is-financial-literacy'
 import { Route as LessonPathIdLessonIdRouteImport } from './routes/lesson.$pathId.$lessonId'
@@ -52,9 +54,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MoneyBasicsIndexRoute = MoneyBasicsIndexRouteImport.update({
+  id: '/money-basics/',
+  path: '/money-basics/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PathPathIdRoute = PathPathIdRouteImport.update({
   id: '/path/$pathId',
   path: '/path/$pathId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MoneyBasicsTopicRoute = MoneyBasicsTopicRouteImport.update({
+  id: '/money-basics/$topic',
+  path: '/money-basics/$topic',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CompareKhanAcademyRoute = CompareKhanAcademyRouteImport.update({
@@ -88,7 +100,9 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/what-is-financial-literacy': typeof BlogWhatIsFinancialLiteracyRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
+  '/money-basics/$topic': typeof MoneyBasicsTopicRoute
   '/path/$pathId': typeof PathPathIdRoute
+  '/money-basics/': typeof MoneyBasicsIndexRoute
   '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
 }
@@ -101,7 +115,9 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/what-is-financial-literacy': typeof BlogWhatIsFinancialLiteracyRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
+  '/money-basics/$topic': typeof MoneyBasicsTopicRoute
   '/path/$pathId': typeof PathPathIdRoute
+  '/money-basics': typeof MoneyBasicsIndexRoute
   '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
 }
@@ -115,7 +131,9 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/what-is-financial-literacy': typeof BlogWhatIsFinancialLiteracyRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
+  '/money-basics/$topic': typeof MoneyBasicsTopicRoute
   '/path/$pathId': typeof PathPathIdRoute
+  '/money-basics/': typeof MoneyBasicsIndexRoute
   '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
 }
@@ -130,7 +148,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/blog/what-is-financial-literacy'
     | '/compare/khan-academy'
+    | '/money-basics/$topic'
     | '/path/$pathId'
+    | '/money-basics/'
     | '/api/public/hero-sfx'
     | '/lesson/$pathId/$lessonId'
   fileRoutesByTo: FileRoutesByTo
@@ -143,7 +163,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/blog/what-is-financial-literacy'
     | '/compare/khan-academy'
+    | '/money-basics/$topic'
     | '/path/$pathId'
+    | '/money-basics'
     | '/api/public/hero-sfx'
     | '/lesson/$pathId/$lessonId'
   id:
@@ -156,7 +178,9 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/blog/what-is-financial-literacy'
     | '/compare/khan-academy'
+    | '/money-basics/$topic'
     | '/path/$pathId'
+    | '/money-basics/'
     | '/api/public/hero-sfx'
     | '/lesson/$pathId/$lessonId'
   fileRoutesById: FileRoutesById
@@ -170,7 +194,9 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BlogWhatIsFinancialLiteracyRoute: typeof BlogWhatIsFinancialLiteracyRoute
   CompareKhanAcademyRoute: typeof CompareKhanAcademyRoute
+  MoneyBasicsTopicRoute: typeof MoneyBasicsTopicRoute
   PathPathIdRoute: typeof PathPathIdRoute
+  MoneyBasicsIndexRoute: typeof MoneyBasicsIndexRoute
   ApiPublicHeroSfxRoute: typeof ApiPublicHeroSfxRoute
   LessonPathIdLessonIdRoute: typeof LessonPathIdLessonIdRoute
 }
@@ -219,11 +245,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/money-basics/': {
+      id: '/money-basics/'
+      path: '/money-basics'
+      fullPath: '/money-basics/'
+      preLoaderRoute: typeof MoneyBasicsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/path/$pathId': {
       id: '/path/$pathId'
       path: '/path/$pathId'
       fullPath: '/path/$pathId'
       preLoaderRoute: typeof PathPathIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/money-basics/$topic': {
+      id: '/money-basics/$topic'
+      path: '/money-basics/$topic'
+      fullPath: '/money-basics/$topic'
+      preLoaderRoute: typeof MoneyBasicsTopicRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/compare/khan-academy': {
@@ -266,7 +306,9 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   BlogWhatIsFinancialLiteracyRoute: BlogWhatIsFinancialLiteracyRoute,
   CompareKhanAcademyRoute: CompareKhanAcademyRoute,
+  MoneyBasicsTopicRoute: MoneyBasicsTopicRoute,
   PathPathIdRoute: PathPathIdRoute,
+  MoneyBasicsIndexRoute: MoneyBasicsIndexRoute,
   ApiPublicHeroSfxRoute: ApiPublicHeroSfxRoute,
   LessonPathIdLessonIdRoute: LessonPathIdLessonIdRoute,
 }
