@@ -268,7 +268,9 @@ function Home() {
                 stage={stage}
                 size={180}
                 mood={now ? deriveMood(state, now.getTime()) : undefined}
+                studiedPaths={studiedPaths}
               />
+
               {idleAction === "yawn" && (
                 <span
                   key={`yawn-${idleAction}`}
