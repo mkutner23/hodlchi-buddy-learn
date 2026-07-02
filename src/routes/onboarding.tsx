@@ -157,7 +157,7 @@ function Onboarding() {
 
           {step === 1 && (
             <div className="animate-pop">
-              <h1 className="text-3xl font-extrabold">Name your Hodlchi</h1>
+              <h1 className="text-3xl font-extrabold">What should your Hodlchi call themselves?</h1>
               <p className="mt-2 text-foreground/70">
                 Pick anything. You can't change it later — kidding, you can.
               </p>
