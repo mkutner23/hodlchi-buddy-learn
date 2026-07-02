@@ -1,7 +1,16 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 export type Personality = "ape" | "turtle" | "fox";
-export type Mood = "hungry" | "happy" | "focused" | "tired";
+export type Mood =
+  | "hungry"
+  | "happy"
+  | "focused"
+  | "tired"
+  | "sleepy"
+  | "excited"
+  | "proud"
+  | "confused"
+  | "celebrating";
 export type EggColor = "mint" | "sun" | "berry";
 
 export const EVOLUTION_STAGES = [
@@ -26,6 +35,8 @@ export interface HodlchiState {
   lastActiveDay: string | null;
   completedLessons: string[]; // "pathId:lessonId"
   mood: Mood;
+  moodExpiresAt: number | null; // timestamp; after this, mood is derived from context
+  lastQuizPct: number | null; // 0..1 last quiz score
   acknowledgedStage: Stage;
 }
 
@@ -40,6 +51,8 @@ const DEFAULT_STATE: HodlchiState = {
   lastActiveDay: null,
   completedLessons: [],
   mood: "hungry",
+  moodExpiresAt: null,
+  lastQuizPct: null,
   acknowledgedStage: "Baby",
 };
 
@@ -101,6 +114,7 @@ interface Ctx {
   state: HodlchiState;
   setOnboarding: (data: { name: string; egg: EggColor; personality: Personality }) => void;
   completeLesson: (pathId: string, lessonId: string, correctCount: number, total: number) => void;
+  flashMood: (mood: Mood, durationMs?: number) => void;
   evolve: () => void;
   reset: () => void;
   demoMode: () => void;
@@ -110,6 +124,41 @@ interface Ctx {
 export function stageIndex(stage: Stage): number {
   return EVOLUTION_STAGES.indexOf(stage);
 }
+
+/**
+ * Derive the mood Penny should show right now.
+ *
+ * Priority:
+ * 1. A short-lived "flash" mood (excited/confused/proud/celebrating) that was
+ *    set by a recent interaction and hasn't expired yet.
+ * 2. A contextual mood derived from streak, XP progress, and last-active day.
+ */
+export function deriveMood(state: HodlchiState, now: number = Date.now()): Mood {
+  if (state.moodExpiresAt && now < state.moodExpiresAt) return state.mood;
+
+  const today = new Date(now).toISOString().slice(0, 10);
+  const lastActive = state.lastActiveDay;
+
+  // No lesson yet today — Penny nudges the user.
+  if (lastActive !== today) {
+    if (!lastActive) return "hungry"; // brand new
+    const daysAgo = Math.floor(
+      (now - new Date(lastActive + "T12:00:00Z").getTime()) / 86400000,
+    );
+    if (daysAgo >= 2) return "sleepy"; // been ignored — dozing off
+    return "hungry"; // one day gap, ready to be fed a lesson
+  }
+
+  // Already active today.
+  const prog = progressToNextStage(state.level, state.xp);
+  const xpToNext = Math.max(0, prog.end - state.xp);
+  if (stageForLevel(state.level) !== state.acknowledgedStage) return "celebrating";
+  if (xpToNext > 0 && xpToNext <= 30) return "excited";
+  if (state.streak >= 3) return "proud";
+  return "happy";
+}
+
+
 
 
 const HodlchiContext = createContext<Ctx | null>(null);
@@ -150,8 +199,11 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
             const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
             streak = s.lastActiveDay === yesterday ? s.streak + 1 : 1;
           }
+          const pct = total > 0 ? correctCount / total : 0;
+          // Celebrate a perfect run; feel proud on a strong pass;
+          // look a bit confused on a shaky one.
           const mood: Mood =
-            correctCount === total ? "happy" : correctCount >= total / 2 ? "focused" : "tired";
+            pct === 1 ? "celebrating" : pct >= 0.5 ? "proud" : "confused";
           return {
             ...s,
             xp,
@@ -159,10 +211,14 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
             streak,
             lastActiveDay: today,
             mood,
+            moodExpiresAt: Date.now() + 8000,
+            lastQuizPct: pct,
             completedLessons: already ? s.completedLessons : [...s.completedLessons, key],
           };
         });
       },
+      flashMood: (mood, durationMs = 1500) =>
+        setState((s) => ({ ...s, mood, moodExpiresAt: Date.now() + durationMs })),
       evolve: () =>
         setState((s) => ({ ...s, acknowledgedStage: stageForLevel(s.level), mood: "happy" })),
       reset: () => setState({ ...DEFAULT_STATE }),

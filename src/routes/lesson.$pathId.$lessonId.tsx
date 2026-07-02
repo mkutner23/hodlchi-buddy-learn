@@ -2,7 +2,7 @@ import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 import { PATHS, PATH_ACCENT } from "@/lib/lessons-data";
-import { useHodlchi } from "@/lib/hodlchi-store";
+import { useHodlchi, deriveMood } from "@/lib/hodlchi-store";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { PathFruit } from "@/components/PathFruit";
 
@@ -56,7 +56,7 @@ type Phase = "intro" | "quiz" | "done";
 function LessonView() {
   const { pathId, lessonId } = Route.useParams();
   const nav = useNavigate();
-  const { state, completeLesson } = useHodlchi();
+  const { state, completeLesson, flashMood } = useHodlchi();
   const path = PATHS.find((p) => p.id === pathId);
   const lesson = path?.lessons.find((l) => l.id === lessonId);
   if (!path || !lesson) throw notFound();
@@ -73,7 +73,12 @@ function LessonView() {
   const check = () => {
     if (selected === null) return;
     setLocked(true);
-    if (selected === q.answer) setCorrectCount((c) => c + 1);
+    if (selected === q.answer) {
+      setCorrectCount((c) => c + 1);
+      flashMood("excited", 1400);
+    } else {
+      flashMood("confused", 1600);
+    }
   };
 
   const nextQ = () => {
@@ -259,7 +264,9 @@ function LessonView() {
                   personality={state.personality}
                   stage={state.acknowledgedStage}
                   size={170}
+                  mood={deriveMood(state)}
                 />
+
               </div>
             </div>
             <h1 className="mt-4 text-3xl font-extrabold">
