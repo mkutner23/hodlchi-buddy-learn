@@ -49,7 +49,7 @@ function Landing() {
           </h1>
           <div className="mx-auto mt-4 max-w-xl text-center">
             <p className="text-base text-foreground/70 whitespace-nowrap">
-              Build confidence with money in just five minutes a day.
+              Build confidence with money in just 5 minutes a day.
             </p>
             <p className="text-base text-foreground/70 whitespace-nowrap">
               Every lesson helps your Hodlchi evolve — and helps you
@@ -115,7 +115,7 @@ function Landing() {
 
         <section className="mt-10 rounded-2xl bg-foreground p-5 text-center shadow-pop">
           <p className="text-lg font-extrabold text-primary">
-            Five minutes today. Smarter money tomorrow.
+            5 minutes today. Smarter money tomorrow.
           </p>
           <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-primary/70">
             Designed to build lifelong money habits
@@ -127,7 +127,7 @@ function Landing() {
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             <FeatureCard emoji="🥚" title="Learn by raising a companion you'll actually care about" body="Hatch, name, and grow a Hodlchi that evolves with every lesson you finish." />
             <FeatureCard emoji="📚" title="Master the money skills schools rarely teach" body="Simple lessons that make money easier to understand." />
-            <FeatureCard emoji="🔥" title="Build a daily money habit that lasts" body="Streaks, daily challenges, and evolutions turn five minutes a day into real confidence." />
+            <FeatureCard emoji="🔥" title="Build a daily money habit that lasts" body="Streaks, daily challenges, and evolutions turn 5 minutes a day into real confidence." />
           </div>
         </section>
 
