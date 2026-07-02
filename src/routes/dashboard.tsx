@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
 import { PathFruit } from "@/components/PathFruit";
-import { PATHS, PATH_ACCENT, getDailyChallenge } from "@/lib/lessons-data";
+import { PATHS, PATH_ACCENT, getDailyChallenge, type PathId } from "@/lib/lessons-data";
 import { EvolveCinematic } from "@/components/EvolveCinematic";
 import {
   useHodlchi,
@@ -113,9 +113,9 @@ function Home() {
   const xpToNext = Math.max(0, prog.end - state.xp);
   const atMaxStage = prog.nextStage === stage;
   const lastCompletedPath = state.completedLessons.length > 0
-    ? (state.completedLessons[state.completedLessons.length - 1].split(":")[0] as keyof typeof PATH_FRUIT)
+    ? (state.completedLessons[state.completedLessons.length - 1].split(":")[0] as PathId)
     : "saving";
-  const fruit = PATH_FRUIT[lastCompletedPath] ?? "🍎";
+  const fruit = <PathFruit pathId={lastCompletedPath} animate={false} />;
   const speech = readyToEvolve
     ? `🎉 We did it! I'm ready to become a ${naturalStage}!`
     : greetingFor(
