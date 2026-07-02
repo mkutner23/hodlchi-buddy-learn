@@ -28,7 +28,7 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   const { state, demoMode } = useHodlchi();
-  const primaryCta = state.onboarded ? { to: "/home", label: "Open my Hodlchi" } : { to: "/onboarding", label: "Hatch my Hodlchi" };
+  const primaryCta = state.onboarded ? { to: "/home", label: "Hatch my Hodlchi" } : { to: "/onboarding", label: "Hatch my Hodlchi" };
 
   return (
     <main className="min-h-screen bg-gradient-hero">
