@@ -6,7 +6,7 @@ const TITLE = "Financial Literacy Course for Teens — Hodlchi";
 const DESCRIPTION =
   "Free gamified financial literacy course for teens. Learn saving, investing, credit, entrepreneurship, and crypto in 20 bite-size lessons.";
 
-export const Route = createFileRoute("/financial-literacy-for-teens")({
+export const Route = createFileRoute("/financial-literacy-for-everyone")({
   component: TeensPage,
   head: () => ({
     meta: [
