@@ -197,9 +197,11 @@ function LessonView() {
               {/* Micro-delight when correct */}
               {locked && isCorrect && (
                 <div className="pointer-events-none relative h-0" aria-hidden="true">
-                  <div className="animate-fruit-fly absolute left-1/2 -top-2 text-4xl">
-                    {PATH_FRUIT[path.id]}
-                  </div>
+                  <PathFruit
+                    pathId={path.id}
+                    animate={false}
+                    className="animate-fruit-fly absolute left-1/2 -top-2 text-4xl"
+                  />
                   <span
                     className="animate-heart-pop absolute left-1/3 -top-2 text-2xl"
                     style={{ ["--tx" as string]: "-12px" } as CSSProperties}
