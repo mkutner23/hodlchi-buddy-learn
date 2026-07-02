@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
+
+const URL_ = "https://demo.hodlchi.com/compare/khan-academy";
 const TITLE = "Hodlchi vs Khan Academy: Financial Literacy Compared";
 const DESCRIPTION =
   "Compare Hodlchi and Khan Academy for financial literacy. Gamified 3-minute lessons vs traditional video courses — see which fits teens and beginners best.";
@@ -9,7 +11,7 @@ type Row = { feature: string; hodlchi: string; khan: string };
 const ROWS: Row[] = [
   {
     feature: "Format",
-    hodlchi: "Gamified 3-minute lessons with a companion that levels up",
+    hodlchi: "Gamified 5-minute lessons with a companion that levels up",
     khan: "Video lectures with practice exercises",
   },
   {
@@ -29,7 +31,7 @@ const ROWS: Row[] = [
   },
   {
     feature: "Session length",
-    hodlchi: "~3 minutes per lesson",
+    hodlchi: "~5 minutes per lesson",
     khan: "10–20 minute videos",
   },
   {
@@ -51,15 +53,15 @@ const FAQ = [
   },
   {
     q: "How is Hodlchi different from Khan Academy?",
-    a: "Hodlchi turns financial literacy into a daily habit. Instead of watching lectures, you complete 3-minute lessons to feed and evolve a virtual companion. It's designed for teens and beginners who bounce off long-form video.",
+    a: "Hodlchi turns financial literacy into a daily habit. Instead of watching lectures, you complete 5-minute lessons to feed and evolve a virtual companion. It's designed for beginners who bounce off long-form video.",
   },
   {
-    q: "Which is better for teens?",
-    a: "If a teen already enjoys courses, Khan Academy works well. If they need motivation to come back daily, Hodlchi's streaks, XP, and evolving character are usually more effective at building the habit.",
+    q: "Which is better for beginners?",
+    a: "If you already enjoy longer courses, Khan Academy works well. If you need motivation to come back daily, Hodlchi's streaks, XP, and evolving character are usually more effective at building the habit.",
   },
   {
     q: "Can I use both?",
-    a: "Absolutely. Many learners use Hodlchi for the daily 3-minute reps and Khan Academy for deeper dives on specific topics like taxes or compound interest.",
+    a: "Absolutely. Many learners use Hodlchi for the daily 5-minute reps and Khan Academy for deeper dives on specific topics like taxes or compound interest.",
   },
 ];
 
