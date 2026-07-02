@@ -165,6 +165,8 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
           };
         });
       },
+      evolve: () =>
+        setState((s) => ({ ...s, acknowledgedStage: stageForLevel(s.level), mood: "happy" })),
       reset: () => setState({ ...DEFAULT_STATE }),
       demoMode: () =>
         setState({
