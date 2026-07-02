@@ -130,6 +130,7 @@ function Home() {
         atMaxStage ? 0 : xpToNext,
         prog.nextStage,
         fruit,
+        now ? now.getHours() : 9,
       );
 
   const handleEvolve = () => {
