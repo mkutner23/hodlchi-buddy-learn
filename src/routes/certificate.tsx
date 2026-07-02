@@ -135,6 +135,34 @@ function CertificatePage() {
             <HodlchiAvatar egg="mint" personality="fox" stage="Money Legend" size={140} />
           </div>
 
+          <div className="mt-5 text-left">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/50 mb-2 text-center">
+              Preview your certificate
+            </div>
+            <div className="relative overflow-hidden rounded-2xl border-2 border-foreground/10 bg-gradient-to-br from-primary/10 via-white to-primary/20 p-5 shadow-soft">
+              <div className="absolute inset-0 pointer-events-none opacity-40 blur-[1.5px]" aria-hidden />
+              <div className="relative text-center">
+                <div className="text-[9px] font-black uppercase tracking-[0.2em] text-primary-deep">
+                  Certificate of Completion
+                </div>
+                <div className="mt-2 font-display text-lg font-extrabold">Hodlchi</div>
+                <div className="mt-3 text-[10px] uppercase tracking-widest text-foreground/50">
+                  Awarded to
+                </div>
+                <div className="mt-1 font-display text-xl font-black text-foreground/80 blur-[1px] select-none">
+                  Your Name Here
+                </div>
+                <div className="mt-2 text-[10px] text-foreground/60">
+                  For completing all 5 Hodlchi Financial Literacy paths
+                </div>
+                <div className="mt-3 flex items-center justify-between text-[9px] text-foreground/50">
+                  <span>ID · ABCD-1234</span>
+                  <span>hodlchi.com/verify</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <Link
             to="/onboarding"
             className="mt-5 inline-flex w-full items-center justify-center rounded-2xl bg-foreground px-5 py-3.5 font-bold text-primary shadow-pop"
@@ -142,7 +170,7 @@ function CertificatePage() {
             Start the free course →
           </Link>
           <p className="mt-2 text-xs text-foreground/60">
-            {totalLessons} lessons · ~{totalMinutes} minutes · No credit card required
+            {totalLessons} lessons • About {Math.round(totalMinutes / 5) * 5} minutes • No credit card required
           </p>
         </header>
 
