@@ -10,6 +10,7 @@ import {
   stageForLevel,
   progressToNextStage,
   stageIndex,
+  deriveMood,
 } from "@/lib/hodlchi-store";
 
 
