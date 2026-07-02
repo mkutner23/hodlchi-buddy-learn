@@ -44,6 +44,13 @@ const PERSONALITY_HINTS: Record<Personality, string> = {
   fox: "Loves solving puzzles.",
 };
 
+const PERSONALITY_GREETINGS: Record<Personality, string> = {
+  ape: "Let's try something new today!",
+  turtle: "One lesson at a time. 🐢",
+  fox: "Let's solve some money puzzles!",
+};
+
+
 const RANDOM_NAMES = [
   "Bean", "Mochi", "Atlas", "Pixel", "Penny", "Waffles",
   "Nugget", "Sage", "Pip", "Biscuit", "Ziggy", "Clover",
