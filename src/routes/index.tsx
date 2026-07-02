@@ -127,7 +127,7 @@ function Landing() {
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             <FeatureCard emoji="🥚" title="Learn by raising a companion you'll actually care about" body="Hatch, name, and grow a Hodlchi that evolves with every lesson you finish." />
             <FeatureCard emoji="📚" title="Master the money skills schools rarely teach" body="Simple lessons that make money easier to understand." />
-            <FeatureCard emoji="🔥" title="Build a daily money habit that lasts" body="Streaks, daily challenges, and evolutions turn 3 minutes a day into real confidence." />
+            <FeatureCard emoji="🔥" title="Build a daily money habit that lasts" body="Streaks, daily challenges, and evolutions turn five minutes a day into real confidence." />
           </div>
         </section>
 
