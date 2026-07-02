@@ -201,7 +201,7 @@ function Home() {
   };
 
   // Penny looks toward where you tap.
-  const handleTap = (e: React.PointerEvent<HTMLElement>) => {
+  const handleTap = (e: ReactPointerEvent<HTMLElement>) => {
     if (!avatarWrapRef.current) return;
     const rect = avatarWrapRef.current.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
