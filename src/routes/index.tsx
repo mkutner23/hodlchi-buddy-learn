@@ -49,7 +49,7 @@ function Landing() {
           </h1>
           <div className="mx-auto mt-4 max-w-xl text-center">
             <p className="text-base text-foreground/70 whitespace-nowrap">
-              Build confidence with money in just 3 minutes a day.
+              Build confidence with money in just five minutes a day.
             </p>
             <p className="text-base text-foreground/70 whitespace-nowrap">
               Every lesson helps your Hodlchi evolve — and helps you
@@ -63,7 +63,7 @@ function Landing() {
               From financial beginner to financial confidence —
             </p>
             <p className="text-sm font-bold text-foreground/80 italic whitespace-nowrap">
-              3 minutes at a time.
+              five minutes at a time.
             </p>
           </div>
           <div className="mx-auto mt-2 max-w-xl text-center">
