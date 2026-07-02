@@ -1,7 +1,16 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 export type Personality = "ape" | "turtle" | "fox";
-export type Mood = "hungry" | "happy" | "focused" | "tired";
+export type Mood =
+  | "hungry"
+  | "happy"
+  | "focused"
+  | "tired"
+  | "sleepy"
+  | "excited"
+  | "proud"
+  | "confused"
+  | "celebrating";
 export type EggColor = "mint" | "sun" | "berry";
 
 export const EVOLUTION_STAGES = [
