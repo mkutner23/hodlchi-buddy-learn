@@ -6,6 +6,7 @@ import { useHodlchi, deriveMood } from "@/lib/hodlchi-store";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { PathFruit } from "@/components/PathFruit";
 import { sfx } from "@/lib/sfx";
+import { getReflectionPrompt } from "@/lib/reflections";
 
 
 
@@ -57,7 +58,7 @@ type Phase = "intro" | "quiz" | "done";
 function LessonView() {
   const { pathId, lessonId } = Route.useParams();
   const nav = useNavigate();
-  const { state, completeLesson, flashMood } = useHodlchi();
+  const { state, completeLesson, flashMood, addReflection } = useHodlchi();
   const path = PATHS.find((p) => p.id === pathId);
   const lesson = path?.lessons.find((l) => l.id === lessonId);
   if (!path || !lesson) throw notFound();
@@ -67,6 +68,9 @@ function LessonView() {
   const [selected, setSelected] = useState<number | null>(null);
   const [locked, setLocked] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
+  const [reflection, setReflection] = useState("");
+  const [reflectionSaved, setReflectionSaved] = useState(false);
+  const lessonIdx = path.lessons.findIndex((l) => l.id === lesson.id);
 
   const q = lesson.quiz[qIdx];
   const isCorrect = selected !== null && selected === q?.answer;
