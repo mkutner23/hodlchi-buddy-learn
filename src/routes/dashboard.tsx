@@ -171,6 +171,7 @@ function Home() {
           <button
             onClick={() => {
               setWobble(true);
+              sfx.chirp();
               setTimeout(() => setWobble(false), 600);
             }}
             className="mx-auto block"
