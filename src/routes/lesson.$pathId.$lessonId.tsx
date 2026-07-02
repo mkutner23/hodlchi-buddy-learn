@@ -140,11 +140,12 @@ function LessonView() {
               </div>
               <button
                 onClick={() => setPhase("quiz")}
-                className="mt-5 w-full rounded-2xl px-5 py-4 font-bold text-white shadow-pop active:scale-[0.98]"
+                className="btn-squish mt-5 w-full rounded-2xl px-5 py-4 font-bold text-white shadow-pop"
                 style={{ backgroundColor: accent.hex, boxShadow: `0 12px 30px -10px ${accent.ring}` }}
               >
                 Start the quiz →
               </button>
+
             </div>
           );
         })()}
