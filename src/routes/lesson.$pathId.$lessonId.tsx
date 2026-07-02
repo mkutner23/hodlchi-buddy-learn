@@ -89,7 +89,7 @@ function LessonView() {
   const accent = PATH_ACCENT[path.id];
 
   return (
-    <main className="min-h-screen bg-gradient-sky pb-8">
+    <main className="min-h-screen pb-8" style={{ background: `linear-gradient(180deg, ${accent.soft} 0%, #fafbf7 100%)` }}>
       <div className="mx-auto max-w-md px-5 pt-6">
         <div className="flex items-center justify-between">
           <button
