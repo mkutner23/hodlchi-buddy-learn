@@ -26,6 +26,7 @@ export interface HodlchiState {
   lastActiveDay: string | null;
   completedLessons: string[]; // "pathId:lessonId"
   mood: Mood;
+  acknowledgedStage: Stage;
 }
 
 const DEFAULT_STATE: HodlchiState = {
@@ -39,6 +40,7 @@ const DEFAULT_STATE: HodlchiState = {
   lastActiveDay: null,
   completedLessons: [],
   mood: "hungry",
+  acknowledgedStage: "Baby",
 };
 
 const STORAGE_KEY = "hodlchi-state-v1";
