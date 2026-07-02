@@ -243,7 +243,7 @@ function Home() {
         </div>
 
         {/* Hero companion */}
-        <section className="mt-4 text-center">
+        <section className="mt-4 text-center" onPointerDown={handleTap}>
           <button
             onClick={() => {
               setWobble(true);
@@ -251,10 +251,17 @@ function Home() {
               sfx.penny.happy();
               setTimeout(() => setWobble(false), 600);
             }}
-            className="mx-auto block"
+            className="btn-squish mx-auto block"
             aria-label={`Pet ${state.name}`}
           >
-            <div className={wobble ? "animate-wobble" : ""}>
+            <div
+              ref={avatarWrapRef}
+              className={`relative inline-block ${wobble ? "animate-wobble" : idleAnimClass}`}
+              style={{
+                transform: `translateX(${lookDir * 4}px)`,
+                transition: "transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+              }}
+            >
               <HodlchiAvatar
                 egg={state.egg}
                 personality={state.personality}
@@ -262,7 +269,24 @@ function Home() {
                 size={180}
                 mood={now ? deriveMood(state, now.getTime()) : undefined}
               />
-
+              {idleAction === "yawn" && (
+                <span
+                  key={`yawn-${idleAction}`}
+                  className="pointer-events-none absolute right-2 top-2 text-xl animate-idle-puff"
+                  aria-hidden
+                >
+                  💤
+                </span>
+              )}
+              {idleAction === "sigh" && (
+                <span
+                  key={`sigh-${idleAction}`}
+                  className="pointer-events-none absolute right-4 top-6 text-lg animate-idle-puff"
+                  aria-hidden
+                >
+                  💭
+                </span>
+              )}
             </div>
           </button>
 
@@ -293,7 +317,7 @@ function Home() {
             </div>
             <div className="mt-2 h-3 overflow-hidden rounded-full bg-foreground/10">
               <div
-                className="h-full bg-gradient-primary transition-all"
+                className="progress-spring h-full bg-gradient-primary"
                 style={{ width: `${prog.pct}%` }}
               />
             </div>
@@ -305,6 +329,7 @@ function Home() {
 
           </div>
         </section>
+
 
         {/* Evolve CTA takes over when a milestone is reached */}
         {readyToEvolve ? (
