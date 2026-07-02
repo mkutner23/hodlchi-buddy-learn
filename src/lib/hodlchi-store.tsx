@@ -6,7 +6,7 @@ export type EggColor = "mint" | "sun" | "berry";
 
 export const EVOLUTION_STAGES = [
   "Egg",
-  "Baby Hodlchi",
+  "Baby",
   "Student",
   "Builder",
   "Investor",
@@ -69,8 +69,8 @@ function xpToLevel(xp: number) {
 }
 
 export function stageForLevel(level: number): Stage {
-  // Users hatch during onboarding, so level 1 already starts as Baby Hodlchi.
-  if (level <= 2) return "Baby Hodlchi";
+  // Users hatch during onboarding, so level 1 already starts as Baby.
+  if (level <= 2) return "Baby";
   if (level <= 5) return "Student";
   if (level <= 9) return "Builder";
   if (level <= 15) return "Investor";

@@ -160,12 +160,12 @@ function SceneView({ sceneKey }: { sceneKey: string }) {
 }
 
 function HatchScene() {
-  const [stage, setStage] = useState<"Egg" | "Baby Hodlchi">("Egg");
+  const [stage, setStage] = useState<"Egg" | "Baby">("Egg");
   const [shake, setShake] = useState(false);
   useEffect(() => {
     const t1 = setTimeout(() => setShake(true), 400);
     const t2 = setTimeout(() => setShake(false), 2600);
-    const t3 = setTimeout(() => setStage("Baby Hodlchi"), 2700);
+    const t3 = setTimeout(() => setStage("Baby"), 2700);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
@@ -200,7 +200,7 @@ function NameScene() {
   return (
     <div className="flex w-full max-w-xs flex-col items-center gap-4">
       <div className="animate-float">
-        <HodlchiAvatar egg="mint" personality="fox" stage="Baby Hodlchi" size={130} />
+        <HodlchiAvatar egg="mint" personality="fox" stage="Baby" size={130} />
       </div>
       <div className="w-full">
         <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
@@ -288,7 +288,7 @@ function XpScene() {
     <div className="flex w-full max-w-xs flex-col items-center gap-4">
       <div className="relative">
         <div className={pop ? "animate-wobble" : "animate-float"}>
-          <HodlchiAvatar egg="mint" personality="fox" stage="Baby Hodlchi" size={140} />
+          <HodlchiAvatar egg="mint" personality="fox" stage="Baby" size={140} />
         </div>
         {pop && (
           <div className="absolute -right-2 -top-2 rounded-full bg-primary-deep px-2.5 py-1 text-xs font-extrabold text-white shadow-pop">
@@ -313,10 +313,10 @@ function XpScene() {
 }
 
 function EvolveScene() {
-  const [stage, setStage] = useState<"Baby Hodlchi" | "Student">("Baby Hodlchi");
+  const [stage, setStage] = useState<"Baby" | "Student">("Baby");
   const [flash, setFlash] = useState(false);
   useEffect(() => {
-    setStage("Baby Hodlchi");
+    setStage("Baby");
     setFlash(false);
     const t1 = setTimeout(() => setFlash(true), 900);
     const t2 = setTimeout(() => setStage("Student"), 1500);

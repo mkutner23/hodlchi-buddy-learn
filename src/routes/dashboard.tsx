@@ -17,7 +17,7 @@ export const Route = createFileRoute("/dashboard")({
       {
         name: "description",
         content:
-          "Feed your Hodlchi with a lesson, keep your streak alive, and evolve from Baby Hodlchi to Money Legend.",
+          "Feed your Hodlchi with a lesson, keep your streak alive, and evolve from Baby to Money Legend.",
       },
       { property: "og:title", content: "Your Hodlchi — Dashboard" },
       {

@@ -55,7 +55,7 @@ interface Props {
 
 const STAGE_INDEX: Record<Stage, number> = {
   Egg: 0,
-  "Baby Hodlchi": 1,
+  "Baby": 1,
   Student: 2,
   Builder: 3,
   Investor: 4,
