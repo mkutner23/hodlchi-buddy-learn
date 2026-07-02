@@ -138,6 +138,7 @@ function Home() {
 
   const handleEvolve = () => {
     setCelebrating(true);
+    sfx.sparkle();
   };
   const finishEvolve = () => {
     evolve();
