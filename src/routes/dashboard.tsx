@@ -134,8 +134,6 @@ function Home() {
     return null;
   }, [state.completedLessons]);
 
-  if (!mounted) return null;
-  if (!state.onboarded) return null;
 
 
 
