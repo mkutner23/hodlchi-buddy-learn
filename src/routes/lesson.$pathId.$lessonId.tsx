@@ -194,13 +194,13 @@ function LessonView() {
                   </div>
                   <span
                     className="animate-heart-pop absolute left-1/3 -top-2 text-2xl"
-                    style={{ ["--tx" as string]: "-12px" } as React.CSSProperties}
+                    style={{ ["--tx" as string]: "-12px" } as CSSProperties}
                   >
                     💚
                   </span>
                   <span
                     className="animate-heart-pop absolute left-2/3 -top-2 text-2xl"
-                    style={{ ["--tx" as string]: "10px", animationDelay: "0.15s" } as React.CSSProperties}
+                    style={{ ["--tx" as string]: "10px", animationDelay: "0.15s" } as CSSProperties}
                   >
                     ✨
                   </span>
