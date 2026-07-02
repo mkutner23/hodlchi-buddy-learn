@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { PATHS, PATH_FRUIT, PATH_ACCENT } from "@/lib/lessons-data";
+import { PathFruit } from "@/components/PathFruit";
 import { useHodlchi } from "@/lib/hodlchi-store";
 
 export const Route = createFileRoute("/path/$pathId")({
