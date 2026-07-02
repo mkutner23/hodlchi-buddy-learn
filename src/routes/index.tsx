@@ -57,7 +57,7 @@ function Landing() {
             Learn money.<br />Raise your <span className="text-primary-deep">Hodlchi.</span>
           </h1>
           <p className="mx-auto mt-4 max-w-sm text-base text-foreground/70">
-            Learn real money skills in just 3 minutes a day. Every lesson helps your Hodlchi evolve — and helps you build your financial future.
+            Build real money skills in just 3 minutes a day. Every lesson helps your Hodlchi evolve — and helps you build your financial future.
           </p>
           <p className="mx-auto mt-3 max-w-sm text-sm font-semibold text-foreground/80 italic">
             From financial beginner to financial confidence — 3 minutes at a time.
@@ -90,7 +90,7 @@ function Landing() {
             Educational only. No trading, wallets, or investment advice.
           </p>
           <p className="mt-2 text-[11px] font-semibold uppercase tracking-widest text-foreground/50">
-            Your Money Companion
+            Meet your Money Companion
           </p>
         </section>
 
@@ -107,11 +107,11 @@ function Landing() {
         </section>
 
         <section className="mt-10 rounded-2xl bg-foreground p-5 text-center shadow-pop">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-primary">
-            Our moat
-          </div>
-          <p className="mt-1 text-lg font-extrabold text-primary">
-            Built to make learning money a daily habit.
+          <p className="text-lg font-extrabold text-primary">
+            3 minutes a day. A lifetime of better money decisions.
+          </p>
+          <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-primary/70">
+            Designed to build lifelong money habits
           </p>
         </section>
 
