@@ -103,14 +103,23 @@ function Home() {
 
   const xpToNext = Math.max(0, prog.end - state.xp);
   const atMaxStage = prog.nextStage === stage;
-  const speech = greetingFor(
-    state.name,
-    state.streak,
-    doneToday,
-    doneLessons,
-    atMaxStage ? 0 : xpToNext,
-    prog.nextStage,
-  );
+  const speech = readyToEvolve
+    ? `🎉 We did it! I'm ready to become a ${naturalStage}!`
+    : greetingFor(
+        state.name,
+        state.streak,
+        doneToday,
+        doneLessons,
+        atMaxStage ? 0 : xpToNext,
+        prog.nextStage,
+      );
+
+  const handleEvolve = () => {
+    setCelebrating(true);
+    evolve();
+    setTimeout(() => setCelebrating(false), 1400);
+  };
+
 
 
   return (
