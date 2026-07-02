@@ -51,6 +51,8 @@ const DEFAULT_STATE: HodlchiState = {
   lastActiveDay: null,
   completedLessons: [],
   mood: "hungry",
+  moodExpiresAt: null,
+  lastQuizPct: null,
   acknowledgedStage: "Baby",
 };
 
