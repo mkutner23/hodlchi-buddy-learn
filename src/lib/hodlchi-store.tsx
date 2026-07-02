@@ -35,6 +35,8 @@ export interface HodlchiState {
   lastActiveDay: string | null;
   completedLessons: string[]; // "pathId:lessonId"
   mood: Mood;
+  moodExpiresAt: number | null; // timestamp; after this, mood is derived from context
+  lastQuizPct: number | null; // 0..1 last quiz score
   acknowledgedStage: Stage;
 }
 
