@@ -193,6 +193,9 @@ function Home() {
     return () => clearTimeout(t);
   }, [contextualGreeting]);
 
+  if (!mounted) return null;
+  if (!state.onboarded) return null;
+
   const handleEvolve = () => {
     setCelebrating(true);
     
