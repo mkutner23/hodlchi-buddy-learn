@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-
-const URL_ = "https://demo.hodlchi.com/compare/khan-academy";
+import { HodlchiLogo } from "@/components/HodlchiLogo";
 const TITLE = "Hodlchi vs Khan Academy: Financial Literacy Compared";
 const DESCRIPTION =
   "Compare Hodlchi and Khan Academy for financial literacy. Gamified 3-minute lessons vs traditional video courses — see which fits teens and beginners best.";
