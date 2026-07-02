@@ -44,6 +44,13 @@ const PERSONALITY_HINTS: Record<Personality, string> = {
   fox: "Loves solving puzzles.",
 };
 
+const PERSONALITY_GREETINGS: Record<Personality, string> = {
+  ape: "Let's try something new today!",
+  turtle: "One lesson at a time. 🐢",
+  fox: "Let's solve some money puzzles!",
+};
+
+
 const RANDOM_NAMES = [
   "Bean", "Mochi", "Atlas", "Pixel", "Penny", "Waffles",
   "Nugget", "Sage", "Pip", "Biscuit", "Ziggy", "Clover",
@@ -60,15 +67,21 @@ function Onboarding() {
   const [personality, setPersonality] = useState<Personality>("fox");
 
   const [hatchPhase, setHatchPhase] = useState<"idle" | "cracking" | "revealed">("idle");
+  const [hatchCTAReady, setHatchCTAReady] = useState(false);
 
   useEffect(() => {
     if (step !== 2) {
       setHatchPhase("idle");
+      setHatchCTAReady(false);
       return;
     }
     setHatchPhase("cracking");
-    const t = setTimeout(() => setHatchPhase("revealed"), 1700);
-    return () => clearTimeout(t);
+    const t1 = setTimeout(() => setHatchPhase("revealed"), 1700);
+    const t2 = setTimeout(() => setHatchCTAReady(true), 3600);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, [step]);
 
   const displayName = name.trim() || "Hodlchi";
@@ -76,15 +89,16 @@ function Onboarding() {
   const canNext =
     (step === 0 && !!egg) ||
     (step === 1 && name.trim().length > 0) ||
-    (step === 2 && hatchPhase === "revealed") ||
+    (step === 2 && hatchCTAReady) ||
     step === 3;
 
   const handleNext = () => {
     if (step === 0 || step === 1) {
       setStep(step + 1);
     } else if (step === 2) {
-      if (hatchPhase !== "revealed") return;
+      if (!hatchCTAReady) return;
       setStep(3);
+
     } else {
       setOnboarding({ name: displayName, egg, personality });
       nav({ to: "/demo" });
@@ -143,7 +157,7 @@ function Onboarding() {
 
           {step === 1 && (
             <div className="animate-pop">
-              <h1 className="text-3xl font-extrabold">Name your Hodlchi</h1>
+              <h1 className="text-3xl font-extrabold">What should your Hodlchi call themselves?</h1>
               <p className="mt-2 text-foreground/70">
                 Pick anything. You can't change it later — kidding, you can.
               </p>
@@ -189,7 +203,25 @@ function Onboarding() {
               <p className="mt-2 text-foreground/70">
                 Pick a learning style. You'll unlock the others as you grow.
               </p>
-              <div className="mt-6 space-y-3">
+
+              <div key={personality} className="mt-5 flex items-start gap-3 animate-pop">
+                <HodlchiAvatar
+                  egg={egg}
+                  personality={personality}
+                  stage="Baby Hodlchi"
+                  size={56}
+                  bob
+                />
+                <div className="relative rounded-2xl border-2 border-foreground/10 bg-white/90 px-4 py-2.5 text-sm font-semibold shadow-soft">
+                  <span
+                    className="absolute left-[-8px] top-4 h-3 w-3 rotate-45 border-b-2 border-l-2 border-foreground/10 bg-white/90"
+                    aria-hidden
+                  />
+                  {PERSONALITY_GREETINGS[personality]}
+                </div>
+              </div>
+
+              <div className="mt-5 space-y-3">
                 {PERSONALITIES.map((p) => {
                   const meta = getPersonalityMeta(p);
                   const active = personality === p;
@@ -220,6 +252,7 @@ function Onboarding() {
               </div>
             </div>
           )}
+
         </div>
 
         <div className="mt-6 flex gap-3">
@@ -238,7 +271,7 @@ function Onboarding() {
           >
             {step === 0 && "Continue"}
             {step === 1 && "Hatch!"}
-            {step === 2 && (hatchPhase === "revealed" ? `Meet ${displayName} →` : "Hatching…")}
+            {step === 2 && (hatchCTAReady ? `Meet ${displayName} →` : "Hatching…")}
             {step === 3 && "Start my journey"}
           </button>
         </div>
@@ -307,19 +340,36 @@ function HatchScene({
         )}
       </div>
 
-      <div className="mt-6 min-h-[92px] text-center">
+      <div className="mt-6 min-h-[120px] text-center">
         {phase !== "revealed" ? (
           <>
             <p className="text-lg font-semibold">Something's stirring…</p>
             <p className="mt-1 text-sm text-foreground/60">Hold tight, {name} is on the way.</p>
           </>
         ) : (
-          <div className="animate-pop">
-            <p className="text-2xl font-extrabold">Hi! I'm {name}. ✨</p>
-            <p className="mt-1 text-sm text-foreground/70">Thanks for choosing me.</p>
-          </div>
+          <>
+            <p
+              className="animate-pop text-lg font-semibold"
+              style={{ animationDelay: "0.3s", animationFillMode: "both" }}
+            >
+              *waves* 👋
+            </p>
+            <p
+              className="animate-pop mt-2 text-2xl font-extrabold"
+              style={{ animationDelay: "1.1s", animationFillMode: "both" }}
+            >
+              Hi! I'm {name}. ✨
+            </p>
+            <p
+              className="animate-pop mt-1 text-sm text-foreground/70"
+              style={{ animationDelay: "1.9s", animationFillMode: "both" }}
+            >
+              Thanks for choosing me.
+            </p>
+          </>
         )}
       </div>
+
     </div>
   );
 }
