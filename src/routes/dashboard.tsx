@@ -68,7 +68,11 @@ function Home() {
     if (!state.onboarded) nav({ to: "/onboarding" });
   }, [state.onboarded, nav]);
 
-  const stage = stageForLevel(state.level);
+  const naturalStage = stageForLevel(state.level);
+  const displayStage = state.acknowledgedStage;
+  const readyToEvolve = stageIndex(naturalStage) > stageIndex(displayStage);
+  const stage = displayStage;
+
   const prog = progressToNextStage(state.level, state.xp);
   const challenge = useMemo(() => getDailyChallenge(), []);
   const totalLessons = PATHS.reduce((n, p) => n + p.lessons.length, 0);
