@@ -15,6 +15,7 @@ import { Route as HomeRouteImport } from './routes/home'
 import { Route as FinancialLiteracyForTeensRouteImport } from './routes/financial-literacy-for-teens'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PathPathIdRouteImport } from './routes/path.$pathId'
+import { Route as CompareKhanAcademyRouteImport } from './routes/compare.khan-academy'
 import { Route as LessonPathIdLessonIdRouteImport } from './routes/lesson.$pathId.$lessonId'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -48,6 +49,11 @@ const PathPathIdRoute = PathPathIdRouteImport.update({
   path: '/path/$pathId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompareKhanAcademyRoute = CompareKhanAcademyRouteImport.update({
+  id: '/compare/khan-academy',
+  path: '/compare/khan-academy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LessonPathIdLessonIdRoute = LessonPathIdLessonIdRouteImport.update({
   id: '/lesson/$pathId/$lessonId',
   path: '/lesson/$pathId/$lessonId',
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/compare/khan-academy': typeof CompareKhanAcademyRoute
   '/path/$pathId': typeof PathPathIdRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
 }
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/compare/khan-academy': typeof CompareKhanAcademyRoute
   '/path/$pathId': typeof PathPathIdRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
 }
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/compare/khan-academy': typeof CompareKhanAcademyRoute
   '/path/$pathId': typeof PathPathIdRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
 }
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/onboarding'
     | '/sitemap.xml'
+    | '/compare/khan-academy'
     | '/path/$pathId'
     | '/lesson/$pathId/$lessonId'
   fileRoutesByTo: FileRoutesByTo
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/onboarding'
     | '/sitemap.xml'
+    | '/compare/khan-academy'
     | '/path/$pathId'
     | '/lesson/$pathId/$lessonId'
   id:
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/onboarding'
     | '/sitemap.xml'
+    | '/compare/khan-academy'
     | '/path/$pathId'
     | '/lesson/$pathId/$lessonId'
   fileRoutesById: FileRoutesById
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   OnboardingRoute: typeof OnboardingRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  CompareKhanAcademyRoute: typeof CompareKhanAcademyRoute
   PathPathIdRoute: typeof PathPathIdRoute
   LessonPathIdLessonIdRoute: typeof LessonPathIdLessonIdRoute
 }
@@ -166,6 +179,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PathPathIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/compare/khan-academy': {
+      id: '/compare/khan-academy'
+      path: '/compare/khan-academy'
+      fullPath: '/compare/khan-academy'
+      preLoaderRoute: typeof CompareKhanAcademyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lesson/$pathId/$lessonId': {
       id: '/lesson/$pathId/$lessonId'
       path: '/lesson/$pathId/$lessonId'
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   OnboardingRoute: OnboardingRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  CompareKhanAcademyRoute: CompareKhanAcademyRoute,
   PathPathIdRoute: PathPathIdRoute,
   LessonPathIdLessonIdRoute: LessonPathIdLessonIdRoute,
 }
