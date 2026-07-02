@@ -76,7 +76,7 @@ function Home() {
   const [showTools, setShowTools] = useState(false);
   const [wobble, setWobble] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
-  const [shakeKey, setShakeKey] = useState(0);
+  // (screen shake handled inside EvolveCinematic)
   const [now, setNow] = useState<Date | null>(null);
   const [mounted, setMounted] = useState(false);
   const [lookDir, setLookDir] = useState(0);
