@@ -86,6 +86,7 @@ function LessonView() {
   };
 
   const xpGained = correctCount * 10 + (correctCount === lesson.quiz.length ? 20 : 0);
+  const accent = PATH_ACCENT[path.id];
 
   return (
     <main className="min-h-screen bg-gradient-sky pb-8">
