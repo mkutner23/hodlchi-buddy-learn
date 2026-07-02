@@ -156,7 +156,7 @@ function Landing() {
           <button
             onClick={() => {
               demoMode();
-              nav({ to: "/demo" });
+              nav({ to: "/dashboard" });
             }}
             className="mt-2 rounded-full border border-foreground/20 bg-white/80 px-4 py-2 text-xs font-semibold backdrop-blur"
           >

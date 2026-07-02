@@ -101,7 +101,7 @@ function Onboarding() {
 
     } else {
       setOnboarding({ name: displayName, egg, personality });
-      nav({ to: "/demo" });
+      nav({ to: "/dashboard" });
     }
   };
 

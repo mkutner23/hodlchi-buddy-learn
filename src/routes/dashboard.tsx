@@ -9,26 +9,26 @@ import {
   type Mood,
 } from "@/lib/hodlchi-store";
 
-export const Route = createFileRoute("/demo")({
+export const Route = createFileRoute("/dashboard")({
   component: Home,
   head: () => ({
     meta: [
-      { title: "Your Hodlchi — Home" },
+      { title: "Your Hodlchi — Dashboard" },
       {
         name: "description",
         content:
           "Feed your Hodlchi with a lesson, keep your streak alive, and evolve from Egg to Wealth Sage.",
       },
-      { property: "og:title", content: "Your Hodlchi — Home" },
+      { property: "og:title", content: "Your Hodlchi — Dashboard" },
       {
         property: "og:description",
         content: "Daily lessons feed your Hodlchi. Come back tomorrow to keep the streak alive.",
       },
-      { property: "og:url", content: "https://demo.hodlchi.com/demo" },
+      { property: "og:url", content: "https://demo.hodlchi.com/dashboard" },
       { property: "og:type", content: "website" },
       { name: "robots", content: "noindex, follow" },
     ],
-    links: [{ rel: "canonical", href: "https://demo.hodlchi.com/demo" }],
+    links: [{ rel: "canonical", href: "https://demo.hodlchi.com/dashboard" }],
   }),
 });
 
