@@ -123,8 +123,10 @@ function Home() {
 
   const handleEvolve = () => {
     setCelebrating(true);
+  };
+  const finishEvolve = () => {
     evolve();
-    setTimeout(() => setCelebrating(false), 1400);
+    setCelebrating(false);
   };
 
 
