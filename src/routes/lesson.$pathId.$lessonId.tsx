@@ -142,7 +142,8 @@ function LessonView() {
               {lesson.quiz.map((_, i) => (
                 <div
                   key={i}
-                  className={`h-1.5 flex-1 rounded-full ${i <= qIdx ? "bg-foreground" : "bg-foreground/15"}`}
+                  className="h-1.5 flex-1 rounded-full"
+                  style={{ backgroundColor: i <= qIdx ? accent.hex : `${accent.hex}20` }}
                 />
               ))}
             </div>
