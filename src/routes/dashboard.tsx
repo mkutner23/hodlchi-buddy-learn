@@ -93,7 +93,17 @@ function Home() {
     });
   };
 
-  const speech = greetingFor(state.name, state.streak, doneToday, doneLessons);
+  const xpToNext = Math.max(0, prog.end - state.xp);
+  const atMaxStage = prog.nextStage === stage;
+  const speech = greetingFor(
+    state.name,
+    state.streak,
+    doneToday,
+    doneLessons,
+    atMaxStage ? 0 : xpToNext,
+    prog.nextStage,
+  );
+
 
   return (
     <main className="min-h-screen bg-gradient-sky pb-16 font-sans">
