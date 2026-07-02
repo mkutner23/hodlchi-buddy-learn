@@ -46,7 +46,7 @@ function greetingFor(
   nextStage: string,
   fruit: ReactNode,
 ) {
-  const hour = new Date().getHours();
+  const hour = (arguments[7] as number | undefined) ?? 9;
   const timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
   if (doneToday) {
     if (xpToNext > 0 && xpToNext <= 30) return `Almost to ${nextStage} — ${xpToNext} XP to go! ✨`;
