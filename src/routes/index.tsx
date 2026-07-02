@@ -11,7 +11,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Hodlchi is the Duolingo of Money. Hatch a cute companion and level it up with 3-minute lessons on saving, investing, credit, and more.",
+          "Hodlchi is the Duolingo of Money. Hatch a cute companion and level it up with quick daily lessons on saving, investing, credit, and more.",
       },
       { property: "og:title", content: "Hodlchi — Learn money. Raise your Hodlchi." },
       {
