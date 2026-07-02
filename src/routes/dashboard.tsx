@@ -151,21 +151,43 @@ function Home() {
     ? (state.completedLessons[state.completedLessons.length - 1].split(":")[0] as PathId)
     : "saving";
   const fruit = <PathFruit pathId={lastCompletedPath} animate={false} />;
-  const speech = readyToEvolve
+  const contextualGreeting = useMemo(
+    () => (mounted && !readyToEvolve ? pickContextualGreeting(state, Date.now()) : null),
+    [mounted, readyToEvolve, state],
+  );
+  const speech: ReactNode = readyToEvolve
     ? `🎉 We did it! I'm ready to become a ${naturalStage}!`
-    : greetingFor(
-        state.name,
-        state.streak,
-        doneToday,
-        doneLessons,
-        atMaxStage ? 0 : xpToNext,
-        prog.nextStage,
-        fruit,
-        now ? now.getHours() : 9,
-      );
+    : contextualGreeting
+      ? contextualGreeting.line
+      : greetingFor(
+          state.name,
+          state.streak,
+          doneToday,
+          doneLessons,
+          atMaxStage ? 0 : xpToNext,
+          prog.nextStage,
+          fruit,
+          now ? now.getHours() : 9,
+        );
+
+  // When a contextual greeting first appears, sound a tone-matched Penny blip.
+  const spokenRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!contextualGreeting) return;
+    if (spokenRef.current === contextualGreeting.key) return;
+    spokenRef.current = contextualGreeting.key;
+    const t = setTimeout(() => {
+      const voice = (sfx.penny as Record<string, (() => void) | undefined>)[
+        contextualGreeting.tone
+      ];
+      if (voice) voice();
+    }, 420);
+    return () => clearTimeout(t);
+  }, [contextualGreeting]);
 
   const handleEvolve = () => {
     setCelebrating(true);
+    setShakeKey((k) => k + 1);
     sfx.penny.excited();
     sfx.sparkle();
   };
@@ -173,6 +195,27 @@ function Home() {
     evolve();
     setCelebrating(false);
   };
+
+  // Penny looks toward where you tap.
+  const handleTap = (e: React.PointerEvent<HTMLElement>) => {
+    if (!avatarWrapRef.current) return;
+    const rect = avatarWrapRef.current.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const dx = e.clientX - cx;
+    setLookDir(dx < -30 ? -1 : dx > 30 ? 1 : 0);
+  };
+
+  const idleAnimClass =
+    idleAction === "stretch"
+      ? "animate-penny-stretch"
+      : idleAction === "yawn"
+        ? "animate-penny-yawn"
+        : idleAction === "tail"
+          ? "animate-penny-tail"
+          : idleAction === "sigh"
+            ? "animate-penny-sigh"
+            : "";
+
 
 
 
