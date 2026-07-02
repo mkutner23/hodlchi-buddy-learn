@@ -200,34 +200,56 @@ function Home() {
           </div>
         </section>
 
-        {/* Today's Lesson — the primary CTA */}
-        <button
-          onClick={goNext}
-          disabled={!nextLesson}
-          className="mt-5 flex w-full items-center justify-between rounded-3xl bg-foreground px-5 py-5 text-left font-bold text-primary shadow-pop transition active:scale-[0.98] disabled:opacity-40"
-        >
-          <div className="min-w-0 flex-1">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
-              {isFirstTime
-                ? "⭐ Start here"
-                : nextLesson
-                  ? `⭐ Today's Lesson · ${nextLesson.lesson.minutes} min`
-                  : "You're all caught up"}
-            </div>
-
-            <div className="mt-1 truncate font-display text-xl font-extrabold leading-tight">
-              {nextLesson
-                ? `${nextLesson.path.emoji}  ${nextLesson.lesson.title}`
-                : "All lessons complete 🎉"}
-            </div>
-            {nextLesson && (
-              <div className="mt-1 text-[11px] font-semibold text-primary/70">
-                {nextLesson.lesson.minutes} min · +30 XP · feed {state.name} 🍎
+        {/* Evolve CTA takes over when a milestone is reached */}
+        {readyToEvolve ? (
+          <button
+            onClick={handleEvolve}
+            className={`mt-5 flex w-full items-center justify-between rounded-3xl bg-gradient-primary px-5 py-5 text-left font-bold text-primary-foreground shadow-pop transition active:scale-[0.98] ${celebrating ? "animate-wobble" : ""}`}
+          >
+            <div className="min-w-0 flex-1">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/80">
+                🎉 Milestone unlocked
               </div>
-            )}
-          </div>
-          <span className="ml-3 text-3xl">→</span>
-        </button>
+              <div className="mt-1 truncate font-display text-xl font-extrabold leading-tight">
+                Evolve into {naturalStage}
+              </div>
+              <div className="mt-1 text-[11px] font-semibold text-primary-foreground/80">
+                Tap to help {state.name} grow up ✨
+              </div>
+            </div>
+            <span className="ml-3 text-3xl">✨</span>
+          </button>
+        ) : (
+          /* Today's Lesson — the primary CTA */
+          <button
+            onClick={goNext}
+            disabled={!nextLesson}
+            className="mt-5 flex w-full items-center justify-between rounded-3xl bg-foreground px-5 py-5 text-left font-bold text-primary shadow-pop transition active:scale-[0.98] disabled:opacity-40"
+          >
+            <div className="min-w-0 flex-1">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
+                {isFirstTime
+                  ? "⭐ Start here"
+                  : nextLesson
+                    ? `⭐ Today's Lesson · ${nextLesson.lesson.minutes} min`
+                    : "You're all caught up"}
+              </div>
+
+              <div className="mt-1 truncate font-display text-xl font-extrabold leading-tight">
+                {nextLesson
+                  ? `${nextLesson.path.emoji}  ${nextLesson.lesson.title}`
+                  : "All lessons complete 🎉"}
+              </div>
+              {nextLesson && (
+                <div className="mt-1 text-[11px] font-semibold text-primary/70">
+                  {nextLesson.lesson.minutes} min · +30 XP · feed {state.name} 🍎
+                </div>
+              )}
+            </div>
+            <span className="ml-3 text-3xl">→</span>
+          </button>
+        )}
+
 
         {/* First-time explainer */}
         {isFirstTime && (
