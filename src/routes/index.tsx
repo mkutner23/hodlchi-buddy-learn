@@ -47,15 +47,30 @@ function Landing() {
           <h1 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
             Learn money.<br />Raise your <span className="text-primary-deep">Hodlchi.</span>
           </h1>
-          <p className="mx-auto mt-4 max-w-sm text-base text-foreground/70">
-            Build confidence with money in just 3 minutes a day. Every lesson helps your Hodlchi evolve — and helps you build your financial future.
-          </p>
-          <p className="mx-auto mt-3 max-w-sm text-sm text-foreground/80 italic">
-            From financial beginner to financial confidence — 3 minutes at a time.
-          </p>
-          <p className="mx-auto mt-3 max-w-sm text-sm text-primary-deep">
-            Come back every day to keep your streak alive and unlock new evolutions.
-          </p>
+          <div className="mx-auto mt-4 max-w-xl text-center">
+            <p className="text-base text-foreground/70 whitespace-nowrap">
+              Build confidence with money in just 3 minutes a day.
+            </p>
+            <p className="text-base text-foreground/70 whitespace-nowrap">
+              Every lesson helps your Hodlchi evolve — and helps you build your financial future.
+            </p>
+          </div>
+          <div className="mx-auto mt-2 max-w-xl text-center">
+            <p className="text-sm text-foreground/80 italic whitespace-nowrap">
+              From financial beginner to financial confidence —
+            </p>
+            <p className="text-sm text-foreground/80 italic whitespace-nowrap">
+              3 minutes at a time.
+            </p>
+          </div>
+          <div className="mx-auto mt-2 max-w-xl text-center">
+            <p className="text-sm text-primary-deep whitespace-nowrap">
+              Come back every day to keep your streak alive
+            </p>
+            <p className="text-sm text-primary-deep whitespace-nowrap">
+              and unlock new evolutions.
+            </p>
+          </div>
 
           <div className="mt-8 grid place-items-center">
             <div className="relative">
