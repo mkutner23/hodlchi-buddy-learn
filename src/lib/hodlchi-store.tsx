@@ -115,13 +115,11 @@ export function stageIndex(stage: Stage): number {
 const HodlchiContext = createContext<Ctx | null>(null);
 
 export function HodlchiProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<HodlchiState>(DEFAULT_STATE);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    setState(loadState());
-    setReady(true);
-  }, []);
+  // Initialize synchronously from localStorage so route guards (e.g. dashboard's
+  // "redirect if !onboarded") see the persisted state on first render rather
+  // than racing against a post-mount setState.
+  const [state, setState] = useState<HodlchiState>(() => loadState());
+  const [ready, setReady] = useState(true);
 
   useEffect(() => {
     if (ready) saveState(state);
