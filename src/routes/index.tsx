@@ -115,7 +115,7 @@ function Landing() {
 
         <section className="mt-10 rounded-2xl bg-foreground p-5 text-center shadow-pop">
           <p className="text-lg font-extrabold text-primary">
-            3 minutes a day. A lifetime of better money decisions.
+            Five minutes today. Smarter money tomorrow.
           </p>
           <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-primary/70">
             Designed to build lifelong money habits
