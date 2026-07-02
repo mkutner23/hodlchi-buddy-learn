@@ -69,8 +69,10 @@ function Home() {
   const nav = useNavigate();
   const { state, reset, demoMode, evolve } = useHodlchi();
   const [showTools, setShowTools] = useState(false);
-  const [wobble, setWobble] = useState(false);
-  const [celebrating, setCelebrating] = useState(false);
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => {
+    setNow(new Date());
+  }, []);
 
 
   useEffect(() => {
