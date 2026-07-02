@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
-import { PATHS, PATH_FRUIT, getDailyChallenge } from "@/lib/lessons-data";
+import { PATHS, PATH_FRUIT, PATH_ACCENT, getDailyChallenge } from "@/lib/lessons-data";
+import { EvolveCinematic } from "@/components/EvolveCinematic";
 import {
   useHodlchi,
   stageForLevel,
@@ -122,8 +123,10 @@ function Home() {
 
   const handleEvolve = () => {
     setCelebrating(true);
+  };
+  const finishEvolve = () => {
     evolve();
-    setTimeout(() => setCelebrating(false), 1400);
+    setCelebrating(false);
   };
 
 
@@ -309,23 +312,36 @@ function Home() {
               const pct = Math.round((done / p.lessons.length) * 100);
               const isNext = nextLesson?.path.id === p.id;
               const isDone = done === p.lessons.length;
+              const accent = PATH_ACCENT[p.id];
               return (
                 <Link
                   key={p.id}
                   to="/path/$pathId"
                   params={{ pathId: p.id }}
-                  className={`flex items-center gap-3 rounded-2xl bg-white/80 p-3 backdrop-blur transition active:scale-[0.99] ${
-                    isNext ? "ring-2 ring-primary" : ""
-                  } ${isDone ? "opacity-60" : ""}`}
+                  className={`flex items-center gap-3 rounded-2xl p-3 backdrop-blur transition active:scale-[0.99] ${
+                    isDone ? "opacity-60" : ""
+                  }`}
+                  style={{
+                    backgroundColor: accent.soft,
+                    boxShadow: isNext ? `0 0 0 2px ${accent.hex}` : undefined,
+                  }}
                 >
-                  <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary/25 text-xl">
+                  <div
+                    className="grid h-11 w-11 place-items-center rounded-xl text-xl"
+                    style={{ backgroundColor: `${accent.hex}30` }}
+                  >
                     {p.emoji}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <div className="font-display font-bold">{p.title}</div>
+                      <div className="font-display font-bold" style={{ color: accent.deep }}>
+                        {p.title}
+                      </div>
                       {isNext && (
-                        <span className="rounded-full bg-foreground px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
+                        <span
+                          className="rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white"
+                          style={{ backgroundColor: accent.hex }}
+                        >
                           Up next
                         </span>
                       )}
@@ -335,11 +351,20 @@ function Home() {
                         </span>
                       )}
                     </div>
-                    <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-foreground/10">
-                      <div className="h-full bg-primary-deep" style={{ width: `${pct}%` }} />
+                    <div
+                      className="mt-1.5 h-1.5 overflow-hidden rounded-full"
+                      style={{ backgroundColor: `${accent.hex}25` }}
+                    >
+                      <div
+                        className="h-full transition-all"
+                        style={{ width: `${pct}%`, backgroundColor: accent.hex }}
+                      />
                     </div>
                   </div>
-                  <div className="text-xs font-bold text-foreground/50">
+                  <div
+                    className="text-xs font-bold"
+                    style={{ color: accent.deep }}
+                  >
                     {done}/{p.lessons.length}
                   </div>
                 </Link>
@@ -379,6 +404,16 @@ function Home() {
           )}
         </div>
       </div>
+      {celebrating && (
+        <EvolveCinematic
+          name={state.name}
+          egg={state.egg}
+          personality={state.personality}
+          fromStage={displayStage}
+          toStage={naturalStage}
+          onDone={finishEvolve}
+        />
+      )}
     </main>
   );
 }
