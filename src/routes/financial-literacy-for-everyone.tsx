@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PATHS } from "@/lib/lessons-data";
 
-const URL = "https://demo.hodlchi.com/financial-literacy-for-teens";
-const TITLE = "Financial Literacy Course for Teens — Hodlchi";
+const URL = "https://demo.hodlchi.com/financial-literacy-for-everyone";
+const TITLE = "Financial Literacy Course for Everyone — Hodlchi";
 const DESCRIPTION =
-  "Free gamified financial literacy course for teens. Learn saving, investing, credit, entrepreneurship, and crypto in 20 bite-size lessons.";
+  "Free gamified financial literacy course for everyone. Learn saving, investing, credit, entrepreneurship, and crypto in 20 bite-size lessons.";
 
 export const Route = createFileRoute("/financial-literacy-for-everyone")({
   component: TeensPage,
