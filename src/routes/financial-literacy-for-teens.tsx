@@ -161,6 +161,22 @@ function TeensPage() {
           </ul>
         </section>
 
+        <section className="mt-8 rounded-3xl bg-foreground p-6 text-primary shadow-pop">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-primary/80">
+            Completion milestone
+          </div>
+          <h2 className="mt-2 text-lg font-extrabold">Earn a free financial literacy certificate</h2>
+          <p className="mt-2 text-sm text-primary/80">
+            Finish all 5 paths and unlock a shareable certificate for your resume, class, or portfolio.
+          </p>
+          <Link
+            to="/certificate"
+            className="mt-4 inline-flex items-center font-semibold text-primary underline underline-offset-2"
+          >
+            Learn about the certificate →
+          </Link>
+        </section>
+
         <section className="mt-8">
           <h2 className="px-1 text-sm font-extrabold uppercase tracking-widest text-foreground/60">
             FAQ
