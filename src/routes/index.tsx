@@ -79,6 +79,19 @@ function Landing() {
           <FeatureRow emoji="📚" title="5 learning paths, bite-size" body="Saving, Investing, Credit, Entrepreneurship, and Crypto basics." />
           <FeatureRow emoji="🔥" title="Streaks & daily challenges" body="Show up daily, earn XP, evolve from Egg to Wealth Sage." />
         </section>
+
+        <section className="mt-8 rounded-2xl bg-white/80 p-4 text-center shadow-soft backdrop-blur">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
+            For students & parents
+          </div>
+          <div className="mt-1 font-bold">A free financial literacy course for teens</div>
+          <Link
+            to="/financial-literacy-for-teens"
+            className="mt-2 inline-block text-sm font-semibold text-primary-deep underline underline-offset-2"
+          >
+            See the curriculum →
+          </Link>
+        </section>
       </div>
     </main>
   );
