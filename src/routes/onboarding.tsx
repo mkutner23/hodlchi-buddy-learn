@@ -340,19 +340,36 @@ function HatchScene({
         )}
       </div>
 
-      <div className="mt-6 min-h-[92px] text-center">
+      <div className="mt-6 min-h-[120px] text-center">
         {phase !== "revealed" ? (
           <>
             <p className="text-lg font-semibold">Something's stirring…</p>
             <p className="mt-1 text-sm text-foreground/60">Hold tight, {name} is on the way.</p>
           </>
         ) : (
-          <div className="animate-pop">
-            <p className="text-2xl font-extrabold">Hi! I'm {name}. ✨</p>
-            <p className="mt-1 text-sm text-foreground/70">Thanks for choosing me.</p>
-          </div>
+          <>
+            <p
+              className="animate-pop text-lg font-semibold"
+              style={{ animationDelay: "0.3s", animationFillMode: "both" }}
+            >
+              *waves* 👋
+            </p>
+            <p
+              className="animate-pop mt-2 text-2xl font-extrabold"
+              style={{ animationDelay: "1.1s", animationFillMode: "both" }}
+            >
+              Hi! I'm {name}. ✨
+            </p>
+            <p
+              className="animate-pop mt-1 text-sm text-foreground/70"
+              style={{ animationDelay: "1.9s", animationFillMode: "both" }}
+            >
+              Thanks for choosing me.
+            </p>
+          </>
         )}
       </div>
+
     </div>
   );
 }
