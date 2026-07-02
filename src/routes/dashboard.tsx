@@ -32,17 +32,27 @@ export const Route = createFileRoute("/dashboard")({
   }),
 });
 
-function greetingFor(name: string, streak: number, doneToday: boolean, doneLessons: number) {
+function greetingFor(
+  name: string,
+  streak: number,
+  doneToday: boolean,
+  doneLessons: number,
+  xpToNext: number,
+  nextStage: string,
+) {
   const hour = new Date().getHours();
   const timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
   if (doneToday) {
+    if (xpToNext > 0 && xpToNext <= 30) return `Almost to ${nextStage} — ${xpToNext} XP to go! ✨`;
     if (streak >= 3) return `Nice — ${streak} days in a row! 🔥`;
-    return `You're getting good at this, ${name}!`;
+    return `Thanks for feeding me, ${name}! 🍎`;
   }
   if (doneLessons === 0) return `Hi! I'm ${name}. Feed me my first lesson?`;
+  if (xpToNext > 0 && xpToNext <= 30) return `So close to ${nextStage}! Just ${xpToNext} XP left.`;
   if (streak >= 2) return `Good ${timeOfDay}! Keep your ${streak}-day streak alive?`;
   return `Good ${timeOfDay}! Ready for today's lesson?`;
 }
+
 
 function Home() {
   const nav = useNavigate();
