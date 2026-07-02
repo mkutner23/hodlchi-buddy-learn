@@ -70,6 +70,13 @@ export function EvolveCinematic({ name, egg, personality, toStage, onDone }: Pro
       aria-live="polite"
       role="dialog"
     >
+      {/* Subtle screen shake when the shell cracks */}
+      <div
+        className="pointer-events-none absolute inset-0 animate-screen-shake"
+        style={{ animationDelay: "0.9s" }}
+        aria-hidden
+      />
+
       {/* Confetti */}
       {confetti.map((c, i) => (
         <span
