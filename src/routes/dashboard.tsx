@@ -1,11 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
 import { PathFruit } from "@/components/PathFruit";
 import { PATHS, PATH_ACCENT, getDailyChallenge, type PathId } from "@/lib/lessons-data";
 import { EvolveCinematic } from "@/components/EvolveCinematic";
 import { sfx } from "@/lib/sfx";
+import { pickContextualGreeting } from "@/lib/penny-greetings";
+import { useIdleLife, type IdleAction } from "@/hooks/useIdleLife";
 import {
   useHodlchi,
   stageForLevel,
@@ -13,6 +15,7 @@ import {
   stageIndex,
   deriveMood,
 } from "@/lib/hodlchi-store";
+
 
 
 
