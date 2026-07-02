@@ -51,7 +51,7 @@ export interface PathAccent {
 // Signature accent color per learning path — used on headers, progress bars,
 // fruit pops, and completion screen so each path has its own personality.
 export const PATH_ACCENT: Record<PathId, PathAccent> = {
-  saving:           { hex: "#22c55e", soft: "#dcfce7", deep: "#15803d", ring: "rgba(34,197,94,0.35)",  name: "green"  },
+  saving:           { hex: "#ef4444", soft: "#fee2e2", deep: "#b91c1c", ring: "rgba(239,68,68,0.35)",  name: "red"    },
   investing:        { hex: "#eab308", soft: "#fef9c3", deep: "#854d0e", ring: "rgba(234,179,8,0.35)",  name: "gold"   },
   credit:           { hex: "#3b82f6", soft: "#dbeafe", deep: "#1d4ed8", ring: "rgba(59,130,246,0.35)", name: "blue"   },
   entrepreneurship: { hex: "#a855f7", soft: "#f3e8ff", deep: "#6b21a8", ring: "rgba(168,85,247,0.35)", name: "purple" },
