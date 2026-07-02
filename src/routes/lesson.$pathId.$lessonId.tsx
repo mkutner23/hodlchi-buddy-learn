@@ -5,6 +5,7 @@ import { PATHS, PATH_ACCENT } from "@/lib/lessons-data";
 import { useHodlchi, deriveMood } from "@/lib/hodlchi-store";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { PathFruit } from "@/components/PathFruit";
+import { sfx } from "@/lib/sfx";
 
 
 
