@@ -51,6 +51,7 @@ interface Props {
   stage: Stage;
   size?: number;
   bob?: boolean;
+  mood?: Mood;
 }
 
 const STAGE_INDEX: Record<Stage, number> = {
@@ -62,23 +63,54 @@ const STAGE_INDEX: Record<Stage, number> = {
   "Money Legend": 5,
 };
 
-export function HodlchiAvatar({ egg, personality, stage, size = 160, bob = true }: Props) {
+const MOOD_ANIM: Record<Mood, string> = {
+  hungry: "animate-mood-hungry",
+  happy: "animate-float",
+  focused: "animate-float",
+  tired: "animate-mood-sleepy",
+  sleepy: "animate-mood-sleepy",
+  excited: "animate-mood-excited",
+  proud: "animate-mood-proud",
+  confused: "animate-mood-confused",
+  celebrating: "animate-mood-celebrating",
+};
+
+const MOOD_OVERLAY: Partial<Record<Mood, { emoji: string; className: string }>> = {
+  sleepy: { emoji: "💤", className: "absolute -top-1 right-0 text-2xl animate-mood-zzz" },
+  tired: { emoji: "💤", className: "absolute -top-1 right-0 text-2xl animate-mood-zzz" },
+  hungry: { emoji: "🍎", className: "absolute -top-2 -right-1 text-2xl animate-mood-hungry-fruit" },
+  excited: { emoji: "✨", className: "absolute -top-1 -right-1 text-2xl animate-sparkle-a" },
+  proud: { emoji: "⭐", className: "absolute -top-1 -right-1 text-xl animate-sparkle-b" },
+  confused: { emoji: "❓", className: "absolute -top-2 right-2 text-2xl animate-mood-confused-mark" },
+  celebrating: { emoji: "🎉", className: "absolute -top-2 -right-2 text-2xl animate-mood-celebrating-pop" },
+};
+
+export function HodlchiAvatar({ egg, personality, stage, size = 160, bob = true, mood }: Props) {
+  const anim = mood ? MOOD_ANIM[mood] : bob ? "animate-float" : "";
+  const overlay = mood ? MOOD_OVERLAY[mood] : undefined;
   return (
-    <div className={bob ? "animate-float" : ""} style={{ width: size, height: size, position: "relative" }}>
-      <svg viewBox="0 0 200 200" width={size} height={size}>
-        <defs>
-          <radialGradient id={`eggGrad-${egg}-${stage}`} cx="50%" cy="35%" r="70%">
-            <stop offset="0%" stopColor="white" stopOpacity="0.9" />
-            <stop offset="60%" stopColor={EGG_META[egg].bg} stopOpacity="1" />
-            <stop offset="100%" stopColor={EGG_META[egg].ring} stopOpacity="1" />
-          </radialGradient>
-        </defs>
+    <div style={{ width: size, height: size, position: "relative" }}>
+      <div className={anim} style={{ width: size, height: size }}>
+        <svg viewBox="0 0 200 200" width={size} height={size}>
+          <defs>
+            <radialGradient id={`eggGrad-${egg}-${stage}`} cx="50%" cy="35%" r="70%">
+              <stop offset="0%" stopColor="white" stopOpacity="0.9" />
+              <stop offset="60%" stopColor={EGG_META[egg].bg} stopOpacity="1" />
+              <stop offset="100%" stopColor={EGG_META[egg].ring} stopOpacity="1" />
+            </radialGradient>
+          </defs>
 
-        {/* shadow */}
-        <ellipse cx="100" cy="184" rx="52" ry="6" fill="oklch(0 0 0 / 0.18)" />
+          {/* shadow */}
+          <ellipse cx="100" cy="184" rx="52" ry="6" fill="oklch(0 0 0 / 0.18)" />
 
-        <StageBody egg={egg} personality={personality} stage={stage} />
-      </svg>
+          <StageBody egg={egg} personality={personality} stage={stage} />
+        </svg>
+      </div>
+      {overlay && (
+        <span className={overlay.className} aria-hidden="true">
+          {overlay.emoji}
+        </span>
+      )}
     </div>
   );
 }
