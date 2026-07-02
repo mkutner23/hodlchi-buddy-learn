@@ -29,26 +29,18 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   const { demoMode } = useHodlchi();
+  const nav = useNavigate();
 
   return (
     <main className="min-h-screen bg-gradient-hero">
-      <div className="mx-auto max-w-md px-5 pt-10 pb-16">
-        <header className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-foreground text-primary text-lg font-black">H</div>
-            <span className="font-display text-xl font-extrabold">Hodlchi</span>
-          </div>
-          <button
-            onClick={() => {
-              demoMode();
-              window.location.href = "/demo";
-            }}
-            className="rounded-full border border-foreground/20 bg-white/60 px-3 py-1.5 text-xs font-semibold backdrop-blur"
-          >
-            Mentor demo
-          </button>
-
+      <div className="mx-auto max-w-md px-5 pt-8 pb-16">
+        <header className="flex flex-col items-center text-center">
+          <HodlchiLogo size={96} className="drop-shadow-sm" />
+          <span className="mt-2 font-display text-3xl font-extrabold tracking-tight">
+            Hodlchi
+          </span>
         </header>
+
 
         <section className="mt-10 text-center">
           <div className="mx-auto w-fit rounded-full bg-white/70 px-3 py-1 text-xs font-semibold text-primary-deep shadow-soft">
