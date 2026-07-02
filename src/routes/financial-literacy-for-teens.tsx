@@ -4,7 +4,7 @@ import { PATHS } from "@/lib/lessons-data";
 const URL = "https://demo.hodlchi.com/financial-literacy-for-teens";
 const TITLE = "Financial Literacy Course for Teens — Hodlchi";
 const DESCRIPTION =
-  "A free, gamified financial literacy course built for teens and beginners. Learn saving, investing, credit, entrepreneurship and crypto basics through 20 bite-size lessons.";
+  "Free gamified financial literacy course for teens. Learn saving, investing, credit, entrepreneurship, and crypto in 20 bite-size lessons.";
 
 export const Route = createFileRoute("/financial-literacy-for-teens")({
   component: TeensPage,
