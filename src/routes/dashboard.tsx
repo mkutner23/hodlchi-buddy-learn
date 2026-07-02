@@ -505,6 +505,35 @@ function Home() {
           </div>
         </section>
 
+        {/* Reflections — recent things Penny "remembers" */}
+        {state.reflections.length > 0 && (
+          <section className="mt-6">
+            <details className="rounded-3xl bg-white/80 p-4 shadow-soft backdrop-blur">
+              <summary className="flex cursor-pointer items-center justify-between">
+                <span className="font-display text-sm font-extrabold uppercase tracking-widest text-foreground/60">
+                  Your reflections
+                </span>
+                <span className="text-[11px] font-semibold text-foreground/50">
+                  {state.reflections.length}
+                </span>
+              </summary>
+              <ul className="mt-3 space-y-2">
+                {state.reflections.slice(0, 3).map((r) => (
+                  <li key={r.ts} className="rounded-2xl bg-primary/10 p-3">
+                    <div className="text-[15px] font-semibold text-foreground/85">
+                      "{r.text}"
+                    </div>
+                    <div className="mt-1 text-[10px] font-bold uppercase tracking-widest text-foreground/50">
+                      {new Date(r.ts).toLocaleDateString()}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </section>
+        )}
+
+
         {/* Tucked-away tools */}
         <div className="mt-8 text-center">
           <button
