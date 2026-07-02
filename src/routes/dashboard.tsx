@@ -134,8 +134,9 @@ function Home() {
     return null;
   }, [state.completedLessons]);
 
-  if (!mounted) return <main className="min-h-screen bg-gradient-sky pb-16 font-sans" aria-hidden />;
+  if (!mounted) return null;
   if (!state.onboarded) return null;
+
 
 
 
