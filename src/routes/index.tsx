@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
+import { ProductWalkthrough } from "@/components/ProductWalkthrough";
 import { useHodlchi } from "@/lib/hodlchi-store";
 
 export const Route = createFileRoute("/")({
