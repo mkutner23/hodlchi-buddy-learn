@@ -153,7 +153,7 @@ function TeensPage() {
         </section>
 
         <section className="mt-8 rounded-3xl bg-white p-5 shadow-soft">
-          <h2 className="text-lg font-extrabold">Why you'll love Hodlchi</h2>
+          <h2 className="text-lg font-extrabold">Why learners stick with Hodlchi</h2>
           <ul className="mt-3 space-y-2 text-sm text-foreground/80">
             <li>🎮 <b>Gamified:</b> Feed a virtual companion by completing lessons.</li>
             <li>⏱️ <b>5 minutes a day:</b> Short lessons that fit between classes.</li>
