@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import type { EggColor, Personality, Stage } from "@/lib/hodlchi-store";
+import type { PathId } from "@/lib/lessons-data";
 
 interface Props {
   name: string;
@@ -9,14 +10,16 @@ interface Props {
   fromStage: Stage;
   toStage: Stage;
   onDone: () => void;
+  studiedPaths?: PathId[];
 }
+
 
 // Signature "Evolve" moment (Pokémon-style):
 // darken → shaking shell → shell burst → glow halo → avatar reveal with
 // particles + confetti → XP stars fly out → name reveal. Auto-dismisses.
 const TOTAL_MS = 4200;
 
-export function EvolveCinematic({ name, egg, personality, toStage, onDone }: Props) {
+export function EvolveCinematic({ name, egg, personality, toStage, onDone, studiedPaths }: Props) {
   useEffect(() => {
     const t = setTimeout(onDone, TOTAL_MS);
     return () => clearTimeout(t);
@@ -133,7 +136,7 @@ export function EvolveCinematic({ name, egg, personality, toStage, onDone }: Pro
           className="relative z-10 animate-evolve-avatar"
           style={{ animationDelay: "1.4s" }}
         >
-          <HodlchiAvatar egg={egg} personality={personality} stage={toStage} size={220} />
+          <HodlchiAvatar egg={egg} personality={personality} stage={toStage} size={220} studiedPaths={studiedPaths} />
         </div>
 
         {/* Sparkle burst on emergence */}

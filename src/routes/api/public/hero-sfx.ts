@@ -9,14 +9,15 @@ type HeroName = "sparkle" | "levelUp";
 
 const PROMPTS: Record<HeroName, { text: string; duration: number }> = {
   sparkle: {
-    text: "Magical evolution transformation: rising shimmering crystal arpeggio with sparkling glass bells, gentle rising orchestral swell underneath, a triumphant sparkle burst at the peak. Nintendo Pokemon-evolution feeling, warm, emotional, joyful, magical, not harsh. Around 1.2 seconds.",
-    duration: 1.5,
+    text: "Magical evolution transformation: rising shimmering crystal arpeggio with sparkling glass bells, gentle rising orchestral swell underneath, a triumphant sparkle burst at the peak. Long fairy-dust tail hanging in the air for an extra 300 ms of shimmer after the peak — soft, airy, decaying gently. Nintendo Pokemon-evolution feeling, warm, emotional, joyful, magical, not harsh. Around 1.6 seconds total.",
+    duration: 1.9,
   },
   levelUp: {
-    text: "Cheerful level-up fanfare: bright ascending bell melody like a Mario power-up star, warm triangle-wave pad underneath, celebratory sparkle tail at the end. Rewarding, joyful, warm, Nintendo-quality, not harsh. Around 1.5 seconds.",
-    duration: 2,
+    text: "Cheerful level-up fanfare: bright ascending bell melody like a Mario power-up star, warm triangle-wave pad underneath, celebratory sparkle burst at the peak, then a long fairy-dust sparkle tail hanging in the air for an extra 300 ms — soft, airy, gently decaying. Rewarding, joyful, warm, Nintendo-quality, not harsh. Around 1.8 seconds total.",
+    duration: 2.3,
   },
 };
+
 
 const cache = new Map<HeroName, ArrayBuffer>();
 

@@ -155,6 +155,12 @@ function Home() {
     ? (state.completedLessons[state.completedLessons.length - 1].split(":")[0] as PathId)
     : "saving";
   const fruit = <PathFruit pathId={lastCompletedPath} animate={false} />;
+  const studiedPaths = useMemo<PathId[]>(() => {
+    const set = new Set<PathId>();
+    for (const key of state.completedLessons) set.add(key.split(":")[0] as PathId);
+    return Array.from(set);
+  }, [state.completedLessons]);
+
   const contextualGreeting = useMemo(
     () => (mounted && !readyToEvolve ? pickContextualGreeting(state, Date.now()) : null),
     [mounted, readyToEvolve, state],
@@ -268,7 +274,9 @@ function Home() {
                 stage={stage}
                 size={180}
                 mood={now ? deriveMood(state, now.getTime()) : undefined}
+                studiedPaths={studiedPaths}
               />
+
               {idleAction === "yawn" && (
                 <span
                   key={`yawn-${idleAction}`}
@@ -535,8 +543,10 @@ function Home() {
           fromStage={displayStage}
           toStage={naturalStage}
           onDone={finishEvolve}
+          studiedPaths={studiedPaths}
         />
       )}
+
     </main>
   );
 }

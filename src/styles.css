@@ -598,4 +598,14 @@
   animation: idle-puff 1.4s ease-out forwards;
 }
 
+@keyframes charm-in {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@utility animate-charm-in {
+  animation: charm-in 500ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
 
