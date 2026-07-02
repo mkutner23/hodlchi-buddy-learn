@@ -89,7 +89,7 @@ const MOOD_OVERLAY: Partial<Record<Mood, { emoji: string; className: string }>> 
   celebrating: { emoji: "🎉", className: "absolute -top-2 -right-2 text-2xl animate-mood-celebrating-pop" },
 };
 
-export function HodlchiAvatar({ egg, personality, stage, size = 160, bob = true, mood }: Props) {
+export function HodlchiAvatar({ egg, personality, stage, size = 160, bob = true, mood, studiedPaths }: Props) {
   const anim = mood ? MOOD_ANIM[mood] : bob ? "animate-float" : "";
   const overlay = mood ? MOOD_OVERLAY[mood] : undefined;
   return (
@@ -108,6 +108,9 @@ export function HodlchiAvatar({ egg, personality, stage, size = 160, bob = true,
           <ellipse cx="100" cy="184" rx="52" ry="6" fill="oklch(0 0 0 / 0.18)" />
 
           <StageBody egg={egg} personality={personality} stage={stage} />
+          {studiedPaths && studiedPaths.length > 0 && STAGE_INDEX[stage] >= 1 && (
+            <PathCharms paths={studiedPaths} />
+          )}
         </svg>
       </div>
       {overlay && (
@@ -118,6 +121,7 @@ export function HodlchiAvatar({ egg, personality, stage, size = 160, bob = true,
     </div>
   );
 }
+
 
 function StageBody({
   egg,
