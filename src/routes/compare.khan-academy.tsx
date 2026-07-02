@@ -126,7 +126,7 @@ function ComparePage() {
             Comparison guide
           </div>
           <h1 className="mt-3 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">
-            Hodlchi vs Khan Academy for financial literacy
+            Hodlchi vs Khan Academy: Which is better for beginners?
           </h1>
           <p className="mt-3 text-foreground/70">
             Khan Academy is a beloved free classroom. Hodlchi is a daily-habit game. Here's an honest side-by-side so you can pick what fits — or use both.
