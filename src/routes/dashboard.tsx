@@ -44,20 +44,25 @@ function greetingFor(
   doneLessons: number,
   xpToNext: number,
   nextStage: string,
-  fruit: string,
+  fruit: ReactNode,
 ) {
   const hour = new Date().getHours();
   const timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
   if (doneToday) {
     if (xpToNext > 0 && xpToNext <= 30) return `Almost to ${nextStage} — ${xpToNext} XP to go! ✨`;
     if (streak >= 3) return `Nice — ${streak} days in a row! 🔥`;
-    return `Thanks for feeding me! ${fruit}`;
+    return (
+      <>
+        Thanks for feeding me! {fruit}
+      </>
+    );
   }
   if (doneLessons === 0) return `Hi! I'm ${name}. Feed me my first lesson?`;
   if (xpToNext > 0 && xpToNext <= 30) return `So close to ${nextStage}! Just ${xpToNext} XP left.`;
   if (streak >= 2) return `Good ${timeOfDay}! Keep your ${streak}-day streak alive?`;
   return `Good ${timeOfDay}! Ready for today's lesson?`;
 }
+
 
 
 function Home() {
