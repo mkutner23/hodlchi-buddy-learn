@@ -66,6 +66,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#8fe36b" },
+      { name: "google-site-verification", content: "-XBtYtp9DNWGMoyu0q01hxCINjm4wCIQF_gSFLIw3ig" },
       { property: "og:site_name", content: "Hodlchi" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
