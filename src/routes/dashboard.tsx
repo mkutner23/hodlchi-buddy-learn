@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
 import { PathFruit } from "@/components/PathFruit";
