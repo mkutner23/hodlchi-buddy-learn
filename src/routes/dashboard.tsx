@@ -83,6 +83,24 @@ function Home() {
     if (!state.onboarded) nav({ to: "/onboarding" });
   }, [state.onboarded, nav]);
 
+  // Wordless Penny vocalization when her mood changes (skip first mount).
+  const currentMood = now ? deriveMood(state, now.getTime()) : null;
+  const [lastVocalMood, setLastVocalMood] = useState<string | null>(null);
+  useEffect(() => {
+    if (!currentMood) return;
+    if (lastVocalMood === null) {
+      setLastVocalMood(currentMood);
+      return;
+    }
+    if (currentMood === lastVocalMood) return;
+    const voice = (sfx.penny as Record<string, (() => void) | undefined>)[currentMood];
+    setLastVocalMood(currentMood);
+    if (voice) {
+      const t = setTimeout(() => voice(), 220);
+      return () => clearTimeout(t);
+    }
+  }, [currentMood, lastVocalMood]);
+
   const naturalStage = stageForLevel(state.level);
   const displayStage = state.acknowledgedStage;
   const readyToEvolve = stageIndex(naturalStage) > stageIndex(displayStage);
@@ -138,6 +156,7 @@ function Home() {
 
   const handleEvolve = () => {
     setCelebrating(true);
+    sfx.penny.excited();
     sfx.sparkle();
   };
   const finishEvolve = () => {
@@ -172,6 +191,7 @@ function Home() {
             onClick={() => {
               setWobble(true);
               sfx.chirp();
+              sfx.penny.happy();
               setTimeout(() => setWobble(false), 600);
             }}
             className="mx-auto block"
