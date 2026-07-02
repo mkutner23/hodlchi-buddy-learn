@@ -19,7 +19,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/onboarding", changefreq: "monthly", priority: "0.6" },
           { path: "/dashboard", changefreq: "weekly", priority: "0.8" },
           { path: "/financial-literacy-for-everyone", changefreq: "monthly", priority: "0.9" },
-          { path: "/blog/what-is-financial-literacy-for-teens", changefreq: "monthly", priority: "0.8" },
+          { path: "/blog/what-is-financial-literacy", changefreq: "monthly", priority: "0.8" },
           { path: "/compare/khan-academy", changefreq: "monthly", priority: "0.7" },
           { path: "/certificate", changefreq: "monthly", priority: "0.8" },
           ...PATHS.map((p) => ({
