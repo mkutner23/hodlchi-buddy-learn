@@ -77,8 +77,12 @@ function LessonView() {
     if (selected === q.answer) {
       setCorrectCount((c) => c + 1);
       flashMood("excited", 1400);
+      sfx.ding();
+      setTimeout(() => sfx.crunch(), 220);
+      setTimeout(() => sfx.xp(), 380);
     } else {
       flashMood("confused", 1600);
+      sfx.wrong();
     }
   };
 
@@ -87,9 +91,11 @@ function LessonView() {
       setQIdx((i) => i + 1);
       setSelected(null);
       setLocked(false);
+      sfx.pop();
     } else {
       completeLesson(path.id, lesson.id, correctCount, lesson.quiz.length);
       setPhase("done");
+      sfx.levelUp();
     }
   };
 
