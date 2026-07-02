@@ -140,11 +140,12 @@ function LessonView() {
               </div>
               <button
                 onClick={() => setPhase("quiz")}
-                className="mt-5 w-full rounded-2xl px-5 py-4 font-bold text-white shadow-pop active:scale-[0.98]"
+                className="btn-squish mt-5 w-full rounded-2xl px-5 py-4 font-bold text-white shadow-pop"
                 style={{ backgroundColor: accent.hex, boxShadow: `0 12px 30px -10px ${accent.ring}` }}
               >
                 Start the quiz →
               </button>
+
             </div>
           );
         })()}
@@ -233,11 +234,12 @@ function LessonView() {
             <button
               onClick={locked ? nextQ : check}
               disabled={selected === null}
-              className="mt-5 w-full rounded-2xl px-5 py-4 font-bold text-white shadow-pop transition active:scale-[0.98] disabled:opacity-40"
+              className="btn-squish mt-5 w-full rounded-2xl px-5 py-4 font-bold text-white shadow-pop disabled:opacity-40"
               style={{ backgroundColor: accent.hex, boxShadow: `0 12px 30px -10px ${accent.ring}` }}
             >
               {locked ? (qIdx + 1 < lesson.quiz.length ? "Next question" : "Finish lesson") : "Check answer"}
             </button>
+
           </div>
         )}
 
@@ -284,14 +286,35 @@ function LessonView() {
             </p>
             <div className="mt-6 grid grid-cols-3 gap-2">
               <div
-                className="rounded-2xl p-3 shadow-soft"
+                className="relative overflow-visible rounded-2xl p-3 shadow-soft"
                 style={{ backgroundColor: accent.soft }}
               >
                 <div className="text-xs font-semibold" style={{ color: accent.deep }}>XP</div>
                 <div className="mt-0.5 text-lg font-extrabold" style={{ color: accent.deep }}>
                   ⭐ +{xpGained}
                 </div>
+                {/* Radiating XP particles */}
+                <div className="pointer-events-none absolute inset-0" aria-hidden>
+                  {Array.from({ length: 6 }).map((_, i) => {
+                    const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+                    const dist = 40 + Math.random() * 18;
+                    return (
+                      <span
+                        key={i}
+                        className="absolute left-1/2 top-1/2 text-sm animate-xp-particle"
+                        style={{
+                          ["--xpx" as string]: `${Math.cos(angle) * dist}px`,
+                          ["--xpy" as string]: `${Math.sin(angle) * dist}px`,
+                          animationDelay: `${i * 60}ms`,
+                        } as CSSProperties}
+                      >
+                        {i % 2 === 0 ? "⭐" : "✨"}
+                      </span>
+                    );
+                  })}
+                </div>
               </div>
+
               <Stat label="Streak" value={`🔥 ${state.streak}`} />
               <Stat label="Correct" value={`✅ ${correctCount}/${lesson.quiz.length}`} />
             </div>

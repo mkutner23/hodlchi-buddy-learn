@@ -1,11 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
 import { PathFruit } from "@/components/PathFruit";
 import { PATHS, PATH_ACCENT, getDailyChallenge, type PathId } from "@/lib/lessons-data";
 import { EvolveCinematic } from "@/components/EvolveCinematic";
 import { sfx } from "@/lib/sfx";
+import { pickContextualGreeting } from "@/lib/penny-greetings";
+import { useIdleLife, type IdleAction } from "@/hooks/useIdleLife";
 import {
   useHodlchi,
   stageForLevel,
@@ -13,6 +15,7 @@ import {
   stageIndex,
   deriveMood,
 } from "@/lib/hodlchi-store";
+
 
 
 
@@ -73,10 +76,17 @@ function Home() {
   const [showTools, setShowTools] = useState(false);
   const [wobble, setWobble] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
+  // (screen shake handled inside EvolveCinematic)
   const [now, setNow] = useState<Date | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const [lookDir, setLookDir] = useState(0);
+  const avatarWrapRef = useRef<HTMLDivElement | null>(null);
+  const idleAction: IdleAction = useIdleLife({ enabled: mounted && !celebrating });
   useEffect(() => {
     setNow(new Date());
+    setMounted(true);
   }, []);
+
 
 
   useEffect(() => {
@@ -124,7 +134,11 @@ function Home() {
     return null;
   }, [state.completedLessons]);
 
+  if (!mounted) return null;
   if (!state.onboarded) return null;
+
+
+
 
   const goNext = () => {
     if (!nextLesson) return;
@@ -141,21 +155,43 @@ function Home() {
     ? (state.completedLessons[state.completedLessons.length - 1].split(":")[0] as PathId)
     : "saving";
   const fruit = <PathFruit pathId={lastCompletedPath} animate={false} />;
-  const speech = readyToEvolve
+  const contextualGreeting = useMemo(
+    () => (mounted && !readyToEvolve ? pickContextualGreeting(state, Date.now()) : null),
+    [mounted, readyToEvolve, state],
+  );
+  const speech: ReactNode = readyToEvolve
     ? `🎉 We did it! I'm ready to become a ${naturalStage}!`
-    : greetingFor(
-        state.name,
-        state.streak,
-        doneToday,
-        doneLessons,
-        atMaxStage ? 0 : xpToNext,
-        prog.nextStage,
-        fruit,
-        now ? now.getHours() : 9,
-      );
+    : contextualGreeting
+      ? contextualGreeting.line
+      : greetingFor(
+          state.name,
+          state.streak,
+          doneToday,
+          doneLessons,
+          atMaxStage ? 0 : xpToNext,
+          prog.nextStage,
+          fruit,
+          now ? now.getHours() : 9,
+        );
+
+  // When a contextual greeting first appears, sound a tone-matched Penny blip.
+  const spokenRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!contextualGreeting) return;
+    if (spokenRef.current === contextualGreeting.key) return;
+    spokenRef.current = contextualGreeting.key;
+    const t = setTimeout(() => {
+      const voice = (sfx.penny as Record<string, (() => void) | undefined>)[
+        contextualGreeting.tone
+      ];
+      if (voice) voice();
+    }, 420);
+    return () => clearTimeout(t);
+  }, [contextualGreeting]);
 
   const handleEvolve = () => {
     setCelebrating(true);
+    
     sfx.penny.excited();
     sfx.sparkle();
   };
@@ -163,6 +199,27 @@ function Home() {
     evolve();
     setCelebrating(false);
   };
+
+  // Penny looks toward where you tap.
+  const handleTap = (e: ReactPointerEvent<HTMLElement>) => {
+    if (!avatarWrapRef.current) return;
+    const rect = avatarWrapRef.current.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const dx = e.clientX - cx;
+    setLookDir(dx < -30 ? -1 : dx > 30 ? 1 : 0);
+  };
+
+  const idleAnimClass =
+    idleAction === "stretch"
+      ? "animate-penny-stretch"
+      : idleAction === "yawn"
+        ? "animate-penny-yawn"
+        : idleAction === "tail"
+          ? "animate-penny-tail"
+          : idleAction === "sigh"
+            ? "animate-penny-sigh"
+            : "";
+
 
 
 
@@ -186,7 +243,7 @@ function Home() {
         </div>
 
         {/* Hero companion */}
-        <section className="mt-4 text-center">
+        <section className="mt-4 text-center" onPointerDown={handleTap}>
           <button
             onClick={() => {
               setWobble(true);
@@ -194,10 +251,17 @@ function Home() {
               sfx.penny.happy();
               setTimeout(() => setWobble(false), 600);
             }}
-            className="mx-auto block"
+            className="btn-squish mx-auto block"
             aria-label={`Pet ${state.name}`}
           >
-            <div className={wobble ? "animate-wobble" : ""}>
+            <div
+              ref={avatarWrapRef}
+              className={`relative inline-block ${wobble ? "animate-wobble" : idleAnimClass}`}
+              style={{
+                transform: `translateX(${lookDir * 4}px)`,
+                transition: "transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+              }}
+            >
               <HodlchiAvatar
                 egg={state.egg}
                 personality={state.personality}
@@ -205,7 +269,24 @@ function Home() {
                 size={180}
                 mood={now ? deriveMood(state, now.getTime()) : undefined}
               />
-
+              {idleAction === "yawn" && (
+                <span
+                  key={`yawn-${idleAction}`}
+                  className="pointer-events-none absolute right-2 top-2 text-xl animate-idle-puff"
+                  aria-hidden
+                >
+                  💤
+                </span>
+              )}
+              {idleAction === "sigh" && (
+                <span
+                  key={`sigh-${idleAction}`}
+                  className="pointer-events-none absolute right-4 top-6 text-lg animate-idle-puff"
+                  aria-hidden
+                >
+                  💭
+                </span>
+              )}
             </div>
           </button>
 
@@ -236,7 +317,7 @@ function Home() {
             </div>
             <div className="mt-2 h-3 overflow-hidden rounded-full bg-foreground/10">
               <div
-                className="h-full bg-gradient-primary transition-all"
+                className="progress-spring h-full bg-gradient-primary"
                 style={{ width: `${prog.pct}%` }}
               />
             </div>
@@ -249,11 +330,12 @@ function Home() {
           </div>
         </section>
 
+
         {/* Evolve CTA takes over when a milestone is reached */}
         {readyToEvolve ? (
           <button
             onClick={handleEvolve}
-            className={`mt-5 flex w-full items-center justify-between rounded-3xl bg-gradient-primary px-5 py-5 text-left font-bold text-primary-foreground shadow-pop transition active:scale-[0.98] ${celebrating ? "animate-wobble" : ""}`}
+            className={`btn-squish mt-5 flex w-full items-center justify-between rounded-3xl bg-gradient-primary px-5 py-5 text-left font-bold text-primary-foreground shadow-pop ${celebrating ? "animate-wobble" : ""}`}
           >
             <div className="min-w-0 flex-1">
               <div className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/80">
@@ -273,7 +355,7 @@ function Home() {
           <button
             onClick={goNext}
             disabled={!nextLesson}
-            className="mt-5 flex w-full items-center justify-between rounded-3xl bg-foreground px-5 py-5 text-left font-bold text-primary shadow-pop transition active:scale-[0.98] disabled:opacity-40"
+            className="btn-squish mt-5 flex w-full items-center justify-between rounded-3xl bg-foreground px-5 py-5 text-left font-bold text-primary shadow-pop disabled:opacity-40"
           >
             <div className="min-w-0 flex-1">
               <div className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
