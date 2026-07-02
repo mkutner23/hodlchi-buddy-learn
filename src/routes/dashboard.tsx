@@ -104,6 +104,10 @@ function Home() {
 
   const xpToNext = Math.max(0, prog.end - state.xp);
   const atMaxStage = prog.nextStage === stage;
+  const lastCompletedPath = state.completedLessons.length > 0
+    ? (state.completedLessons[state.completedLessons.length - 1].split(":")[0] as keyof typeof PATH_FRUIT)
+    : "saving";
+  const fruit = PATH_FRUIT[lastCompletedPath] ?? "🍎";
   const speech = readyToEvolve
     ? `🎉 We did it! I'm ready to become a ${naturalStage}!`
     : greetingFor(
@@ -113,6 +117,7 @@ function Home() {
         doneLessons,
         atMaxStage ? 0 : xpToNext,
         prog.nextStage,
+        fruit,
       );
 
   const handleEvolve = () => {
