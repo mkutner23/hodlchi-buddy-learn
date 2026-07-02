@@ -404,6 +404,16 @@ function Home() {
           )}
         </div>
       </div>
+      {celebrating && (
+        <EvolveCinematic
+          name={state.name}
+          egg={state.egg}
+          personality={state.personality}
+          fromStage={displayStage}
+          toStage={naturalStage}
+          onDone={finishEvolve}
+        />
+      )}
     </main>
   );
 }
