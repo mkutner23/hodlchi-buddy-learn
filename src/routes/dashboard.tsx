@@ -45,8 +45,8 @@ function greetingFor(
   xpToNext: number,
   nextStage: string,
   fruit: ReactNode,
+  hour: number,
 ) {
-  const hour = new Date().getHours();
   const timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
   if (doneToday) {
     if (xpToNext > 0 && xpToNext <= 30) return `Almost to ${nextStage} — ${xpToNext} XP to go! ✨`;
@@ -71,6 +71,10 @@ function Home() {
   const [showTools, setShowTools] = useState(false);
   const [wobble, setWobble] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => {
+    setNow(new Date());
+  }, []);
 
 
   useEffect(() => {
@@ -87,7 +91,7 @@ function Home() {
   const totalLessons = PATHS.reduce((n, p) => n + p.lessons.length, 0);
   const doneLessons = state.completedLessons.length;
   const isFirstTime = doneLessons === 0;
-  const doneToday = state.lastActiveDay === new Date().toISOString().slice(0, 10);
+  const doneToday = now ? state.lastActiveDay === now.toISOString().slice(0, 10) : false;
 
   const nextLesson = useMemo(() => {
     for (const path of PATHS) {
@@ -126,6 +130,7 @@ function Home() {
         atMaxStage ? 0 : xpToNext,
         prog.nextStage,
         fruit,
+        now ? now.getHours() : 9,
       );
 
   const handleEvolve = () => {
