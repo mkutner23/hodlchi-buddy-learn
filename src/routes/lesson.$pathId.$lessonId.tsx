@@ -3,7 +3,7 @@ import { useState } from "react";
 import { PATHS } from "@/lib/lessons-data";
 import { useHodlchi } from "@/lib/hodlchi-store";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
-import { stageForLevel } from "@/lib/hodlchi-store";
+
 
 export const Route = createFileRoute("/lesson/$pathId/$lessonId")({
   component: LessonView,
