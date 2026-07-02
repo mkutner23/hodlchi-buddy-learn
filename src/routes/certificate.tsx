@@ -124,7 +124,7 @@ function CertificatePage() {
             Free certificate of completion
           </div>
           <h1 className="mt-2 text-3xl font-black leading-tight">
-            Financial Literacy Certificate for Teens
+            Financial Literacy Certificate
           </h1>
           <p className="mt-3 text-sm text-foreground/70">
             Finish all 5 Hodlchi learning paths and earn a free certificate that shows you’ve
@@ -188,7 +188,7 @@ function CertificatePage() {
         <section className="mt-8 rounded-3xl bg-white p-5 shadow-soft">
           <h2 className="text-lg font-extrabold">Why complete the certificate?</h2>
           <ul className="mt-3 space-y-2 text-sm text-foreground/80">
-            <li>🎓 <b>Prove your skills:</b> Show you understand money basics before adulthood.</li>
+            <li>🎓 <b>Prove your skills:</b> Show you understand money basics.</li>
             <li>📄 <b>Shareable milestone:</b> Great for class assignments, portfolios, and resumes.</li>
             <li>🎮 <b>Fun, not boring:</b> Learn through a game instead of long videos or textbooks.</li>
             <li>🔥 <b>Build a habit:</b> Daily lessons and streaks keep you coming back.</li>
