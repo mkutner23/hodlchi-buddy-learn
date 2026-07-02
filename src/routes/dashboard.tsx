@@ -156,6 +156,7 @@ function Home() {
 
   const handleEvolve = () => {
     setCelebrating(true);
+    sfx.penny.excited();
     sfx.sparkle();
   };
   const finishEvolve = () => {
