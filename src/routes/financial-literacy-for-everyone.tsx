@@ -25,9 +25,9 @@ export const Route = createFileRoute("/financial-literacy-for-everyone")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Course",
-          name: "Financial Literacy Course for Teens",
+          name: "Financial Literacy Course for Everyone",
           description: DESCRIPTION,
-          educationalLevel: "Beginner / Teen",
+          educationalLevel: "Beginner",
           audience: {
             "@type": "EducationalAudience",
             educationalRole: "student",
