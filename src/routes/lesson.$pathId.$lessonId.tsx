@@ -286,14 +286,35 @@ function LessonView() {
             </p>
             <div className="mt-6 grid grid-cols-3 gap-2">
               <div
-                className="rounded-2xl p-3 shadow-soft"
+                className="relative overflow-visible rounded-2xl p-3 shadow-soft"
                 style={{ backgroundColor: accent.soft }}
               >
                 <div className="text-xs font-semibold" style={{ color: accent.deep }}>XP</div>
                 <div className="mt-0.5 text-lg font-extrabold" style={{ color: accent.deep }}>
                   ⭐ +{xpGained}
                 </div>
+                {/* Radiating XP particles */}
+                <div className="pointer-events-none absolute inset-0" aria-hidden>
+                  {Array.from({ length: 6 }).map((_, i) => {
+                    const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+                    const dist = 40 + Math.random() * 18;
+                    return (
+                      <span
+                        key={i}
+                        className="absolute left-1/2 top-1/2 text-sm animate-xp-particle"
+                        style={{
+                          ["--xpx" as string]: `${Math.cos(angle) * dist}px`,
+                          ["--xpy" as string]: `${Math.sin(angle) * dist}px`,
+                          animationDelay: `${i * 60}ms`,
+                        } as CSSProperties}
+                      >
+                        {i % 2 === 0 ? "⭐" : "✨"}
+                      </span>
+                    );
+                  })}
+                </div>
               </div>
+
               <Stat label="Streak" value={`🔥 ${state.streak}`} />
               <Stat label="Correct" value={`✅ ${correctCount}/${lesson.quiz.length}`} />
             </div>
