@@ -96,6 +96,7 @@ function TeensPage() {
     (n, p) => n + p.lessons.reduce((m, l) => m + l.minutes, 0),
     0,
   );
+  const roundedMinutes = Math.round(totalMinutes / 5) * 5;
 
   return (
     <main className="min-h-screen bg-gradient-sky pb-20">
@@ -112,9 +113,9 @@ function TeensPage() {
             Financial Literacy Course for Everyone
           </h1>
           <p className="mt-3 text-sm text-foreground/70">
-            {totalLessons} bite-size lessons · ~{totalMinutes} minutes total. Hatch a Hodlchi and
-            learn money the fun way — saving, investing, credit, entrepreneurship and crypto
-            basics, all in one gamified curriculum.
+            {totalLessons} bite-size lessons • About {roundedMinutes} minutes total. Hatch a
+            Hodlchi and learn money the fun way — saving, investing, credit, entrepreneurship
+            and crypto basics, all in one gamified curriculum.
           </p>
           <Link
             to="/onboarding"
