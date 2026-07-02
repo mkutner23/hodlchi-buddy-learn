@@ -143,7 +143,7 @@ function Landing() {
             <Link to="/certificate" className="font-semibold text-primary-deep underline underline-offset-2">
               Free financial literacy certificate →
             </Link>
-            <Link to="/blog/what-is-financial-literacy-for-teens" className="font-semibold text-foreground/70 underline underline-offset-2">
+            <Link to="/blog/what-is-financial-literacy" className="font-semibold text-foreground/70 underline underline-offset-2">
               What is financial literacy? →
             </Link>
           </div>
