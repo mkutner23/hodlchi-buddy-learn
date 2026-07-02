@@ -19,7 +19,7 @@ interface Props {
 // particles + confetti → XP stars fly out → name reveal. Auto-dismisses.
 const TOTAL_MS = 4200;
 
-export function EvolveCinematic({ name, egg, personality, toStage, onDone }: Props) {
+export function EvolveCinematic({ name, egg, personality, toStage, onDone, studiedPaths }: Props) {
   useEffect(() => {
     const t = setTimeout(onDone, TOTAL_MS);
     return () => clearTimeout(t);
