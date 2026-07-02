@@ -117,9 +117,7 @@ function PathView() {
                   }}
                 >
                   {complete ? (
-                    <span className="text-2xl leading-none" aria-label="completed">
-                      {PATH_FRUIT[path.id]}
-                    </span>
+                    <PathFruit pathId={path.id} className="text-2xl leading-none" />
                   ) : locked ? (
                     "🔒"
                   ) : (
