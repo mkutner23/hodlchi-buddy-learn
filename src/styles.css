@@ -166,3 +166,37 @@
 @utility animate-pop {
   animation: pop-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+@keyframes wiggle-alive {
+  0%, 88%, 100% { transform: rotate(0deg) translateY(0); }
+  92% { transform: rotate(-4deg) translateY(-2px); }
+  96% { transform: rotate(4deg) translateY(-2px); }
+}
+@utility animate-wiggle {
+  animation: wiggle-alive 4.5s ease-in-out infinite;
+}
+
+@keyframes blink-eye {
+  0%, 92%, 100% { transform: translateX(-50%) scaleY(0); opacity: 0; }
+  94%, 96% { transform: translateX(-50%) scaleY(1); opacity: 0.85; }
+}
+@utility animate-blink {
+  animation: blink-eye 5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes sparkle-pulse {
+  0%, 100% { transform: scale(0.6) rotate(0deg); opacity: 0; }
+  40% { transform: scale(1.1) rotate(15deg); opacity: 1; }
+  70% { transform: scale(0.9) rotate(-10deg); opacity: 0.7; }
+}
+@utility animate-sparkle-a {
+  animation: sparkle-pulse 3.2s ease-in-out infinite;
+}
+@utility animate-sparkle-b {
+  animation: sparkle-pulse 3.8s ease-in-out infinite 0.9s;
+}
+@utility animate-sparkle-c {
+  animation: sparkle-pulse 4.4s ease-in-out infinite 1.8s;
+}
+
