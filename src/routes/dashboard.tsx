@@ -178,7 +178,9 @@ function Home() {
                 personality={state.personality}
                 stage={stage}
                 size={180}
+                mood={now ? deriveMood(state, now.getTime()) : undefined}
               />
+
             </div>
           </button>
 
