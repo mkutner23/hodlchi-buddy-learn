@@ -1,12 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PATHS } from "@/lib/lessons-data";
 
-const URL = "https://demo.hodlchi.com/financial-literacy-for-teens";
-const TITLE = "Financial Literacy Course for Teens — Hodlchi";
+const URL = "https://demo.hodlchi.com/financial-literacy-for-everyone";
+const TITLE = "Financial Literacy Course for Everyone — Hodlchi";
 const DESCRIPTION =
-  "Free gamified financial literacy course for teens. Learn saving, investing, credit, entrepreneurship, and crypto in 20 bite-size lessons.";
+  "Free gamified financial literacy course for everyone. Learn saving, investing, credit, entrepreneurship, and crypto in 20 bite-size lessons.";
 
-export const Route = createFileRoute("/financial-literacy-for-teens")({
+export const Route = createFileRoute("/financial-literacy-for-everyone")({
   component: TeensPage,
   head: () => ({
     meta: [
@@ -25,9 +25,9 @@ export const Route = createFileRoute("/financial-literacy-for-teens")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Course",
-          name: "Financial Literacy Course for Teens",
+          name: "Financial Literacy Course for Everyone",
           description: DESCRIPTION,
-          educationalLevel: "Beginner / Teen",
+          educationalLevel: "Beginner",
           audience: {
             "@type": "EducationalAudience",
             educationalRole: "student",
@@ -109,7 +109,7 @@ function TeensPage() {
             Free · Beginner-friendly
           </div>
           <h1 className="mt-2 text-3xl font-black leading-tight">
-            Financial Literacy Course for Teens
+            Financial Literacy Course for Everyone
           </h1>
           <p className="mt-3 text-sm text-foreground/70">
             {totalLessons} bite-size lessons · ~{totalMinutes} minutes total. Hatch a Hodlchi and
@@ -152,10 +152,10 @@ function TeensPage() {
         </section>
 
         <section className="mt-8 rounded-3xl bg-white p-5 shadow-soft">
-          <h2 className="text-lg font-extrabold">Why teens love Hodlchi</h2>
+          <h2 className="text-lg font-extrabold">Why you'll love Hodlchi</h2>
           <ul className="mt-3 space-y-2 text-sm text-foreground/80">
             <li>🎮 <b>Gamified:</b> Feed a virtual companion by completing lessons.</li>
-            <li>⏱️ <b>3 minutes a day:</b> Short lessons that fit between classes.</li>
+            <li>⏱️ <b>5 minutes a day:</b> Short lessons that fit between classes.</li>
             <li>🔥 <b>Streaks:</b> Come back daily to keep your Hodlchi alive.</li>
             <li>🧠 <b>Plain English:</b> No jargon. No pressure. Just the basics.</li>
           </ul>
