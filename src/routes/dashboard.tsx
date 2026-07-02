@@ -191,6 +191,7 @@ function Home() {
             onClick={() => {
               setWobble(true);
               sfx.chirp();
+              sfx.penny.happy();
               setTimeout(() => setWobble(false), 600);
             }}
             className="mx-auto block"
