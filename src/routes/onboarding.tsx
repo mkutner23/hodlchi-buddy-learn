@@ -41,7 +41,7 @@ function Onboarding() {
       setStep(step + 1);
     } else {
       setOnboarding({ name: name.trim() || "Hodlchi", egg, personality });
-      nav({ to: "/home" });
+      nav({ to: "/demo" });
     }
   };
 
