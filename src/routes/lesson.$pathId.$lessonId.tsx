@@ -1,9 +1,11 @@
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
 import { useState } from "react";
-import { PATHS, PATH_FRUIT, PATH_ACCENT } from "@/lib/lessons-data";
+import { PATHS, PATH_ACCENT } from "@/lib/lessons-data";
 import { useHodlchi } from "@/lib/hodlchi-store";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
+import { PathFruit } from "@/components/PathFruit";
+
 
 
 export const Route = createFileRoute("/lesson/$pathId/$lessonId")({
@@ -195,9 +197,11 @@ function LessonView() {
               {/* Micro-delight when correct */}
               {locked && isCorrect && (
                 <div className="pointer-events-none relative h-0" aria-hidden="true">
-                  <div className="animate-fruit-fly absolute left-1/2 -top-2 text-4xl">
-                    {PATH_FRUIT[path.id]}
-                  </div>
+                  <PathFruit
+                    pathId={path.id}
+                    animate={false}
+                    className="animate-fruit-fly absolute left-1/2 -top-2 text-4xl"
+                  />
                   <span
                     className="animate-heart-pop absolute left-1/3 -top-2 text-2xl"
                     style={{ ["--tx" as string]: "-12px" } as CSSProperties}
@@ -234,17 +238,17 @@ function LessonView() {
                 const delay = Math.random() * 0.9;
                 const size = 22 + Math.random() * 16;
                 return (
-                  <span
+                  <PathFruit
                     key={i}
+                    pathId={path.id}
+                    animate={false}
                     className="absolute top-0 animate-fruit-rain"
                     style={{
                       left: `${left}%`,
                       fontSize: `${size}px`,
                       animationDelay: `${delay}s`,
                     }}
-                  >
-                    {PATH_FRUIT[path.id]}
-                  </span>
+                  />
                 );
               })}
             </div>
@@ -259,7 +263,7 @@ function LessonView() {
               </div>
             </div>
             <h1 className="mt-4 text-3xl font-extrabold">
-              {PATH_FRUIT[path.id]} {state.name} enjoyed that lesson!
+              <PathFruit pathId={path.id} animate={false} className="text-4xl" /> {state.name} enjoyed that lesson!
             </h1>
             <p className="mt-1 text-foreground/70">
               +{xpGained} XP · {state.name} feels {correctCount === lesson.quiz.length ? "amazing" : "a little wiser"}.

@@ -1,8 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
-import { PATHS, PATH_FRUIT, PATH_ACCENT, getDailyChallenge } from "@/lib/lessons-data";
+import { PathFruit } from "@/components/PathFruit";
+import { PATHS, PATH_ACCENT, getDailyChallenge, type PathId } from "@/lib/lessons-data";
 import { EvolveCinematic } from "@/components/EvolveCinematic";
 import {
   useHodlchi,
@@ -10,6 +11,7 @@ import {
   progressToNextStage,
   stageIndex,
 } from "@/lib/hodlchi-store";
+
 
 
 export const Route = createFileRoute("/dashboard")({
@@ -42,20 +44,25 @@ function greetingFor(
   doneLessons: number,
   xpToNext: number,
   nextStage: string,
-  fruit: string,
+  fruit: ReactNode,
 ) {
   const hour = new Date().getHours();
   const timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
   if (doneToday) {
     if (xpToNext > 0 && xpToNext <= 30) return `Almost to ${nextStage} — ${xpToNext} XP to go! ✨`;
     if (streak >= 3) return `Nice — ${streak} days in a row! 🔥`;
-    return `Thanks for feeding me! ${fruit}`;
+    return (
+      <>
+        Thanks for feeding me! {fruit}
+      </>
+    );
   }
   if (doneLessons === 0) return `Hi! I'm ${name}. Feed me my first lesson?`;
   if (xpToNext > 0 && xpToNext <= 30) return `So close to ${nextStage}! Just ${xpToNext} XP left.`;
   if (streak >= 2) return `Good ${timeOfDay}! Keep your ${streak}-day streak alive?`;
   return `Good ${timeOfDay}! Ready for today's lesson?`;
 }
+
 
 
 function Home() {
@@ -106,9 +113,9 @@ function Home() {
   const xpToNext = Math.max(0, prog.end - state.xp);
   const atMaxStage = prog.nextStage === stage;
   const lastCompletedPath = state.completedLessons.length > 0
-    ? (state.completedLessons[state.completedLessons.length - 1].split(":")[0] as keyof typeof PATH_FRUIT)
+    ? (state.completedLessons[state.completedLessons.length - 1].split(":")[0] as PathId)
     : "saving";
-  const fruit = PATH_FRUIT[lastCompletedPath] ?? "🍎";
+  const fruit = <PathFruit pathId={lastCompletedPath} animate={false} />;
   const speech = readyToEvolve
     ? `🎉 We did it! I'm ready to become a ${naturalStage}!`
     : greetingFor(
@@ -251,7 +258,8 @@ function Home() {
               </div>
               {nextLesson && (
                 <div className="mt-1 text-[11px] font-semibold text-primary/70">
-                  {nextLesson.lesson.minutes} min · +30 XP · feed {state.name} {PATH_FRUIT[nextLesson.path.id]}
+                  {nextLesson.lesson.minutes} min · +30 XP · feed {state.name}{" "}
+                  <PathFruit pathId={nextLesson.path.id} animate={false} />
                 </div>
               )}
             </div>
