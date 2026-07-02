@@ -1,9 +1,11 @@
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
 import { useState } from "react";
-import { PATHS, PATH_FRUIT, PATH_ACCENT } from "@/lib/lessons-data";
+import { PATHS, PATH_ACCENT } from "@/lib/lessons-data";
 import { useHodlchi } from "@/lib/hodlchi-store";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
+import { PathFruit } from "@/components/PathFruit";
+
 
 
 export const Route = createFileRoute("/lesson/$pathId/$lessonId")({
