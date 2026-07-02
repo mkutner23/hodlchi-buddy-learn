@@ -59,12 +59,25 @@ function Landing() {
           <p className="mx-auto mt-4 max-w-sm text-base text-foreground/70">
             Learn real money skills in just 3 minutes a day. Every lesson helps your Hodlchi evolve — and helps you build your financial future.
           </p>
+          <p className="mx-auto mt-3 max-w-sm text-sm font-semibold text-foreground/80 italic">
+            From financial beginner to financial confidence — 3 minutes at a time.
+          </p>
           <p className="mx-auto mt-3 max-w-sm text-sm font-semibold text-primary-deep">
             Come back every day to keep your streak alive and unlock new evolutions.
           </p>
 
           <div className="mt-8 grid place-items-center">
-            <HodlchiAvatar egg="mint" personality="fox" stage="Baby Hodlchi" size={200} />
+            <div className="relative">
+              {/* Sparkles */}
+              <span className="pointer-events-none absolute -left-4 top-2 text-lg animate-sparkle-a">✨</span>
+              <span className="pointer-events-none absolute -right-2 top-8 text-base animate-sparkle-b">✨</span>
+              <span className="pointer-events-none absolute left-6 -bottom-2 text-sm animate-sparkle-c">💚</span>
+              {/* Blink overlay */}
+              <span className="pointer-events-none absolute left-1/2 top-[38%] -translate-x-1/2 h-1.5 w-14 rounded-full bg-foreground/80 animate-blink" />
+              <div className="animate-wiggle">
+                <HodlchiAvatar egg="mint" personality="fox" stage="Baby Hodlchi" size={200} />
+              </div>
+            </div>
           </div>
 
           <Link
@@ -81,7 +94,7 @@ function Landing() {
           </p>
         </section>
 
-        <section className="mt-12">
+        <section className="mt-10">
           <div className="mb-3 text-center">
             <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
               30-second product tour
@@ -93,8 +106,16 @@ function Landing() {
           <ProductWalkthrough />
         </section>
 
-        <section className="mt-14">
+        <section className="mt-10 rounded-2xl bg-foreground p-5 text-center shadow-pop">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-primary">
+            Our moat
+          </div>
+          <p className="mt-1 text-lg font-extrabold text-primary">
+            Built to make learning money a daily habit.
+          </p>
+        </section>
 
+        <section className="mt-10">
           <h2 className="text-center text-2xl font-extrabold tracking-tight">Why learn with Hodlchi?</h2>
           <div className="mt-5 grid gap-3">
             <FeatureRow emoji="🥚" title="Learn by raising a companion you'll actually care about" body="Hatch, name, and grow a Hodlchi that evolves with every lesson you finish." />
