@@ -41,13 +41,14 @@ function greetingFor(
   doneLessons: number,
   xpToNext: number,
   nextStage: string,
+  fruit: string,
 ) {
   const hour = new Date().getHours();
   const timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
   if (doneToday) {
     if (xpToNext > 0 && xpToNext <= 30) return `Almost to ${nextStage} — ${xpToNext} XP to go! ✨`;
     if (streak >= 3) return `Nice — ${streak} days in a row! 🔥`;
-    return `Thanks for feeding me, ${name}! 🍎`;
+    return `Thanks for feeding me! ${fruit}`;
   }
   if (doneLessons === 0) return `Hi! I'm ${name}. Feed me my first lesson?`;
   if (xpToNext > 0 && xpToNext <= 30) return `So close to ${nextStage}! Just ${xpToNext} XP left.`;
