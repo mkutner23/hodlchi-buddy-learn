@@ -47,6 +47,9 @@ function Landing() {
           <h1 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
             Learn money.<br />Raise your <span className="text-primary-deep">Hodlchi.</span>
           </h1>
+          <p className="mx-auto mt-4 max-w-xl text-center text-base text-foreground/80">
+            Learn the money skills most schools never teach — in just 5 minutes a day.
+          </p>
           <div className="mx-auto mt-4 max-w-xl text-center">
             <p className="text-base text-foreground/70 whitespace-nowrap">
               Build confidence with money in just 5 minutes a day.
