@@ -124,7 +124,7 @@ function CertificatePage() {
             Free certificate of completion
           </div>
           <h1 className="mt-2 text-3xl font-black leading-tight">
-            Financial Literacy Certificate for Teens
+            Financial Literacy Certificate
           </h1>
           <p className="mt-3 text-sm text-foreground/70">
             Finish all 5 Hodlchi learning paths and earn a free certificate that shows you’ve
