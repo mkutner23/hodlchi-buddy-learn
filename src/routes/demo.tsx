@@ -9,7 +9,7 @@ import {
   type Mood,
 } from "@/lib/hodlchi-store";
 
-export const Route = createFileRoute("/home")({
+export const Route = createFileRoute("/demo")({
   component: Home,
   head: () => ({
     meta: [
@@ -24,11 +24,11 @@ export const Route = createFileRoute("/home")({
         property: "og:description",
         content: "Daily lessons feed your Hodlchi. Come back tomorrow to keep the streak alive.",
       },
-      { property: "og:url", content: "https://demo.hodlchi.com/home" },
+      { property: "og:url", content: "https://demo.hodlchi.com/demo" },
       { property: "og:type", content: "website" },
       { name: "robots", content: "noindex, follow" },
     ],
-    links: [{ rel: "canonical", href: "https://demo.hodlchi.com/home" }],
+    links: [{ rel: "canonical", href: "https://demo.hodlchi.com/demo" }],
   }),
 });
 

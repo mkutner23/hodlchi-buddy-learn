@@ -213,7 +213,7 @@ function LessonView() {
                 Back to path
               </button>
               <button
-                onClick={() => nav({ to: "/home" })}
+                onClick={() => nav({ to: "/demo" })}
                 className="flex-1 rounded-2xl bg-foreground px-5 py-4 font-bold text-primary shadow-pop"
               >
                 Home

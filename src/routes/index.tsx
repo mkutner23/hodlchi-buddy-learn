@@ -27,8 +27,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Landing() {
-  const { state, demoMode } = useHodlchi();
-  const primaryCta = state.onboarded ? { to: "/home", label: "Hatch my Hodlchi" } : { to: "/onboarding", label: "Hatch my Hodlchi" };
+  const { demoMode } = useHodlchi();
 
   return (
     <main className="min-h-screen bg-gradient-hero">
@@ -41,12 +40,13 @@ function Landing() {
           <button
             onClick={() => {
               demoMode();
-              window.location.href = "/home";
+              window.location.href = "/demo";
             }}
             className="rounded-full border border-foreground/20 bg-white/60 px-3 py-1.5 text-xs font-semibold backdrop-blur"
           >
             Mentor demo
           </button>
+
         </header>
 
         <section className="mt-10 text-center">
@@ -81,11 +81,12 @@ function Landing() {
           </div>
 
           <Link
-            to={primaryCta.to}
+            to="/onboarding"
             className="mt-8 inline-flex w-full items-center justify-center rounded-2xl bg-foreground px-6 py-4 text-base font-bold text-primary shadow-pop transition active:scale-[0.98]"
           >
-            {primaryCta.label} →
+            Hatch my Hodlchi →
           </Link>
+
           <p className="mt-3 text-xs text-foreground/60">
             Educational only. No trading, wallets, or investment advice.
           </p>
