@@ -76,10 +76,17 @@ function Home() {
   const [showTools, setShowTools] = useState(false);
   const [wobble, setWobble] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
+  const [shakeKey, setShakeKey] = useState(0);
   const [now, setNow] = useState<Date | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const [lookDir, setLookDir] = useState(0);
+  const avatarWrapRef = useRef<HTMLDivElement | null>(null);
+  const idleAction: IdleAction = useIdleLife({ enabled: mounted && !celebrating });
   useEffect(() => {
     setNow(new Date());
+    setMounted(true);
   }, []);
+
 
 
   useEffect(() => {
