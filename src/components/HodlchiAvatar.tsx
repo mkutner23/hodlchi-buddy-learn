@@ -54,7 +54,9 @@ interface Props {
   size?: number;
   bob?: boolean;
   mood?: Mood;
+  studiedPaths?: PathId[];
 }
+
 
 const STAGE_INDEX: Record<Stage, number> = {
   Egg: 0,
