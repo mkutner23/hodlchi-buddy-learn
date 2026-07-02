@@ -7,9 +7,9 @@ export type EggColor = "mint" | "sun" | "berry";
 export const EVOLUTION_STAGES = [
   "Egg",
   "Baby Hodlchi",
-  "Learner",
+  "Student",
   "Builder",
-  "Wealth Sage",
+  "Investor",
   "Money Legend",
 ] as const;
 
@@ -69,20 +69,25 @@ function xpToLevel(xp: number) {
 }
 
 export function stageForLevel(level: number): Stage {
-  if (level <= 1) return "Egg";
-  if (level <= 3) return "Baby Hodlchi";
-  if (level <= 6) return "Learner";
-  if (level <= 10) return "Builder";
-  if (level <= 16) return "Wealth Sage";
+  // Users hatch during onboarding, so level 1 already starts as Baby Hodlchi.
+  if (level <= 2) return "Baby Hodlchi";
+  if (level <= 5) return "Student";
+  if (level <= 9) return "Builder";
+  if (level <= 15) return "Investor";
   return "Money Legend";
 }
 
 export function progressToNextStage(level: number, xp: number) {
-  const thresholds = [0, 100, 300, 600, 1000, 1600, 2400]; // stage boundaries
-  const stageIdx = Math.min(
-    thresholds.length - 2,
-    thresholds.findIndex((t, i) => xp < (thresholds[i + 1] ?? Infinity)),
-  );
+  // Thresholds align with stageForLevel (Baby → Student → Builder → Investor → Legend).
+  const thresholds = [0, 200, 500, 900, 1500, 2400];
+  let stageIdx = 0;
+  for (let i = 0; i < thresholds.length - 1; i++) {
+    if (xp >= thresholds[i] && xp < thresholds[i + 1]) {
+      stageIdx = i;
+      break;
+    }
+    if (xp >= thresholds[thresholds.length - 1]) stageIdx = thresholds.length - 2;
+  }
   const start = thresholds[stageIdx];
   const end = thresholds[stageIdx + 1] ?? xp + 1;
   const pct = Math.min(100, Math.round(((xp - start) / (end - start)) * 100));

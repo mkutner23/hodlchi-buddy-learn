@@ -132,7 +132,7 @@ function CertificatePage() {
           </p>
 
           <div className="mt-5 grid place-items-center">
-            <HodlchiAvatar egg="mint" personality="fox" stage="Wealth Sage" size={140} />
+            <HodlchiAvatar egg="mint" personality="fox" stage="Money Legend" size={140} />
           </div>
 
           <Link

@@ -313,13 +313,13 @@ function XpScene() {
 }
 
 function EvolveScene() {
-  const [stage, setStage] = useState<"Baby Hodlchi" | "Learner">("Baby Hodlchi");
+  const [stage, setStage] = useState<"Baby Hodlchi" | "Student">("Baby Hodlchi");
   const [flash, setFlash] = useState(false);
   useEffect(() => {
     setStage("Baby Hodlchi");
     setFlash(false);
     const t1 = setTimeout(() => setFlash(true), 900);
-    const t2 = setTimeout(() => setStage("Learner"), 1500);
+    const t2 = setTimeout(() => setStage("Student"), 1500);
     const t3 = setTimeout(() => setFlash(false), 2300);
     return () => {
       clearTimeout(t1);
@@ -338,7 +338,7 @@ function EvolveScene() {
         </div>
       </div>
       <div className="rounded-full bg-foreground px-3 py-1 text-xs font-bold text-primary shadow-pop">
-        Evolved → {stage === "Learner" ? "Learner" : "…"}
+        Evolved → {stage === "Student" ? "Student" : "…"}
       </div>
     </div>
   );

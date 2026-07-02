@@ -1,12 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
+import { HodlchiLogo } from "@/components/HodlchiLogo";
 import { PATHS, getDailyChallenge } from "@/lib/lessons-data";
 import {
   useHodlchi,
   stageForLevel,
   progressToNextStage,
-  type Mood,
 } from "@/lib/hodlchi-store";
 
 export const Route = createFileRoute("/dashboard")({
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/dashboard")({
       {
         name: "description",
         content:
-          "Feed your Hodlchi with a lesson, keep your streak alive, and evolve from Egg to Wealth Sage.",
+          "Feed your Hodlchi with a lesson, keep your streak alive, and evolve from Baby Hodlchi to Money Legend.",
       },
       { property: "og:title", content: "Your Hodlchi — Dashboard" },
       {
@@ -32,12 +32,17 @@ export const Route = createFileRoute("/dashboard")({
   }),
 });
 
-const MOOD_LINE: Record<Mood, string> = {
-  hungry: "I'm hungry… feed me a lesson?",
-  happy: "That felt great! Ready for more?",
-  focused: "I'm learning. Let's keep going.",
-  tired: "One more lesson and I'll rest well.",
-};
+function greetingFor(name: string, streak: number, doneToday: boolean, doneLessons: number) {
+  const hour = new Date().getHours();
+  const timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
+  if (doneToday) {
+    if (streak >= 3) return `Nice — ${streak} days in a row! 🔥`;
+    return `You're getting good at this, ${name}!`;
+  }
+  if (doneLessons === 0) return `Hi! I'm ${name}. Feed me my first lesson?`;
+  if (streak >= 2) return `Good ${timeOfDay}! Keep your ${streak}-day streak alive?`;
+  return `Good ${timeOfDay}! Ready for today's lesson?`;
+}
 
 function Home() {
   const nav = useNavigate();
@@ -55,6 +60,7 @@ function Home() {
   const totalLessons = PATHS.reduce((n, p) => n + p.lessons.length, 0);
   const doneLessons = state.completedLessons.length;
   const isFirstTime = doneLessons === 0;
+  const doneToday = state.lastActiveDay === new Date().toISOString().slice(0, 10);
 
   const nextLesson = useMemo(() => {
     for (const path of PATHS) {
@@ -77,25 +83,27 @@ function Home() {
     });
   };
 
+  const speech = greetingFor(state.name, state.streak, doneToday, doneLessons);
+
   return (
-    <main className="min-h-screen bg-gradient-sky pb-16">
+    <main className="min-h-screen bg-gradient-sky pb-16 font-sans">
       <div className="mx-auto max-w-md px-5 pt-5">
         <h1 className="sr-only">Your Hodlchi — {state.name}</h1>
 
         <div className="flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2" aria-label="Hodlchi home">
+            <HodlchiLogo size={32} />
+            <span className="font-display text-base font-extrabold tracking-tight text-foreground">
+              Hodlchi
+            </span>
+          </Link>
           <div className="flex items-center gap-2">
-            <div className="grid h-8 w-8 place-items-center rounded-lg bg-foreground text-primary text-sm font-black">
-              H
-            </div>
-            <span className="text-sm font-bold text-foreground/70">Hodlchi</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Stat icon="🔥" value={state.streak} label="streak" />
-            <Stat icon="⭐" value={state.xp} label="xp" />
+            <Stat icon="🔥" value={state.streak} shortLabel="streak" fullLabel="day streak" />
+            <Stat icon="⭐" value={state.xp} shortLabel="xp" fullLabel="XP earned" />
           </div>
         </div>
 
-        {/* Hero companion — the emotional anchor */}
+        {/* Hero companion */}
         <section className="mt-4 text-center">
           <button
             onClick={() => {
@@ -115,10 +123,10 @@ function Home() {
             </div>
           </button>
 
-          {/* Speech bubble — makes the need explicit */}
-          <div className="relative mx-auto mt-1 inline-block max-w-[18rem] rounded-2xl bg-white px-4 py-2.5 text-sm font-semibold shadow-soft">
-            <span className="mr-1 font-extrabold">{state.name}:</span>
-            <span className="text-foreground/80">{MOOD_LINE[state.mood]}</span>
+          {/* Speech bubble */}
+          <div className="relative mx-auto mt-1 inline-block max-w-[20rem] rounded-2xl bg-white px-4 py-2.5 font-sans text-sm shadow-soft">
+            <span className="mr-1 font-display font-extrabold">{state.name}:</span>
+            <span className="text-foreground/80">{speech}</span>
             <span className="absolute -top-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 bg-white" />
           </div>
 
@@ -127,15 +135,17 @@ function Home() {
             <div className="flex items-baseline justify-between">
               <div className="text-left">
                 <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-                  Stage
+                  Current
                 </div>
-                <div className="text-lg font-extrabold leading-tight">{stage}</div>
+                <div className="font-display text-lg font-extrabold leading-tight">{stage}</div>
               </div>
               <div className="text-right">
                 <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
                   Next
                 </div>
-                <div className="text-sm font-bold text-foreground/70">{prog.nextStage}</div>
+                <div className="font-display text-sm font-bold text-foreground/70">
+                  {prog.nextStage}
+                </div>
               </div>
             </div>
             <div className="mt-2 h-3 overflow-hidden rounded-full bg-foreground/10">
@@ -150,31 +160,31 @@ function Home() {
           </div>
         </section>
 
-        {/* THE primary action — feed = learn */}
+        {/* Today's Lesson — the primary CTA */}
         <button
           onClick={goNext}
           disabled={!nextLesson}
-          className="mt-5 flex w-full items-center justify-between rounded-2xl bg-foreground px-5 py-4 text-left font-bold text-primary shadow-pop transition active:scale-[0.98] disabled:opacity-40"
+          className="mt-5 flex w-full items-center justify-between rounded-3xl bg-foreground px-5 py-5 text-left font-bold text-primary shadow-pop transition active:scale-[0.98] disabled:opacity-40"
         >
-          <div>
+          <div className="min-w-0 flex-1">
             <div className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
-              {isFirstTime ? "Start here" : "Feed with a lesson"}
+              {isFirstTime ? "Start here" : "Today's Lesson"}
             </div>
-            <div className="mt-0.5 text-base leading-tight">
+            <div className="mt-1 truncate font-display text-xl font-extrabold leading-tight">
               {nextLesson
                 ? `${nextLesson.path.emoji}  ${nextLesson.lesson.title}`
                 : "All lessons complete 🎉"}
             </div>
             {nextLesson && (
-              <div className="mt-0.5 text-[11px] font-semibold text-primary/70">
-                {nextLesson.lesson.minutes} min · +30 XP
+              <div className="mt-1 text-[11px] font-semibold text-primary/70">
+                {nextLesson.lesson.minutes} min · +30 XP · feed {state.name} 🍎
               </div>
             )}
           </div>
-          <span className="text-2xl">→</span>
+          <span className="ml-3 text-3xl">→</span>
         </button>
 
-        {/* First-time explainer — the loop, in 4 beats */}
+        {/* First-time explainer */}
         {isFirstTime && (
           <section className="mt-4 rounded-2xl border-2 border-dashed border-primary-deep/30 bg-primary/10 p-4">
             <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
@@ -193,7 +203,7 @@ function Home() {
           </section>
         )}
 
-        {/* Daily challenge — small, secondary */}
+        {/* Daily challenge */}
         {!isFirstTime && (
           <section className="mt-4 flex items-center gap-3 rounded-2xl bg-white/70 p-3 backdrop-blur">
             <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/25 text-lg">
@@ -208,11 +218,11 @@ function Home() {
           </section>
         )}
 
-        {/* Paths — quiet, browsable */}
+        {/* Learning Paths */}
         <section className="mt-6">
           <div className="flex items-baseline justify-between px-1">
-            <h2 className="text-sm font-extrabold uppercase tracking-widest text-foreground/60">
-              Paths
+            <h2 className="font-display text-sm font-extrabold uppercase tracking-widest text-foreground/60">
+              Learning Paths
             </h2>
             <div className="text-[11px] font-semibold text-foreground/50">
               {doneLessons}/{totalLessons} done
@@ -225,6 +235,7 @@ function Home() {
               ).length;
               const pct = Math.round((done / p.lessons.length) * 100);
               const isNext = nextLesson?.path.id === p.id;
+              const isDone = done === p.lessons.length;
               return (
                 <Link
                   key={p.id}
@@ -232,17 +243,22 @@ function Home() {
                   params={{ pathId: p.id }}
                   className={`flex items-center gap-3 rounded-2xl bg-white/80 p-3 backdrop-blur transition active:scale-[0.99] ${
                     isNext ? "ring-2 ring-primary" : ""
-                  }`}
+                  } ${isDone ? "opacity-60" : ""}`}
                 >
                   <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary/25 text-xl">
                     {p.emoji}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <div className="font-bold">{p.title}</div>
+                      <div className="font-display font-bold">{p.title}</div>
                       {isNext && (
                         <span className="rounded-full bg-foreground px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
                           Up next
+                        </span>
+                      )}
+                      {isDone && (
+                        <span className="text-[11px]" aria-label="Completed">
+                          ✅
                         </span>
                       )}
                     </div>
@@ -294,14 +310,28 @@ function Home() {
   );
 }
 
-function Stat({ icon, value, label }: { icon: string; value: number; label: string }) {
+function Stat({
+  icon,
+  value,
+  shortLabel,
+  fullLabel,
+}: {
+  icon: string;
+  value: number;
+  shortLabel: string;
+  fullLabel: string;
+}) {
   return (
     <div
       className="flex items-center gap-1 rounded-full bg-white px-2.5 py-1 text-xs font-bold shadow-soft"
-      aria-label={`${value} ${label}`}
+      title={`${value} ${fullLabel}`}
+      aria-label={`${value} ${fullLabel}`}
     >
       <span>{icon}</span>
       <span>{value}</span>
+      <span className="text-[9px] font-semibold uppercase tracking-wider text-foreground/50">
+        {shortLabel}
+      </span>
     </div>
   );
 }
