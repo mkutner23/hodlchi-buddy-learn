@@ -264,7 +264,9 @@ function LessonView() {
                   personality={state.personality}
                   stage={state.acknowledgedStage}
                   size={170}
+                  mood={deriveMood(state)}
                 />
+
               </div>
             </div>
             <h1 className="mt-4 text-3xl font-extrabold">
