@@ -11,8 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as HomeRouteImport } from './routes/home'
 import { Route as FinancialLiteracyForTeensRouteImport } from './routes/financial-literacy-for-teens'
+import { Route as DemoRouteImport } from './routes/demo'
 import { Route as CertificateRouteImport } from './routes/certificate'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PathPathIdRouteImport } from './routes/path.$pathId'
@@ -30,17 +30,17 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HomeRoute = HomeRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const FinancialLiteracyForTeensRoute =
   FinancialLiteracyForTeensRouteImport.update({
     id: '/financial-literacy-for-teens',
     path: '/financial-literacy-for-teens',
     getParentRoute: () => rootRouteImport,
   } as any)
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CertificateRoute = CertificateRouteImport.update({
   id: '/certificate',
   path: '/certificate',
@@ -76,8 +76,8 @@ const LessonPathIdLessonIdRoute = LessonPathIdLessonIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
+  '/demo': typeof DemoRoute
   '/financial-literacy-for-teens': typeof FinancialLiteracyForTeensRoute
-  '/home': typeof HomeRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/what-is-financial-literacy-for-teens': typeof BlogWhatIsFinancialLiteracyForTeensRoute
@@ -88,8 +88,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
+  '/demo': typeof DemoRoute
   '/financial-literacy-for-teens': typeof FinancialLiteracyForTeensRoute
-  '/home': typeof HomeRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/what-is-financial-literacy-for-teens': typeof BlogWhatIsFinancialLiteracyForTeensRoute
@@ -101,8 +101,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
+  '/demo': typeof DemoRoute
   '/financial-literacy-for-teens': typeof FinancialLiteracyForTeensRoute
-  '/home': typeof HomeRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/what-is-financial-literacy-for-teens': typeof BlogWhatIsFinancialLiteracyForTeensRoute
@@ -115,8 +115,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/certificate'
+    | '/demo'
     | '/financial-literacy-for-teens'
-    | '/home'
     | '/onboarding'
     | '/sitemap.xml'
     | '/blog/what-is-financial-literacy-for-teens'
@@ -127,8 +127,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/certificate'
+    | '/demo'
     | '/financial-literacy-for-teens'
-    | '/home'
     | '/onboarding'
     | '/sitemap.xml'
     | '/blog/what-is-financial-literacy-for-teens'
@@ -139,8 +139,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/certificate'
+    | '/demo'
     | '/financial-literacy-for-teens'
-    | '/home'
     | '/onboarding'
     | '/sitemap.xml'
     | '/blog/what-is-financial-literacy-for-teens'
@@ -152,8 +152,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CertificateRoute: typeof CertificateRoute
+  DemoRoute: typeof DemoRoute
   FinancialLiteracyForTeensRoute: typeof FinancialLiteracyForTeensRoute
-  HomeRoute: typeof HomeRoute
   OnboardingRoute: typeof OnboardingRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BlogWhatIsFinancialLiteracyForTeensRoute: typeof BlogWhatIsFinancialLiteracyForTeensRoute
@@ -178,18 +178,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/financial-literacy-for-teens': {
       id: '/financial-literacy-for-teens'
       path: '/financial-literacy-for-teens'
       fullPath: '/financial-literacy-for-teens'
       preLoaderRoute: typeof FinancialLiteracyForTeensRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/certificate': {
@@ -240,8 +240,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CertificateRoute: CertificateRoute,
+  DemoRoute: DemoRoute,
   FinancialLiteracyForTeensRoute: FinancialLiteracyForTeensRoute,
-  HomeRoute: HomeRoute,
   OnboardingRoute: OnboardingRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   BlogWhatIsFinancialLiteracyForTeensRoute:

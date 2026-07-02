@@ -27,8 +27,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Landing() {
-  const { state, demoMode } = useHodlchi();
-  const primaryCta = state.onboarded ? { to: "/home", label: "Hatch my Hodlchi" } : { to: "/onboarding", label: "Hatch my Hodlchi" };
+  const { demoMode } = useHodlchi();
 
   return (
     <main className="min-h-screen bg-gradient-hero">
@@ -41,12 +40,13 @@ function Landing() {
           <button
             onClick={() => {
               demoMode();
-              window.location.href = "/home";
+              window.location.href = "/demo";
             }}
             className="rounded-full border border-foreground/20 bg-white/60 px-3 py-1.5 text-xs font-semibold backdrop-blur"
           >
             Mentor demo
           </button>
+
         </header>
 
         <section className="mt-10 text-center">
