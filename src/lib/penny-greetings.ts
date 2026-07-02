@@ -39,10 +39,11 @@ const LESSON_TOPIC: Record<string, string> = {
   "entrepreneurship:e2": "pricing",
   "entrepreneurship:e3": "cash flow",
   "entrepreneurship:e4": "growth loops",
-  "crypto:o1": "how crypto works",
-  "crypto:o2": "wallets and keys",
-  "crypto:o3": "stablecoins",
-  "crypto:o4": "spotting scams",
+  "crypto:cr1": "how blockchains work",
+  "crypto:cr2": "public and private keys",
+  "crypto:cr3": "crypto volatility",
+  "crypto:cr4": "spotting crypto scams",
+
 };
 
 function lookupLesson(key: string): { pathId: PathId; title: string } | null {
