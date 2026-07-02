@@ -14,7 +14,7 @@ let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
 let muted = false;
 const STORAGE_KEY = "hodlchi-sfx-muted";
-const HERO_CACHE_PREFIX = "hodlchi-hero-sfx:";
+const HERO_CACHE_PREFIX = "hodlchi-hero-sfx-v2:";
 
 if (typeof window !== "undefined") {
   try {
