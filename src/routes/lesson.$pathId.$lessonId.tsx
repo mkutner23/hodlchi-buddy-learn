@@ -101,23 +101,33 @@ function LessonView() {
           </div>
         </div>
 
-        {phase === "intro" && (
-          <div className="mt-6 animate-pop">
-            <div className="rounded-3xl bg-white p-5 shadow-soft">
-              <div className="text-xs font-bold uppercase tracking-widest text-primary-deep">
-                Lesson · {lesson.minutes} min
+        {phase === "intro" && (() => {
+          const parts = lesson.intro.split(/(?<=[.!?])\s+/);
+          const headline = parts[0];
+          const body = parts.slice(1).join(" ");
+          return (
+            <div className="mt-6 animate-pop">
+              <div className="rounded-3xl bg-white p-5 shadow-soft">
+                <div className="text-xs font-bold uppercase tracking-widest text-primary-deep">
+                  Lesson · {lesson.minutes} min
+                </div>
+                <h1 className="mt-1 text-2xl font-extrabold">{lesson.title}</h1>
+                <p className="mt-4 rounded-2xl bg-primary/15 p-3 text-[16px] font-bold leading-snug text-foreground">
+                  {headline}
+                </p>
+                {body && (
+                  <p className="mt-3 text-[15px] leading-relaxed text-foreground/75">{body}</p>
+                )}
               </div>
-              <h1 className="mt-1 text-2xl font-extrabold">{lesson.title}</h1>
-              <p className="mt-4 text-[15px] leading-relaxed text-foreground/80">{lesson.intro}</p>
+              <button
+                onClick={() => setPhase("quiz")}
+                className="mt-5 w-full rounded-2xl bg-foreground px-5 py-4 font-bold text-primary shadow-pop active:scale-[0.98]"
+              >
+                Start the quiz →
+              </button>
             </div>
-            <button
-              onClick={() => setPhase("quiz")}
-              className="mt-5 w-full rounded-2xl bg-foreground px-5 py-4 font-bold text-primary shadow-pop active:scale-[0.98]"
-            >
-              Start the quiz →
-            </button>
-          </div>
-        )}
+          );
+        })()}
 
         {phase === "quiz" && q && (
           <div className="mt-6 animate-pop">
@@ -174,6 +184,27 @@ function LessonView() {
                   <div className="mt-0.5 text-foreground/80">{q.explain}</div>
                 </div>
               )}
+
+              {/* Micro-delight when correct */}
+              {locked && isCorrect && (
+                <div className="pointer-events-none relative h-0" aria-hidden="true">
+                  <div className="animate-fruit-fly absolute left-1/2 -top-2 text-4xl">
+                    {PATH_FRUIT[path.id]}
+                  </div>
+                  <span
+                    className="animate-heart-pop absolute left-1/3 -top-2 text-2xl"
+                    style={{ ["--tx" as string]: "-12px" } as React.CSSProperties}
+                  >
+                    💚
+                  </span>
+                  <span
+                    className="animate-heart-pop absolute left-2/3 -top-2 text-2xl"
+                    style={{ ["--tx" as string]: "10px", animationDelay: "0.15s" } as React.CSSProperties}
+                  >
+                    ✨
+                  </span>
+                </div>
+              )}
             </div>
 
             <button
@@ -189,21 +220,25 @@ function LessonView() {
         {phase === "done" && (
           <div className="mt-8 animate-pop text-center">
             <div className="mx-auto grid place-items-center">
-              <HodlchiAvatar
-                egg={state.egg}
-                personality={state.personality}
-                stage={state.acknowledgedStage}
-                size={170}
-              />
+              <div className="animate-bounce-happy">
+                <HodlchiAvatar
+                  egg={state.egg}
+                  personality={state.personality}
+                  stage={state.acknowledgedStage}
+                  size={170}
+                />
+              </div>
             </div>
-            <h1 className="mt-4 text-3xl font-extrabold">🍎 {state.name} enjoyed that lesson!</h1>
+            <h1 className="mt-4 text-3xl font-extrabold">
+              {PATH_FRUIT[path.id]} {state.name} enjoyed that lesson!
+            </h1>
             <p className="mt-1 text-foreground/70">
               +{xpGained} XP · {state.name} feels {correctCount === lesson.quiz.length ? "amazing" : "a little wiser"}.
             </p>
             <div className="mt-6 grid grid-cols-3 gap-2">
-              <Stat label="Correct" value={`${correctCount}/${lesson.quiz.length}`} />
-              <Stat label="XP" value={`+${xpGained}`} />
+              <Stat label="XP" value={`⭐ +${xpGained}`} />
               <Stat label="Streak" value={`🔥 ${state.streak}`} />
+              <Stat label="Correct" value={`✅ ${correctCount}/${lesson.quiz.length}`} />
             </div>
             <div className="mt-6 flex gap-3">
               <button
