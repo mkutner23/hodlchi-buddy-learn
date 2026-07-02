@@ -67,15 +67,21 @@ function Onboarding() {
   const [personality, setPersonality] = useState<Personality>("fox");
 
   const [hatchPhase, setHatchPhase] = useState<"idle" | "cracking" | "revealed">("idle");
+  const [hatchCTAReady, setHatchCTAReady] = useState(false);
 
   useEffect(() => {
     if (step !== 2) {
       setHatchPhase("idle");
+      setHatchCTAReady(false);
       return;
     }
     setHatchPhase("cracking");
-    const t = setTimeout(() => setHatchPhase("revealed"), 1700);
-    return () => clearTimeout(t);
+    const t1 = setTimeout(() => setHatchPhase("revealed"), 1700);
+    const t2 = setTimeout(() => setHatchCTAReady(true), 3600);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, [step]);
 
   const displayName = name.trim() || "Hodlchi";
@@ -83,15 +89,16 @@ function Onboarding() {
   const canNext =
     (step === 0 && !!egg) ||
     (step === 1 && name.trim().length > 0) ||
-    (step === 2 && hatchPhase === "revealed") ||
+    (step === 2 && hatchCTAReady) ||
     step === 3;
 
   const handleNext = () => {
     if (step === 0 || step === 1) {
       setStep(step + 1);
     } else if (step === 2) {
-      if (hatchPhase !== "revealed") return;
+      if (!hatchCTAReady) return;
       setStep(3);
+
     } else {
       setOnboarding({ name: displayName, egg, personality });
       nav({ to: "/demo" });
