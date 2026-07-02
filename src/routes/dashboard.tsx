@@ -91,7 +91,7 @@ function Home() {
   const totalLessons = PATHS.reduce((n, p) => n + p.lessons.length, 0);
   const doneLessons = state.completedLessons.length;
   const isFirstTime = doneLessons === 0;
-  const doneToday = state.lastActiveDay === new Date().toISOString().slice(0, 10);
+  const doneToday = now ? state.lastActiveDay === now.toISOString().slice(0, 10) : false;
 
   const nextLesson = useMemo(() => {
     for (const path of PATHS) {
