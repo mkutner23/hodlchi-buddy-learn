@@ -238,17 +238,17 @@ function LessonView() {
                 const delay = Math.random() * 0.9;
                 const size = 22 + Math.random() * 16;
                 return (
-                  <span
+                  <PathFruit
                     key={i}
+                    pathId={path.id}
+                    animate={false}
                     className="absolute top-0 animate-fruit-rain"
                     style={{
                       left: `${left}%`,
                       fontSize: `${size}px`,
                       animationDelay: `${delay}s`,
                     }}
-                  >
-                    {PATH_FRUIT[path.id]}
-                  </span>
+                  />
                 );
               })}
             </div>
@@ -263,7 +263,7 @@ function LessonView() {
               </div>
             </div>
             <h1 className="mt-4 text-3xl font-extrabold">
-              {PATH_FRUIT[path.id]} {state.name} enjoyed that lesson!
+              <PathFruit pathId={path.id} animate={false} className="text-4xl" /> {state.name} enjoyed that lesson!
             </h1>
             <p className="mt-1 text-foreground/70">
               +{xpGained} XP · {state.name} feels {correctCount === lesson.quiz.length ? "amazing" : "a little wiser"}.
