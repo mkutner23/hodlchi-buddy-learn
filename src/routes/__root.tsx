@@ -76,8 +76,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Hodlchi is the Duolingo of Money. 5-minute lessons. Daily streaks. A companion that grows with you." },
       { property: "og:description", content: "Hodlchi is the Duolingo of Money. 5-minute lessons. Daily streaks. A companion that grows with you." },
       { name: "twitter:description", content: "Hodlchi is the Duolingo of Money. 5-minute lessons. Daily streaks. A companion that grows with you." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/9cb8e19b-785c-4402-a5f2-525af371373b" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/9cb8e19b-785c-4402-a5f2-525af371373b" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/7167e1d7-9edf-4c1d-a2de-e22cf3e7cd8e" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/7167e1d7-9edf-4c1d-a2de-e22cf3e7cd8e" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
