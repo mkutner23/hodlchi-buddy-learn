@@ -99,14 +99,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             {
               "@type": "Organization",
               name: "Hodlchi",
-              url: "https://demo.hodlchi.com",
+              url: "https://hodlchi.com",
               description:
                 "Hodlchi is the Duolingo of Money — bite-size financial literacy lessons that grow a cute virtual companion.",
             },
             {
               "@type": "WebSite",
               name: "Hodlchi",
-              url: "https://demo.hodlchi.com",
+              url: "https://hodlchi.com",
             },
           ],
         }),

@@ -25,10 +25,10 @@ export const Route = createFileRoute("/onboarding")({
         property: "og:description",
         content: "Choose an egg, a name, and a learning style to start your money journey.",
       },
-      { property: "og:url", content: "https://demo.hodlchi.com/onboarding" },
+      { property: "og:url", content: "https://hodlchi.com/onboarding" },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "https://demo.hodlchi.com/onboarding" }],
+    links: [{ rel: "canonical", href: "https://hodlchi.com/onboarding" }],
   }),
 });
 

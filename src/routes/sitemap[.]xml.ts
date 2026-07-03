@@ -3,7 +3,7 @@ import type {} from "@tanstack/react-start";
 import { PATHS } from "@/lib/lessons-data";
 import { MONEY_BASICS_TOPICS } from "@/lib/money-basics";
 
-const BASE_URL = "https://demo.hodlchi.com";
+const BASE_URL = "https://hodlchi.com";
 
 interface SitemapEntry {
   path: string;

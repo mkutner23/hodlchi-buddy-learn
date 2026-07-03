@@ -19,7 +19,7 @@ export const Route = createFileRoute("/lesson/$pathId/$lessonId")({
     const description = lesson
       ? `${lesson.intro.slice(0, 150)}${lesson.intro.length > 150 ? "…" : ""}`
       : "A short financial literacy lesson in Hodlchi.";
-    const url = `https://demo.hodlchi.com/lesson/${params.pathId}/${params.lessonId}`;
+    const url = `https://hodlchi.com/lesson/${params.pathId}/${params.lessonId}`;
     return {
       meta: [
         { title },
@@ -44,7 +44,7 @@ export const Route = createFileRoute("/lesson/$pathId/$lessonId")({
                 educationalLevel: "beginner",
                 inLanguage: "en",
                 isPartOf: { "@type": "Course", name: `${path!.title} — Hodlchi` },
-                provider: { "@type": "Organization", name: "Hodlchi", url: "https://demo.hodlchi.com" },
+                provider: { "@type": "Organization", name: "Hodlchi", url: "https://hodlchi.com" },
               }),
             },
           ]

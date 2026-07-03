@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
 
-const URL = "https://demo.hodlchi.com/blog/what-is-financial-literacy";
+const URL = "https://hodlchi.com/blog/what-is-financial-literacy";
 const TITLE = "What is Financial Literacy? A Simple Guide";
 const DESCRIPTION =
   "A beginner-friendly guide to financial literacy: saving, budgeting, credit, investing, and entrepreneurship — no jargon.";

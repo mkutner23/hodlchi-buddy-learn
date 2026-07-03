@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MONEY_BASICS_TOPICS } from "@/lib/money-basics";
 
 const URL = "https://hodlchi.com/money-basics";
-const TITLE = "Money Basics — Plain-English Answers to Financial Questions | Hodlchi";
+const TITLE = "Money Basics: Plain-English Financial Answers | Hodlchi";
 const DESCRIPTION =
   "Short, beginner-friendly answers to the money questions everyone Googles: budgeting, saving, investing, APR, credit scores, inflation, and more.";
 

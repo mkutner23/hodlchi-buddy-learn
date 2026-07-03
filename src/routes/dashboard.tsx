@@ -35,11 +35,11 @@ export const Route = createFileRoute("/dashboard")({
         property: "og:description",
         content: "Daily lessons feed your Hodlchi. Come back tomorrow to keep the streak alive.",
       },
-      { property: "og:url", content: "https://demo.hodlchi.com/dashboard" },
+      { property: "og:url", content: "https://hodlchi.com/dashboard" },
       { property: "og:type", content: "website" },
       { name: "robots", content: "noindex, follow" },
     ],
-    links: [{ rel: "canonical", href: "https://demo.hodlchi.com/dashboard" }],
+    links: [{ rel: "canonical", href: "https://hodlchi.com/dashboard" }],
   }),
 });
 

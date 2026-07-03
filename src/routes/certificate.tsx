@@ -126,7 +126,7 @@ function printCertificateDocument(learnerName: string, awardedDate: string, cert
 }
 
 
-const URL = "https://demo.hodlchi.com/certificate";
+const URL = "https://hodlchi.com/certificate";
 const TITLE = "Free Financial Literacy Certificate — Hodlchi";
 const DESCRIPTION =
   "Earn a free Hodlchi Financial Literacy Certificate by completing all 5 learning paths. A fun, gamified course for teens and beginners.";
@@ -179,7 +179,7 @@ export const Route = createFileRoute("/certificate")({
           provider: {
             "@type": "Organization",
             name: "Hodlchi",
-            url: "https://demo.hodlchi.com",
+            url: "https://hodlchi.com",
           },
           hasCourseInstance: PATHS.flatMap((p) =>
             p.lessons.map((l) => ({
@@ -208,7 +208,7 @@ export const Route = createFileRoute("/certificate")({
           recognizedBy: {
             "@type": "Organization",
             name: "Hodlchi",
-            url: "https://demo.hodlchi.com",
+            url: "https://hodlchi.com",
           },
           competencyRequired: PATHS.map((p) => p.title).join(", "),
         }),
