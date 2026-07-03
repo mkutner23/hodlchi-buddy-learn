@@ -263,12 +263,36 @@ function playHero(key: HeroKey, volume = 0.9): boolean {
   return true;
 }
 
-// Kick off hero prefetch as soon as the module loads on the client.
+// Mobile browsers (iOS Safari, Android Chrome) require the AudioContext to be
+// created AND resumed inside a user gesture. We defer both context creation
+// and hero-sample prefetch until the first tap/click/keypress anywhere.
 if (typeof window !== "undefined") {
-  setTimeout(() => {
+  const unlock = () => {
+    const ac = getCtx(); // creates + resumes inside the gesture
+    if (ac && ac.state === "suspended") ac.resume().catch(() => {});
+    // Play a near-silent buffer to fully unlock iOS audio output.
+    try {
+      if (ac) {
+        const buf = ac.createBuffer(1, 1, 22050);
+        const src = ac.createBufferSource();
+        src.buffer = buf;
+        src.connect(ac.destination);
+        src.start(0);
+      }
+    } catch {
+      /* ignore */
+    }
     ensureHero("sparkle");
     ensureHero("levelUp");
-  }, 500);
+    window.removeEventListener("touchend", unlock);
+    window.removeEventListener("touchstart", unlock);
+    window.removeEventListener("click", unlock);
+    window.removeEventListener("keydown", unlock);
+  };
+  window.addEventListener("touchend", unlock, { once: false, passive: true });
+  window.addEventListener("touchstart", unlock, { once: false, passive: true });
+  window.addEventListener("click", unlock, { once: false });
+  window.addEventListener("keydown", unlock, { once: false });
 }
 
 // ---------- Procedural voices (with variation) ----------
