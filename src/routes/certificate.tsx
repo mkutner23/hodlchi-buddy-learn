@@ -1,6 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PATHS } from "@/lib/lessons-data";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
+import { useHodlchi } from "@/lib/hodlchi-store";
+import { useMemo } from "react";
+
+function certIdFor(name: string, count: number) {
+  const seed = `${name}-${count}`;
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  const alpha = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const a = alpha[h % 24] + alpha[(h >> 5) % 24] + alpha[(h >> 10) % 24] + alpha[(h >> 15) % 24];
+  const n = String(1000 + (h % 9000));
+  return `${a}-${n}`;
+}
+
 
 const URL = "https://demo.hodlchi.com/certificate";
 const TITLE = "Free Financial Literacy Certificate — Hodlchi";
