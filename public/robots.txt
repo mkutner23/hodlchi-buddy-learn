@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://demo.hodlchi.com/sitemap.xml
+Sitemap: https://hodlchi.com/sitemap.xml

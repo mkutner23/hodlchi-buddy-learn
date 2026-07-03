@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PATHS } from "@/lib/lessons-data";
 
-const URL = "https://demo.hodlchi.com/financial-literacy-for-everyone";
+const URL = "https://hodlchi.com/financial-literacy-for-everyone";
 const TITLE = "Financial Literacy Course for Everyone — Hodlchi";
 const DESCRIPTION =
   "Free gamified financial literacy course for everyone. Learn saving, investing, credit, entrepreneurship, and crypto in 20 bite-size lessons.";
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/financial-literacy-for-everyone")({
           provider: {
             "@type": "Organization",
             name: "Hodlchi",
-            url: "https://demo.hodlchi.com",
+            url: "https://hodlchi.com",
           },
           hasCourseInstance: PATHS.flatMap((p) =>
             p.lessons.map((l) => ({

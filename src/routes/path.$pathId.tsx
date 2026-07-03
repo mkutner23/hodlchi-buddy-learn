@@ -11,7 +11,7 @@ export const Route = createFileRoute("/path/$pathId")({
     const description = path
       ? `${path.tagline} ${path.lessons.length} short, beginner-friendly lessons in Hodlchi.`
       : "Bite-size financial literacy lessons in Hodlchi.";
-    const url = `https://demo.hodlchi.com/path/${params.pathId}`;
+    const url = `https://hodlchi.com/path/${params.pathId}`;
     return {
       meta: [
         { title },
@@ -31,7 +31,7 @@ export const Route = createFileRoute("/path/$pathId")({
                 "@type": "Course",
                 name: `${path.title} — Hodlchi`,
                 description: path.tagline,
-                provider: { "@type": "Organization", name: "Hodlchi", url: "https://demo.hodlchi.com" },
+                provider: { "@type": "Organization", name: "Hodlchi", url: "https://hodlchi.com" },
                 hasCourseInstance: path.lessons.map((l) => ({
                   "@type": "CourseInstance",
                   name: l.title,

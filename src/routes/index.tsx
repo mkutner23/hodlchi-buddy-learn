@@ -19,10 +19,10 @@ export const Route = createFileRoute("/")({
         content:
           "Hatch a cute companion and grow it with bite-size money lessons. Fun, friendly, 100% educational.",
       },
-      { property: "og:url", content: "https://demo.hodlchi.com/" },
+      { property: "og:url", content: "https://hodlchi.com/" },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "https://demo.hodlchi.com/" }],
+    links: [{ rel: "canonical", href: "https://hodlchi.com/" }],
   }),
 });
 
