@@ -288,23 +288,31 @@ function playHero(key: HeroKey, volume = 0.9): boolean {
 // created AND resumed inside a user gesture. We defer both context creation
 // and hero-sample prefetch until the first tap/click/keypress anywhere.
 if (typeof window !== "undefined") {
-  const unlock = () => {
+  const unlock = (e: Event) => {
+    console.log("[sfx] unlock triggered by", e.type, "muted=", muted);
     const ac = getCtx(true); // creates + resumes inside the gesture
-    if (!ac) return;
-    if (ac.state === "suspended") ac.resume().catch(() => {});
-    // Play a near-silent buffer through the full master graph to warm up
-    // iOS's audio output path — going through `master` (not raw destination)
-    // makes iOS commit the graph we'll actually use for real sounds.
+    if (!ac) {
+      console.warn("[sfx] unlock: no AudioContext available");
+      return;
+    }
+    console.log("[sfx] unlock: ctx state after getCtx:", ac.state);
+    if (ac.state === "suspended") {
+      ac.resume().then(
+        () => console.log("[sfx] resume ok, state:", ac.state),
+        (err) => console.warn("[sfx] resume failed", err),
+      );
+    }
     try {
       const buf = ac.createBuffer(1, 1, 22050);
       const src = ac.createBufferSource();
       src.buffer = buf;
       src.connect(dest());
       src.start(0);
-    } catch {
-      /* ignore */
+    } catch (err) {
+      console.warn("[sfx] silent prime failed", err);
     }
     unlocked = true;
+    console.log("[sfx] unlocked=true");
     ensureHero("sparkle");
     ensureHero("levelUp");
     window.removeEventListener("touchend", unlock);
@@ -313,6 +321,7 @@ if (typeof window !== "undefined") {
     window.removeEventListener("click", unlock);
     window.removeEventListener("keydown", unlock);
   };
+
   window.addEventListener("touchend", unlock, { passive: true });
   window.addEventListener("touchstart", unlock, { passive: true });
   window.addEventListener("pointerdown", unlock, { passive: true });
