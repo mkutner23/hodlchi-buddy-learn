@@ -165,24 +165,41 @@ function CertificatePage() {
       {/* Print styles: isolate certificate card only */}
       <style>{`
         @media print {
-          @page { size: letter landscape; margin: 0.5in; }
-          html, body { background: #fff !important; }
-          body * { visibility: hidden !important; }
+          @page { size: letter landscape; margin: 0.4in; }
+          html, body {
+            background: #fff !important;
+            height: auto !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+          }
+          body * {
+            visibility: hidden !important;
+            box-shadow: none !important;
+            min-height: 0 !important;
+            max-height: none !important;
+            overflow: visible !important;
+          }
           #cert-print, #cert-print * { visibility: visible !important; }
           #cert-print {
-            position: absolute !important;
-            left: 0; top: 0;
+            position: fixed !important;
+            inset: 0 !important;
             width: 100% !important;
+            height: 100% !important;
             max-width: none !important;
             margin: 0 !important;
             padding: 0.25in !important;
             box-shadow: none !important;
             border: none !important;
             background: #fff !important;
+            page-break-after: avoid !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
           }
           .no-print { display: none !important; }
         }
-      `}</style>
+
 
       <div className="mx-auto max-w-md px-5 pt-6 print:max-w-none print:px-0 print:pt-0">
         <Link to="/" className="no-print text-sm font-semibold text-foreground/60">
