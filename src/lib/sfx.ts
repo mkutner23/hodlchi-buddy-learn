@@ -13,6 +13,7 @@
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
 let muted = false;
+let unlocked = false;
 const STORAGE_KEY = "hodlchi-sfx-muted";
 const HERO_CACHE_PREFIX = "hodlchi-hero-sfx-v2:";
 
@@ -24,9 +25,15 @@ if (typeof window !== "undefined") {
   }
 }
 
-function getCtx(): AudioContext | null {
+// Create the AudioContext. On iOS/Android, this MUST happen inside a real user
+// gesture — otherwise the context is created in a permanently-suspended state
+// that later resume() calls cannot revive. `allowCreate` gates creation so
+// timer-driven callers (idle animations, greeting delays) don't accidentally
+// create a locked ctx before the user's first tap.
+function getCtx(allowCreate = false): AudioContext | null {
   if (typeof window === "undefined") return null;
   if (!ctx) {
+    if (!allowCreate) return null;
     const AC =
       window.AudioContext ||
       (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
@@ -47,8 +54,9 @@ function getCtx(): AudioContext | null {
 }
 
 function dest(): AudioNode {
-  return master ?? getCtx()!.destination;
+  return master ?? getCtx(true)!.destination;
 }
+
 
 // ---------- small helpers ----------
 
@@ -82,7 +90,7 @@ function tone({
   detune = 0,
   ramp = "exp",
 }: ToneOptions) {
-  const ac = getCtx();
+  const ac = getCtx(true);
   if (!ac) return;
   const start = ac.currentTime + delay;
   const osc = ac.createOscillator();
@@ -119,7 +127,7 @@ function bell({
   shimmer?: boolean;
   partial?: number;
 }) {
-  const ac = getCtx();
+  const ac = getCtx(true);
   if (!ac) return;
   const start = ac.currentTime + delay;
   const osc = ac.createOscillator();
@@ -154,7 +162,7 @@ function noiseBurst(
   filterType: BiquadFilterType = "lowpass",
   q = 0.7,
 ) {
-  const ac = getCtx();
+  const ac = getCtx(true);
   if (!ac) return;
   const start = ac.currentTime + delay;
   const bufferSize = Math.max(1, Math.floor(ac.sampleRate * duration));
@@ -182,12 +190,17 @@ function woodClick(delay = 0, volume = 0.09, freq = 3200) {
 
 function play(fn: () => void) {
   if (muted) return;
+  // Don't create an AudioContext outside a real user gesture — iOS locks any
+  // context created from a timer/effect callback and later `resume()` calls
+  // can't revive it. Skip until the first real tap has unlocked audio.
+  if (!unlocked) return;
   try {
     fn();
   } catch {
     /* audio failures are non-fatal */
   }
 }
+
 
 // ---------- Hero-moment sample cache (ElevenLabs) ----------
 
@@ -214,7 +227,7 @@ async function ensureHero(key: HeroKey) {
   if (heroFetching[key]) return heroFetching[key];
   if (typeof window === "undefined") return;
   heroFetching[key] = (async () => {
-    const ac = getCtx();
+    const ac = getCtx(true);
     if (!ac) return;
     // 1. try localStorage
     try {
@@ -251,7 +264,7 @@ async function ensureHero(key: HeroKey) {
 }
 
 function playHero(key: HeroKey, volume = 0.9): boolean {
-  const ac = getCtx();
+  const ac = getCtx(true);
   const buf = heroBuffers[key];
   if (!ac || !buf) return false;
   const src = ac.createBufferSource();
@@ -268,31 +281,36 @@ function playHero(key: HeroKey, volume = 0.9): boolean {
 // and hero-sample prefetch until the first tap/click/keypress anywhere.
 if (typeof window !== "undefined") {
   const unlock = () => {
-    const ac = getCtx(); // creates + resumes inside the gesture
-    if (ac && ac.state === "suspended") ac.resume().catch(() => {});
-    // Play a near-silent buffer to fully unlock iOS audio output.
+    const ac = getCtx(true); // creates + resumes inside the gesture
+    if (!ac) return;
+    if (ac.state === "suspended") ac.resume().catch(() => {});
+    // Play a near-silent buffer through the full master graph to warm up
+    // iOS's audio output path — going through `master` (not raw destination)
+    // makes iOS commit the graph we'll actually use for real sounds.
     try {
-      if (ac) {
-        const buf = ac.createBuffer(1, 1, 22050);
-        const src = ac.createBufferSource();
-        src.buffer = buf;
-        src.connect(ac.destination);
-        src.start(0);
-      }
+      const buf = ac.createBuffer(1, 1, 22050);
+      const src = ac.createBufferSource();
+      src.buffer = buf;
+      src.connect(dest());
+      src.start(0);
     } catch {
       /* ignore */
     }
+    unlocked = true;
     ensureHero("sparkle");
     ensureHero("levelUp");
     window.removeEventListener("touchend", unlock);
     window.removeEventListener("touchstart", unlock);
+    window.removeEventListener("pointerdown", unlock);
     window.removeEventListener("click", unlock);
     window.removeEventListener("keydown", unlock);
   };
-  window.addEventListener("touchend", unlock, { once: false, passive: true });
-  window.addEventListener("touchstart", unlock, { once: false, passive: true });
-  window.addEventListener("click", unlock, { once: false });
-  window.addEventListener("keydown", unlock, { once: false });
+  window.addEventListener("touchend", unlock, { passive: true });
+  window.addEventListener("touchstart", unlock, { passive: true });
+  window.addEventListener("pointerdown", unlock, { passive: true });
+  window.addEventListener("click", unlock);
+  window.addEventListener("keydown", unlock);
+
 }
 
 // ---------- Procedural voices (with variation) ----------
@@ -324,7 +342,7 @@ function proceduralDing() {
   bell({ freq: n1 * j, duration: 0.42, volume: 0.15, delay: 0.02 });
   bell({ freq: n2 * j, duration: 0.5, volume: 0.13, delay: rand(0.09, 0.13) });
   // Shimmer tail — 20% longer than before, per feedback.
-  const ac = getCtx();
+  const ac = getCtx(true);
   if (ac) {
     const dur = 0.32;
     const start = ac.currentTime + 0.18;
@@ -366,7 +384,7 @@ function proceduralWrong() {
 // Crunch — layered "wooden bite" using two short bandpass noise transients
 // plus a tiny wooden knock for the initial break. More texture, less "digital".
 function proceduralCrunch() {
-  const ac = getCtx();
+  const ac = getCtx(true);
   if (!ac) return;
   // Initial break — a wooden knock (short bandpass noise).
   noiseBurst(0.03, 0.14, rand(1400, 2000), 0, "bandpass", 6);
@@ -417,7 +435,7 @@ interface PennyVoice {
   breath?: boolean;  // add tiny breathy noise
 }
 function pennyVoice({ base, end, duration, wobble = 0, breath = false }: PennyVoice) {
-  const ac = getCtx();
+  const ac = getCtx(true);
   if (!ac) return;
   const start = ac.currentTime;
   const osc = ac.createOscillator();
