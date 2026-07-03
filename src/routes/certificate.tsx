@@ -17,6 +17,109 @@ function certIdFor(name: string, count: number) {
   return `${a}-${n}`;
 }
 
+function escapeCertificateText(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function certificatePrintHtml({
+  learnerName,
+  awardedDate,
+  certId,
+}: {
+  learnerName: string;
+  awardedDate: string;
+  certId: string;
+}) {
+  const safeName = escapeCertificateText(learnerName);
+  const safeDate = escapeCertificateText(awardedDate);
+  const safeId = escapeCertificateText(certId);
+
+  return `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Hodlchi Financial Literacy Certificate</title>
+    <style>
+      @page { size: letter landscape; margin: 0; }
+      * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      html, body { width: 11in; height: 8.5in; margin: 0; padding: 0; overflow: hidden; background: #ffffff; }
+      body { display: flex; align-items: center; justify-content: center; font-family: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #092615; }
+      .page { width: 11in; height: 8.5in; display: flex; align-items: center; justify-content: center; padding: 0.28in; overflow: hidden; }
+      .certificate { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 0.18in; border: 0.045in solid rgba(36, 111, 67, 0.28); background: linear-gradient(135deg, rgba(98, 232, 139, 0.18), #ffffff 48%, rgba(255, 216, 88, 0.24)); padding: 0.32in; }
+      .certificate::before { content: ""; position: absolute; inset: 0.12in; border: 1px solid rgba(36, 111, 67, 0.18); border-radius: 0.14in; }
+      .glow-a, .glow-b { position: absolute; border-radius: 999px; filter: blur(28px); }
+      .glow-a { left: -0.4in; top: -0.35in; width: 1.5in; height: 1.5in; background: rgba(98, 232, 139, 0.24); }
+      .glow-b { right: -0.45in; bottom: -0.45in; width: 1.8in; height: 1.8in; background: rgba(255, 216, 88, 0.28); }
+      .inner { position: relative; height: 100%; border: 1px solid rgba(36, 111, 67, 0.2); border-radius: 0.1in; background: rgba(255, 255, 255, 0.72); padding: 0 0.52in; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+      .eyebrow { color: #08732c; font-size: 14px; font-weight: 900; letter-spacing: 0.28em; text-transform: uppercase; }
+      .brand { margin-top: 0.16in; font-family: Georgia, "Times New Roman", serif; font-size: 50px; line-height: 1; font-weight: 900; letter-spacing: 0; }
+      .rule { margin-top: 0.2in; width: 1.95in; height: 1px; background: rgba(36, 111, 67, 0.25); }
+      .label { margin-top: 0.28in; color: rgba(9, 38, 21, 0.46); font-size: 12px; font-weight: 800; letter-spacing: 0.32em; text-transform: uppercase; }
+      .name { margin-top: 0.1in; font-family: Georgia, "Times New Roman", serif; font-size: 60px; line-height: 1.08; font-weight: 900; letter-spacing: 0; }
+      .body { margin-top: 0.18in; max-width: 7.3in; color: rgba(9, 38, 21, 0.72); font-size: 18px; line-height: 1.45; font-weight: 650; }
+      .seal { margin-top: 0.26in; width: 0.86in; height: 0.86in; display: grid; place-items: center; border-radius: 999px; border: 0.035in solid rgba(36, 111, 67, 0.26); background: rgba(98, 232, 139, 0.18); font-size: 30px; }
+      .meta { margin-top: 0.28in; width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: end; gap: 0.2in; color: rgba(9, 38, 21, 0.56); font-size: 13px; }
+      .meta b { display: block; margin-bottom: 0.04in; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(9, 38, 21, 0.62); }
+      .left { text-align: left; } .center { text-align: center; } .right { text-align: right; }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="certificate" aria-label="Financial Literacy Certificate">
+        <div class="glow-a"></div><div class="glow-b"></div>
+        <div class="inner">
+          <div class="eyebrow">Certificate of Completion</div>
+          <div class="brand">Hodlchi</div>
+          <div class="rule"></div>
+          <div class="label">Awarded to</div>
+          <div class="name">${safeName}</div>
+          <div class="body">For completing all 5 Hodlchi Financial Literacy paths and demonstrating beginner-friendly money basics.</div>
+          <div class="seal">✦</div>
+          <div class="meta">
+            <div class="left"><b>Date</b>${safeDate}</div>
+            <div class="center"><b>Certificate ID</b>${safeId}</div>
+            <div class="right"><b>Verify</b>hodlchi.com/verify</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>`;
+}
+
+function printCertificateDocument(learnerName: string, awardedDate: string, certId: string) {
+  if (typeof window === "undefined") return;
+
+  const frame = document.createElement("iframe");
+  frame.title = "Hodlchi certificate print document";
+  frame.setAttribute("aria-hidden", "true");
+  frame.style.position = "fixed";
+  frame.style.right = "0";
+  frame.style.bottom = "0";
+  frame.style.width = "0";
+  frame.style.height = "0";
+  frame.style.border = "0";
+  frame.srcdoc = certificatePrintHtml({ learnerName, awardedDate, certId });
+  document.body.appendChild(frame);
+
+  frame.onload = () => {
+    const printWindow = frame.contentWindow;
+    if (!printWindow) {
+      frame.remove();
+      window.print();
+      return;
+    }
+    printWindow.focus();
+    printWindow.print();
+    window.setTimeout(() => frame.remove(), 1000);
+  };
+}
+
 
 const URL = "https://demo.hodlchi.com/certificate";
 const TITLE = "Free Financial Literacy Certificate — Hodlchi";
@@ -157,7 +260,7 @@ function CertificatePage() {
   });
 
   const handlePrint = () => {
-    if (typeof window !== "undefined") window.print();
+    printCertificateDocument(learnerName, awardedDate, certId);
   };
 
   return (
