@@ -102,7 +102,7 @@ export function stageForLevel(level: number): Stage {
 
 export function progressToNextStage(level: number, xp: number) {
   // Thresholds align with stageForLevel (Baby → Student → Builder → Investor → Legend).
-  const thresholds = [0, 200, 500, 900, 1500, 2400];
+  const thresholds = [0, 80, 200, 380, 580, 800];
   let stageIdx = 0;
   for (let i = 0; i < thresholds.length - 1; i++) {
     if (xp >= thresholds[i] && xp < thresholds[i + 1]) {

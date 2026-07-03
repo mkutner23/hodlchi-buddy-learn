@@ -1,6 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PATHS } from "@/lib/lessons-data";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
+import { useHodlchi } from "@/lib/hodlchi-store";
+import { useMemo } from "react";
+
+function certIdFor(name: string, count: number) {
+  const seed = `${name}-${count}`;
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  const alpha = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const a = alpha[h % 24] + alpha[(h >> 5) % 24] + alpha[(h >> 10) % 24] + alpha[(h >> 15) % 24];
+  const n = String(1000 + (h % 9000));
+  return `${a}-${n}`;
+}
+
 
 const URL = "https://demo.hodlchi.com/certificate";
 const TITLE = "Free Financial Literacy Certificate — Hodlchi";
@@ -106,11 +119,28 @@ export const Route = createFileRoute("/certificate")({
 });
 
 function CertificatePage() {
+  const { state } = useHodlchi();
   const totalLessons = PATHS.reduce((n, p) => n + p.lessons.length, 0);
   const totalMinutes = PATHS.reduce(
     (n, p) => n + p.lessons.reduce((m, l) => m + l.minutes, 0),
     0,
   );
+  const doneCount = state.completedLessons.length;
+  const unlocked = state.onboarded && doneCount >= totalLessons;
+  const learnerName = (state.name || "").trim() || "Your Name Here";
+  const certId = useMemo(
+    () => certIdFor(learnerName, totalLessons),
+    [learnerName, totalLessons],
+  );
+  const awardedDate = new Date().toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  const handlePrint = () => {
+    if (typeof window !== "undefined") window.print();
+  };
 
   return (
     <main className="min-h-screen bg-gradient-sky pb-20">
@@ -121,26 +151,26 @@ function CertificatePage() {
 
         <header className="mt-4 rounded-3xl bg-white p-6 text-center shadow-soft">
           <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-            Free certificate of completion
+            {unlocked ? "🎉 Certificate unlocked" : "Free certificate of completion"}
           </div>
           <h1 className="mt-2 text-3xl font-black leading-tight">
             Financial Literacy Certificate
           </h1>
           <p className="mt-3 text-sm text-foreground/70">
-            Finish all 5 Hodlchi learning paths and earn a free certificate that shows you’ve
-            mastered the money basics.
+            {unlocked
+              ? `Amazing work, ${learnerName}! You finished all ${totalLessons} lessons across every Hodlchi path.`
+              : "Finish all 5 Hodlchi learning paths and earn a free certificate that shows you've mastered the money basics."}
           </p>
 
           <div className="mt-5 grid place-items-center">
-            <HodlchiAvatar egg="mint" personality="fox" stage="Money Legend" size={140} />
+            <HodlchiAvatar egg={state.egg ?? "mint"} personality={state.personality ?? "fox"} stage="Money Legend" size={140} />
           </div>
 
           <div className="mt-5 text-left">
             <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/50 mb-2 text-center">
-              Preview your certificate
+              {unlocked ? "Your certificate" : "Preview your certificate"}
             </div>
             <div className="relative overflow-hidden rounded-2xl border-2 border-foreground/10 bg-gradient-to-br from-primary/10 via-white to-primary/20 p-5 shadow-soft">
-              <div className="absolute inset-0 pointer-events-none opacity-40 blur-[1.5px]" aria-hidden />
               <div className="relative text-center">
                 <div className="text-[9px] font-black uppercase tracking-[0.2em] text-primary-deep">
                   Certificate of Completion
@@ -149,29 +179,60 @@ function CertificatePage() {
                 <div className="mt-3 text-[10px] uppercase tracking-widest text-foreground/50">
                   Awarded to
                 </div>
-                <div className="mt-1 font-display text-xl font-black text-foreground/80 blur-[1px] select-none">
-                  Your Name Here
+                <div
+                  className={`mt-1 font-display text-xl font-black ${
+                    unlocked ? "text-foreground" : "text-foreground/80 blur-[1px] select-none"
+                  }`}
+                >
+                  {learnerName}
                 </div>
                 <div className="mt-2 text-[10px] text-foreground/60">
                   For completing all 5 Hodlchi Financial Literacy paths
                 </div>
+                {unlocked && (
+                  <div className="mt-1 text-[10px] text-foreground/60">{awardedDate}</div>
+                )}
                 <div className="mt-3 flex items-center justify-between text-[9px] text-foreground/50">
-                  <span>ID · ABCD-1234</span>
+                  <span>ID · {unlocked ? certId : "ABCD-1234"}</span>
                   <span>hodlchi.com/verify</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <Link
-            to="/onboarding"
-            className="mt-5 inline-flex w-full items-center justify-center rounded-2xl bg-foreground px-5 py-3.5 font-bold text-primary shadow-pop"
-          >
-            Start the free course →
-          </Link>
-          <p className="mt-2 text-xs text-foreground/60">
-            {totalLessons} lessons • About {Math.round(totalMinutes / 5) * 5} minutes • No credit card required
-          </p>
+          {unlocked ? (
+            <>
+              <button
+                onClick={handlePrint}
+                className="mt-5 inline-flex w-full items-center justify-center rounded-2xl bg-foreground px-5 py-3.5 font-bold text-primary shadow-pop"
+              >
+                Print or save as PDF →
+              </button>
+              <Link
+                to="/dashboard"
+                className="mt-3 inline-flex w-full items-center justify-center rounded-2xl border border-foreground/20 bg-white px-5 py-3 text-sm font-bold text-foreground"
+              >
+                Back to dashboard
+              </Link>
+              <p className="mt-2 text-xs text-foreground/60">
+                {totalLessons}/{totalLessons} lessons complete • Certificate ID {certId}
+              </p>
+            </>
+          ) : (
+            <>
+              <Link
+                to={state.onboarded ? "/dashboard" : "/onboarding"}
+                className="mt-5 inline-flex w-full items-center justify-center rounded-2xl bg-foreground px-5 py-3.5 font-bold text-primary shadow-pop"
+              >
+                {state.onboarded ? "Keep learning →" : "Start the free course →"}
+              </Link>
+              <p className="mt-2 text-xs text-foreground/60">
+                {state.onboarded
+                  ? `${doneCount}/${totalLessons} lessons complete • Finish them all to unlock your certificate`
+                  : `${totalLessons} lessons • About ${Math.round(totalMinutes / 5) * 5} minutes • No credit card required`}
+              </p>
+            </>
+          )}
         </header>
 
         <section className="mt-8">
@@ -185,6 +246,7 @@ function CertificatePage() {
             <Step n={4} title="Claim your certificate" body="Unlock a free certificate you can share with teachers, parents, or on your resume." />
           </div>
         </section>
+
 
         <section className="mt-8">
           <h2 className="px-1 text-sm font-extrabold uppercase tracking-widest text-foreground/60">

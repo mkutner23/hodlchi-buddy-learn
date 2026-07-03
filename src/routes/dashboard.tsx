@@ -426,7 +426,31 @@ function Home() {
           </section>
         )}
 
+        {/* Certificate unlocked */}
+        {doneLessons >= totalLessons && (
+          <section className="mt-6">
+            <Link
+              to="/certificate"
+              className="flex items-center gap-3 rounded-2xl bg-gradient-to-br from-primary/30 via-white to-primary/20 p-4 shadow-pop ring-2 ring-primary-deep/40"
+            >
+              <div className="grid h-12 w-12 place-items-center rounded-xl bg-primary/40 text-2xl">
+                🎓
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
+                  Certificate unlocked
+                </div>
+                <div className="font-display font-extrabold">
+                  Claim your Financial Literacy Certificate
+                </div>
+              </div>
+              <div className="text-sm font-bold text-primary-deep">→</div>
+            </Link>
+          </section>
+        )}
+
         {/* Learning Paths */}
+
         <section className="mt-6">
           <div className="flex items-baseline justify-between px-1">
             <h2 className="font-display text-sm font-extrabold uppercase tracking-widest text-foreground/60">
