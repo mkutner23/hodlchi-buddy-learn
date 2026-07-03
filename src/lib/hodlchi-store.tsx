@@ -236,7 +236,7 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
       flashMood: (mood, durationMs = 1500) =>
         setState((s) => ({ ...s, mood, moodExpiresAt: Date.now() + durationMs })),
       evolve: () =>
-        setState((s) => ({ ...s, acknowledgedStage: stageForLevel(s.level), mood: "happy" })),
+        setState((s) => ({ ...s, acknowledgedStage: stageForXp(s.xp), mood: "happy" })),
       reset: () => setState({ ...DEFAULT_STATE }),
       demoMode: () =>
         setState({
