@@ -116,7 +116,6 @@ function printCertificateDocument(learnerName: string, awardedDate: string, cert
       window.print();
       return;
     }
-    printWindow.addEventListener("afterprint", () => frame.remove(), { once: true });
     printWindow.focus();
     printWindow.print();
     window.setTimeout(() => frame.remove(), 60_000);
