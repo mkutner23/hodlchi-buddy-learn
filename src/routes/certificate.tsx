@@ -12,7 +12,11 @@ function certIdFor(name: string, count: number) {
   let h = 0;
   for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
   const alpha = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-  const a = alpha[h % 24] + alpha[(h >> 5) % 24] + alpha[(h >> 10) % 24] + alpha[(h >> 15) % 24];
+  const a =
+    alpha[h % alpha.length] +
+    alpha[(h >>> 5) % alpha.length] +
+    alpha[(h >>> 10) % alpha.length] +
+    alpha[(h >>> 15) % alpha.length];
   const n = String(1000 + (h % 9000));
   return `${a}-${n}`;
 }
@@ -99,13 +103,11 @@ function printCertificateDocument(learnerName: string, awardedDate: string, cert
   frame.title = "Hodlchi certificate print document";
   frame.setAttribute("aria-hidden", "true");
   frame.style.position = "fixed";
-  frame.style.right = "0";
-  frame.style.bottom = "0";
-  frame.style.width = "0";
-  frame.style.height = "0";
+  frame.style.left = "-10000px";
+  frame.style.top = "0";
+  frame.style.width = "11in";
+  frame.style.height = "8.5in";
   frame.style.border = "0";
-  frame.srcdoc = certificatePrintHtml({ learnerName, awardedDate, certId });
-  document.body.appendChild(frame);
 
   frame.onload = () => {
     const printWindow = frame.contentWindow;
@@ -114,10 +116,14 @@ function printCertificateDocument(learnerName: string, awardedDate: string, cert
       window.print();
       return;
     }
+    printWindow.addEventListener("afterprint", () => frame.remove(), { once: true });
     printWindow.focus();
     printWindow.print();
-    window.setTimeout(() => frame.remove(), 1000);
+    window.setTimeout(() => frame.remove(), 60_000);
   };
+
+  frame.srcdoc = certificatePrintHtml({ learnerName, awardedDate, certId });
+  document.body.appendChild(frame);
 }
 
 
