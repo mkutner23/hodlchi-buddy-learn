@@ -189,17 +189,25 @@ function woodClick(delay = 0, volume = 0.09, freq = 3200) {
 }
 
 function play(fn: () => void) {
-  if (muted) return;
+  if (muted) {
+    console.log("[sfx] play skipped: muted");
+    return;
+  }
   // Don't create an AudioContext outside a real user gesture — iOS locks any
   // context created from a timer/effect callback and later `resume()` calls
   // can't revive it. Skip until the first real tap has unlocked audio.
-  if (!unlocked) return;
+  if (!unlocked) {
+    console.log("[sfx] play skipped: not unlocked yet");
+    return;
+  }
+  console.log("[sfx] play running, ctx state:", ctx?.state);
   try {
     fn();
-  } catch {
-    /* audio failures are non-fatal */
+  } catch (e) {
+    console.warn("[sfx] play failed", e);
   }
 }
+
 
 
 // ---------- Hero-moment sample cache (ElevenLabs) ----------
