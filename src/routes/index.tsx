@@ -5,6 +5,7 @@ import { useHodlchi } from "@/lib/hodlchi-store";
 
 export const Route = createFileRoute("/")({
   component: Landing,
+  head: () => ({
     // Title, description, og:title, og:description come from sitewide
     // defaults in src/routes/__root.tsx to avoid duplicate tags.
     meta: [
