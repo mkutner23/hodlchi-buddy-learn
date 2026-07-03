@@ -90,7 +90,7 @@ function tone({
   detune = 0,
   ramp = "exp",
 }: ToneOptions) {
-  const ac = getCtx();
+  const ac = getCtx(true);
   if (!ac) return;
   const start = ac.currentTime + delay;
   const osc = ac.createOscillator();
@@ -127,7 +127,7 @@ function bell({
   shimmer?: boolean;
   partial?: number;
 }) {
-  const ac = getCtx();
+  const ac = getCtx(true);
   if (!ac) return;
   const start = ac.currentTime + delay;
   const osc = ac.createOscillator();
@@ -162,7 +162,7 @@ function noiseBurst(
   filterType: BiquadFilterType = "lowpass",
   q = 0.7,
 ) {
-  const ac = getCtx();
+  const ac = getCtx(true);
   if (!ac) return;
   const start = ac.currentTime + delay;
   const bufferSize = Math.max(1, Math.floor(ac.sampleRate * duration));
@@ -222,7 +222,7 @@ async function ensureHero(key: HeroKey) {
   if (heroFetching[key]) return heroFetching[key];
   if (typeof window === "undefined") return;
   heroFetching[key] = (async () => {
-    const ac = getCtx();
+    const ac = getCtx(true);
     if (!ac) return;
     // 1. try localStorage
     try {
@@ -259,7 +259,7 @@ async function ensureHero(key: HeroKey) {
 }
 
 function playHero(key: HeroKey, volume = 0.9): boolean {
-  const ac = getCtx();
+  const ac = getCtx(true);
   const buf = heroBuffers[key];
   if (!ac || !buf) return false;
   const src = ac.createBufferSource();
@@ -276,7 +276,7 @@ function playHero(key: HeroKey, volume = 0.9): boolean {
 // and hero-sample prefetch until the first tap/click/keypress anywhere.
 if (typeof window !== "undefined") {
   const unlock = () => {
-    const ac = getCtx(); // creates + resumes inside the gesture
+    const ac = getCtx(true); // creates + resumes inside the gesture
     if (ac && ac.state === "suspended") ac.resume().catch(() => {});
     // Play a near-silent buffer to fully unlock iOS audio output.
     try {
@@ -332,7 +332,7 @@ function proceduralDing() {
   bell({ freq: n1 * j, duration: 0.42, volume: 0.15, delay: 0.02 });
   bell({ freq: n2 * j, duration: 0.5, volume: 0.13, delay: rand(0.09, 0.13) });
   // Shimmer tail — 20% longer than before, per feedback.
-  const ac = getCtx();
+  const ac = getCtx(true);
   if (ac) {
     const dur = 0.32;
     const start = ac.currentTime + 0.18;
@@ -374,7 +374,7 @@ function proceduralWrong() {
 // Crunch — layered "wooden bite" using two short bandpass noise transients
 // plus a tiny wooden knock for the initial break. More texture, less "digital".
 function proceduralCrunch() {
-  const ac = getCtx();
+  const ac = getCtx(true);
   if (!ac) return;
   // Initial break — a wooden knock (short bandpass noise).
   noiseBurst(0.03, 0.14, rand(1400, 2000), 0, "bandpass", 6);
@@ -425,7 +425,7 @@ interface PennyVoice {
   breath?: boolean;  // add tiny breathy noise
 }
 function pennyVoice({ base, end, duration, wobble = 0, breath = false }: PennyVoice) {
-  const ac = getCtx();
+  const ac = getCtx(true);
   if (!ac) return;
   const start = ac.currentTime;
   const osc = ac.createOscillator();
