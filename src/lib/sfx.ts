@@ -190,12 +190,17 @@ function woodClick(delay = 0, volume = 0.09, freq = 3200) {
 
 function play(fn: () => void) {
   if (muted) return;
+  // Don't create an AudioContext outside a real user gesture — iOS locks any
+  // context created from a timer/effect callback and later `resume()` calls
+  // can't revive it. Skip until the first real tap has unlocked audio.
+  if (!unlocked) return;
   try {
     fn();
   } catch {
     /* audio failures are non-fatal */
   }
 }
+
 
 // ---------- Hero-moment sample cache (ElevenLabs) ----------
 
