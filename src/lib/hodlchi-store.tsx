@@ -168,7 +168,7 @@ export function deriveMood(state: HodlchiState, now: number = Date.now()): Mood 
   // Already active today.
   const prog = progressToNextStage(state.level, state.xp);
   const xpToNext = Math.max(0, prog.end - state.xp);
-  if (stageForLevel(state.level) !== state.acknowledgedStage) return "celebrating";
+  if (stageForXp(state.xp) !== state.acknowledgedStage) return "celebrating";
   if (xpToNext > 0 && xpToNext <= 30) return "excited";
   if (state.streak >= 3) return "proud";
   return "happy";
