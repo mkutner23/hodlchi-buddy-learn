@@ -10,11 +10,12 @@ import { pickContextualGreeting } from "@/lib/penny-greetings";
 import { useIdleLife, type IdleAction } from "@/hooks/useIdleLife";
 import {
   useHodlchi,
-  stageForLevel,
+  stageForXp,
   progressToNextStage,
   stageIndex,
   deriveMood,
 } from "@/lib/hodlchi-store";
+
 
 
 
