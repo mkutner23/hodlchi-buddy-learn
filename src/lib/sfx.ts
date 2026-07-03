@@ -13,6 +13,7 @@
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
 let muted = false;
+let unlocked = false;
 const STORAGE_KEY = "hodlchi-sfx-muted";
 const HERO_CACHE_PREFIX = "hodlchi-hero-sfx-v2:";
 
@@ -24,9 +25,15 @@ if (typeof window !== "undefined") {
   }
 }
 
-function getCtx(): AudioContext | null {
+// Create the AudioContext. On iOS/Android, this MUST happen inside a real user
+// gesture — otherwise the context is created in a permanently-suspended state
+// that later resume() calls cannot revive. `allowCreate` gates creation so
+// timer-driven callers (idle animations, greeting delays) don't accidentally
+// create a locked ctx before the user's first tap.
+function getCtx(allowCreate = false): AudioContext | null {
   if (typeof window === "undefined") return null;
   if (!ctx) {
+    if (!allowCreate) return null;
     const AC =
       window.AudioContext ||
       (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
@@ -47,8 +54,9 @@ function getCtx(): AudioContext | null {
 }
 
 function dest(): AudioNode {
-  return master ?? getCtx()!.destination;
+  return master ?? getCtx(true)!.destination;
 }
+
 
 // ---------- small helpers ----------
 
