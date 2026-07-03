@@ -2,7 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PATHS } from "@/lib/lessons-data";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { useHodlchi } from "@/lib/hodlchi-store";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+const LEARNER_NAME_KEY = "hodlchi-learner-name-v1";
+
 
 function certIdFor(name: string, count: number) {
   const seed = `${name}-${count}`;
@@ -127,7 +130,22 @@ function CertificatePage() {
   );
   const doneCount = state.completedLessons.length;
   const unlocked = state.onboarded && doneCount >= totalLessons;
-  const learnerName = (state.name || "").trim() || "Your Name Here";
+
+  const [learnerNameInput, setLearnerNameInput] = useState("");
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const saved = window.localStorage.getItem(LEARNER_NAME_KEY);
+    if (saved) setLearnerNameInput(saved);
+  }, []);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(LEARNER_NAME_KEY, learnerNameInput);
+  }, [learnerNameInput]);
+
+  const trimmedLearnerName = learnerNameInput.trim();
+  const learnerName = trimmedLearnerName || "Your Name Here";
+  const hasName = trimmedLearnerName.length > 0;
+
   const certId = useMemo(
     () => certIdFor(learnerName, totalLessons),
     [learnerName, totalLessons],
@@ -143,9 +161,31 @@ function CertificatePage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-sky pb-20">
-      <div className="mx-auto max-w-md px-5 pt-6">
-        <Link to="/" className="text-sm font-semibold text-foreground/60">
+    <main className="min-h-screen bg-gradient-sky pb-20 print:bg-white print:pb-0">
+      {/* Print styles: isolate certificate card only */}
+      <style>{`
+        @media print {
+          @page { size: letter landscape; margin: 0.5in; }
+          html, body { background: #fff !important; }
+          body * { visibility: hidden !important; }
+          #cert-print, #cert-print * { visibility: visible !important; }
+          #cert-print {
+            position: absolute !important;
+            left: 0; top: 0;
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0.25in !important;
+            box-shadow: none !important;
+            border: none !important;
+            background: #fff !important;
+          }
+          .no-print { display: none !important; }
+        }
+      `}</style>
+
+      <div className="mx-auto max-w-md px-5 pt-6 print:max-w-none print:px-0 print:pt-0">
+        <Link to="/" className="no-print text-sm font-semibold text-foreground/60">
           ← Back
         </Link>
 
@@ -158,7 +198,7 @@ function CertificatePage() {
           </h1>
           <p className="mt-3 text-sm text-foreground/70">
             {unlocked
-              ? `Amazing work, ${learnerName}! You finished all ${totalLessons} lessons across every Hodlchi path.`
+              ? `Amazing work${hasName ? `, ${learnerName}` : ""}! You finished all ${totalLessons} lessons across every Hodlchi path.`
               : "Finish all 5 Hodlchi learning paths and earn a free certificate that shows you've mastered the money basics."}
           </p>
 
@@ -166,33 +206,59 @@ function CertificatePage() {
             <HodlchiAvatar egg={state.egg ?? "mint"} personality={state.personality ?? "fox"} stage="Money Legend" size={140} />
           </div>
 
+          {unlocked && (
+            <div className="mt-5 text-left">
+              <label htmlFor="learner-name" className="block text-[10px] font-bold uppercase tracking-widest text-foreground/50">
+                Your name (as it should appear on the certificate)
+              </label>
+              <input
+                id="learner-name"
+                type="text"
+                value={learnerNameInput}
+                onChange={(e) => setLearnerNameInput(e.target.value)}
+                placeholder="e.g. Alex Johnson"
+                maxLength={60}
+                className="mt-2 w-full rounded-2xl border-2 border-foreground/15 bg-white px-4 py-3 text-base font-semibold outline-none focus:border-primary-deep"
+              />
+              <p className="mt-1 text-[11px] text-foreground/50">
+                This is different from your Hodlchi's name ({state.name || "your pet"}). Enter the person's name that should appear on the certificate.
+              </p>
+            </div>
+          )}
+
           <div className="mt-5 text-left">
             <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/50 mb-2 text-center">
               {unlocked ? "Your certificate" : "Preview your certificate"}
             </div>
-            <div className="relative overflow-hidden rounded-2xl border-2 border-foreground/10 bg-gradient-to-br from-primary/10 via-white to-primary/20 p-5 shadow-soft">
-              <div className="relative text-center">
-                <div className="text-[9px] font-black uppercase tracking-[0.2em] text-primary-deep">
+
+            <div
+              id="cert-print"
+              className="relative overflow-hidden rounded-2xl border-2 border-foreground/10 bg-gradient-to-br from-primary/10 via-white to-primary/20 p-5 shadow-soft print:rounded-none print:border-4 print:border-primary-deep/40 print:p-10 print:aspect-[11/8.5]"
+            >
+              <div className="relative text-center print:flex print:h-full print:flex-col print:items-center print:justify-center">
+                <div className="text-[9px] font-black uppercase tracking-[0.2em] text-primary-deep print:text-sm">
                   Certificate of Completion
                 </div>
-                <div className="mt-2 font-display text-lg font-extrabold">Hodlchi</div>
-                <div className="mt-3 text-[10px] uppercase tracking-widest text-foreground/50">
+                <div className="mt-2 font-display text-lg font-extrabold print:text-3xl">Hodlchi</div>
+                <div className="mt-3 text-[10px] uppercase tracking-widest text-foreground/50 print:mt-8 print:text-xs">
                   Awarded to
                 </div>
                 <div
-                  className={`mt-1 font-display text-xl font-black ${
-                    unlocked ? "text-foreground" : "text-foreground/80 blur-[1px] select-none"
+                  className={`mt-1 font-display text-xl font-black print:mt-3 print:text-5xl ${
+                    unlocked && hasName
+                      ? "text-foreground"
+                      : "text-foreground/80 blur-[1px] select-none print:blur-0"
                   }`}
                 >
                   {learnerName}
                 </div>
-                <div className="mt-2 text-[10px] text-foreground/60">
+                <div className="mt-2 text-[10px] text-foreground/60 print:mt-6 print:text-base">
                   For completing all 5 Hodlchi Financial Literacy paths
                 </div>
                 {unlocked && (
-                  <div className="mt-1 text-[10px] text-foreground/60">{awardedDate}</div>
+                  <div className="mt-1 text-[10px] text-foreground/60 print:mt-2 print:text-sm">{awardedDate}</div>
                 )}
-                <div className="mt-3 flex items-center justify-between text-[9px] text-foreground/50">
+                <div className="mt-3 flex items-center justify-between text-[9px] text-foreground/50 print:mt-10 print:w-full print:text-xs">
                   <span>ID · {unlocked ? certId : "ABCD-1234"}</span>
                   <span>hodlchi.com/verify</span>
                 </div>
@@ -204,9 +270,10 @@ function CertificatePage() {
             <>
               <button
                 onClick={handlePrint}
-                className="mt-5 inline-flex w-full items-center justify-center rounded-2xl bg-foreground px-5 py-3.5 font-bold text-primary shadow-pop"
+                disabled={!hasName}
+                className="mt-5 inline-flex w-full items-center justify-center rounded-2xl bg-foreground px-5 py-3.5 font-bold text-primary shadow-pop disabled:opacity-40"
               >
-                Print or save as PDF →
+                {hasName ? "Print or save as PDF →" : "Enter your name to print"}
               </button>
               <Link
                 to="/dashboard"
@@ -234,6 +301,7 @@ function CertificatePage() {
             </>
           )}
         </header>
+
 
         <section className="mt-8">
           <h2 className="px-1 text-sm font-extrabold uppercase tracking-widest text-foreground/60">

@@ -91,32 +91,39 @@ function xpToLevel(xp: number) {
   return Math.max(1, Math.floor(xp / 100) + 1);
 }
 
-export function stageForLevel(level: number): Stage {
-  // Users hatch during onboarding, so level 1 already starts as Baby.
-  if (level <= 2) return "Baby";
-  if (level <= 5) return "Student";
-  if (level <= 9) return "Builder";
-  if (level <= 15) return "Investor";
-  return "Money Legend";
+// XP thresholds for each stage. Index i is the minimum XP to be in STAGE_ORDER[i].
+const STAGE_THRESHOLDS = [0, 80, 200, 380, 580] as const;
+const STAGE_ORDER: Stage[] = ["Baby", "Student", "Builder", "Investor", "Money Legend"];
+
+export function stageForXp(xp: number): Stage {
+  let idx = 0;
+  for (let i = 0; i < STAGE_THRESHOLDS.length; i++) {
+    if (xp >= STAGE_THRESHOLDS[i]) idx = i;
+  }
+  return STAGE_ORDER[idx];
 }
 
-export function progressToNextStage(level: number, xp: number) {
-  // Thresholds align with stageForLevel (Baby → Student → Builder → Investor → Legend).
-  const thresholds = [0, 80, 200, 380, 580, 800];
-  let stageIdx = 0;
-  for (let i = 0; i < thresholds.length - 1; i++) {
-    if (xp >= thresholds[i] && xp < thresholds[i + 1]) {
-      stageIdx = i;
-      break;
-    }
-    if (xp >= thresholds[thresholds.length - 1]) stageIdx = thresholds.length - 2;
-  }
-  const start = thresholds[stageIdx];
-  const end = thresholds[stageIdx + 1] ?? xp + 1;
-  const pct = Math.min(100, Math.round(((xp - start) / (end - start)) * 100));
-  return { pct, start, end, current: xp, nextStage: stageForLevel(xpToLevel(end)) };
-  void level;
+// Back-compat wrapper — some callers pass level; derive xp from level.
+export function stageForLevel(level: number): Stage {
+  return stageForXp(Math.max(0, (level - 1) * 100));
 }
+
+export function progressToNextStage(_level: number, xp: number) {
+  let stageIdx = 0;
+  for (let i = 0; i < STAGE_THRESHOLDS.length; i++) {
+    if (xp >= STAGE_THRESHOLDS[i]) stageIdx = i;
+  }
+  const start = STAGE_THRESHOLDS[stageIdx];
+  const nextIdx = Math.min(stageIdx + 1, STAGE_ORDER.length - 1);
+  const isMax = stageIdx === STAGE_ORDER.length - 1;
+  const end = isMax ? xp : STAGE_THRESHOLDS[nextIdx];
+  const pct = isMax
+    ? 100
+    : Math.min(100, Math.round(((xp - start) / (end - start)) * 100));
+  return { pct, start, end, current: xp, nextStage: STAGE_ORDER[nextIdx] };
+  void _level;
+}
+
 
 interface Ctx {
   state: HodlchiState;
@@ -161,7 +168,7 @@ export function deriveMood(state: HodlchiState, now: number = Date.now()): Mood 
   // Already active today.
   const prog = progressToNextStage(state.level, state.xp);
   const xpToNext = Math.max(0, prog.end - state.xp);
-  if (stageForLevel(state.level) !== state.acknowledgedStage) return "celebrating";
+  if (stageForXp(state.xp) !== state.acknowledgedStage) return "celebrating";
   if (xpToNext > 0 && xpToNext <= 30) return "excited";
   if (state.streak >= 3) return "proud";
   return "happy";
@@ -229,7 +236,7 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
       flashMood: (mood, durationMs = 1500) =>
         setState((s) => ({ ...s, mood, moodExpiresAt: Date.now() + durationMs })),
       evolve: () =>
-        setState((s) => ({ ...s, acknowledgedStage: stageForLevel(s.level), mood: "happy" })),
+        setState((s) => ({ ...s, acknowledgedStage: stageForXp(s.xp), mood: "happy" })),
       reset: () => setState({ ...DEFAULT_STATE }),
       demoMode: () =>
         setState({
