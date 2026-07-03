@@ -199,6 +199,9 @@ function CertificatePage() {
           }
           .no-print { display: none !important; }
         }
+      `}</style>
+
+
 
 
       <div className="mx-auto max-w-md px-5 pt-6 print:max-w-none print:px-0 print:pt-0">
