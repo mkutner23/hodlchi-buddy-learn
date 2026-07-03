@@ -161,51 +161,54 @@ function CertificatePage() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-sky pb-20 print:bg-white print:pb-0">
-      {/* Print styles: isolate certificate card only */}
+    <>
       <style>{`
         @media print {
-          @page { size: letter landscape; margin: 0.4in; }
+          @page { size: letter landscape; margin: 0; }
           html, body {
             background: #fff !important;
-            height: auto !important;
-            min-height: 0 !important;
+            width: 11in !important;
+            height: 8.5in !important;
             margin: 0 !important;
             padding: 0 !important;
             overflow: hidden !important;
           }
-          body * {
-            visibility: hidden !important;
-            box-shadow: none !important;
-            min-height: 0 !important;
-            max-height: none !important;
-            overflow: visible !important;
-          }
-          #cert-print, #cert-print * { visibility: visible !important; }
-          #cert-print {
-            position: fixed !important;
+          #cert-screen-page { display: none !important; }
+          #cert-print-page {
+            display: flex !important;
+            position: absolute !important;
             inset: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            max-width: none !important;
-            margin: 0 !important;
-            padding: 0.25in !important;
-            box-shadow: none !important;
-            border: none !important;
+            width: 11in !important;
+            height: 8.5in !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0.28in !important;
             background: #fff !important;
+            overflow: hidden !important;
+            page-break-before: avoid !important;
             page-break-after: avoid !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
           }
-          .no-print { display: none !important; }
+          #cert-print-page, #cert-print-page * {
+            box-sizing: border-box !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
         }
       `}</style>
 
+      <div id="cert-print-page" className="hidden">
+        <CertificateArtwork
+          learnerName={learnerName}
+          awardedDate={awardedDate}
+          certId={unlocked ? certId : "ABCD-1234"}
+          unlocked={unlocked}
+          print
+        />
+      </div>
 
-
-
-      <div className="mx-auto max-w-md px-5 pt-6 print:max-w-none print:px-0 print:pt-0">
-        <Link to="/" className="no-print text-sm font-semibold text-foreground/60">
+      <main id="cert-screen-page" className="min-h-screen bg-gradient-sky pb-20">
+      <div className="mx-auto max-w-md px-5 pt-6">
+        <Link to="/" className="text-sm font-semibold text-foreground/60">
           ← Back
         </Link>
 
@@ -251,39 +254,12 @@ function CertificatePage() {
               {unlocked ? "Your certificate" : "Preview your certificate"}
             </div>
 
-            <div
-              id="cert-print"
-              className="relative overflow-hidden rounded-2xl border-2 border-foreground/10 bg-gradient-to-br from-primary/10 via-white to-primary/20 p-5 shadow-soft print:rounded-none print:border-4 print:border-primary-deep/40 print:p-10 print:aspect-[11/8.5]"
-            >
-              <div className="relative text-center print:flex print:h-full print:flex-col print:items-center print:justify-center">
-                <div className="text-[9px] font-black uppercase tracking-[0.2em] text-primary-deep print:text-sm">
-                  Certificate of Completion
-                </div>
-                <div className="mt-2 font-display text-lg font-extrabold print:text-3xl">Hodlchi</div>
-                <div className="mt-3 text-[10px] uppercase tracking-widest text-foreground/50 print:mt-8 print:text-xs">
-                  Awarded to
-                </div>
-                <div
-                  className={`mt-1 font-display text-xl font-black print:mt-3 print:text-5xl ${
-                    unlocked && hasName
-                      ? "text-foreground"
-                      : "text-foreground/80 blur-[1px] select-none print:blur-0"
-                  }`}
-                >
-                  {learnerName}
-                </div>
-                <div className="mt-2 text-[10px] text-foreground/60 print:mt-6 print:text-base">
-                  For completing all 5 Hodlchi Financial Literacy paths
-                </div>
-                {unlocked && (
-                  <div className="mt-1 text-[10px] text-foreground/60 print:mt-2 print:text-sm">{awardedDate}</div>
-                )}
-                <div className="mt-3 flex items-center justify-between text-[9px] text-foreground/50 print:mt-10 print:w-full print:text-xs">
-                  <span>ID · {unlocked ? certId : "ABCD-1234"}</span>
-                  <span>hodlchi.com/verify</span>
-                </div>
-              </div>
-            </div>
+            <CertificateArtwork
+              learnerName={learnerName}
+              awardedDate={awardedDate}
+              certId={unlocked ? certId : "ABCD-1234"}
+              unlocked={unlocked}
+            />
           </div>
 
           {unlocked ? (
@@ -399,7 +375,76 @@ function CertificatePage() {
           </p>
         </div>
       </div>
-    </main>
+      </main>
+    </>
+  );
+}
+
+function CertificateArtwork({
+  learnerName,
+  awardedDate,
+  certId,
+  unlocked,
+  print = false,
+}: {
+  learnerName: string;
+  awardedDate: string;
+  certId: string;
+  unlocked: boolean;
+  print?: boolean;
+}) {
+  const frameClass = print
+    ? "relative h-full w-full overflow-hidden rounded-[0.18in] border-[0.045in] border-primary-deep/35 bg-gradient-to-br from-primary/10 via-white to-accent/20 p-[0.32in]"
+    : "relative aspect-[11/8.5] overflow-hidden rounded-2xl border-2 border-foreground/10 bg-gradient-to-br from-primary/10 via-white to-accent/20 p-5 shadow-soft";
+  const innerClass = print
+    ? "relative flex h-full flex-col items-center justify-center rounded-[0.1in] border border-primary-deep/20 bg-white/70 px-[0.52in] text-center"
+    : "relative rounded-xl border border-primary-deep/15 bg-white/65 px-4 py-5 text-center";
+
+  return (
+    <section className={frameClass} aria-label="Financial Literacy Certificate preview">
+      <div className="absolute -left-10 -top-10 h-32 w-32 rounded-full bg-primary/20 blur-2xl" />
+      <div className="absolute -bottom-12 -right-12 h-40 w-40 rounded-full bg-accent/25 blur-2xl" />
+      <div className="absolute inset-3 rounded-[inherit] border border-primary-deep/10" />
+      <div className={innerClass}>
+        <div className={print ? "text-sm font-black uppercase tracking-[0.28em] text-primary-deep" : "text-[9px] font-black uppercase tracking-[0.22em] text-primary-deep"}>
+          Certificate of Completion
+        </div>
+        <div className={print ? "mt-4 font-display text-5xl font-black leading-none" : "mt-2 font-display text-lg font-extrabold leading-none"}>
+          Hodlchi
+        </div>
+        <div className={print ? "mt-5 h-px w-48 bg-primary-deep/25" : "mx-auto mt-3 h-px w-24 bg-primary-deep/20"} />
+        <div className={print ? "mt-7 text-xs font-bold uppercase tracking-[0.32em] text-foreground/45" : "mt-3 text-[10px] uppercase tracking-widest text-foreground/50"}>
+          Awarded to
+        </div>
+        <div
+          className={`${print ? "mt-3 font-display text-6xl font-black leading-tight" : "mt-1 font-display text-xl font-black leading-tight"} ${
+            unlocked ? "text-foreground" : "select-none text-foreground/80 blur-[1px]"
+          }`}
+        >
+          {learnerName}
+        </div>
+        <p className={print ? "mt-5 max-w-[7.3in] text-lg font-semibold leading-relaxed text-foreground/70" : "mt-2 text-[10px] leading-snug text-foreground/60"}>
+          For completing all 5 Hodlchi Financial Literacy paths and demonstrating beginner-friendly money basics.
+        </p>
+        <div className={print ? "mt-7 grid h-[0.9in] w-[0.9in] place-items-center rounded-full border-[0.035in] border-primary-deep/35 bg-primary/15 text-3xl" : "mx-auto mt-3 grid h-12 w-12 place-items-center rounded-full border border-primary-deep/25 bg-primary/15 text-lg"}>
+          ✦
+        </div>
+        <div className={print ? "mt-6 flex w-full items-end justify-between text-sm text-foreground/55" : "mt-3 flex items-center justify-between text-[9px] text-foreground/50"}>
+          <div className="text-left">
+            <div className="font-bold uppercase tracking-widest">Date</div>
+            <div>{unlocked ? awardedDate : "July 2, 2026"}</div>
+          </div>
+          <div className="text-center">
+            <div className="font-bold uppercase tracking-widest">Certificate ID</div>
+            <div>{certId}</div>
+          </div>
+          <div className="text-right">
+            <div className="font-bold uppercase tracking-widest">Verify</div>
+            <div>hodlchi.com/verify</div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
