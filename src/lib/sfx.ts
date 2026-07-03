@@ -282,30 +282,35 @@ function playHero(key: HeroKey, volume = 0.9): boolean {
 if (typeof window !== "undefined") {
   const unlock = () => {
     const ac = getCtx(true); // creates + resumes inside the gesture
-    if (ac && ac.state === "suspended") ac.resume().catch(() => {});
-    // Play a near-silent buffer to fully unlock iOS audio output.
+    if (!ac) return;
+    if (ac.state === "suspended") ac.resume().catch(() => {});
+    // Play a near-silent buffer through the full master graph to warm up
+    // iOS's audio output path — going through `master` (not raw destination)
+    // makes iOS commit the graph we'll actually use for real sounds.
     try {
-      if (ac) {
-        const buf = ac.createBuffer(1, 1, 22050);
-        const src = ac.createBufferSource();
-        src.buffer = buf;
-        src.connect(ac.destination);
-        src.start(0);
-      }
+      const buf = ac.createBuffer(1, 1, 22050);
+      const src = ac.createBufferSource();
+      src.buffer = buf;
+      src.connect(dest());
+      src.start(0);
     } catch {
       /* ignore */
     }
+    unlocked = true;
     ensureHero("sparkle");
     ensureHero("levelUp");
     window.removeEventListener("touchend", unlock);
     window.removeEventListener("touchstart", unlock);
+    window.removeEventListener("pointerdown", unlock);
     window.removeEventListener("click", unlock);
     window.removeEventListener("keydown", unlock);
   };
-  window.addEventListener("touchend", unlock, { once: false, passive: true });
-  window.addEventListener("touchstart", unlock, { once: false, passive: true });
-  window.addEventListener("click", unlock, { once: false });
-  window.addEventListener("keydown", unlock, { once: false });
+  window.addEventListener("touchend", unlock, { passive: true });
+  window.addEventListener("touchstart", unlock, { passive: true });
+  window.addEventListener("pointerdown", unlock, { passive: true });
+  window.addEventListener("click", unlock);
+  window.addEventListener("keydown", unlock);
+
 }
 
 // ---------- Procedural voices (with variation) ----------
