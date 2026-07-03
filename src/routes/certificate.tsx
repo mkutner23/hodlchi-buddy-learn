@@ -2,7 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { PATHS } from "@/lib/lessons-data";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { useHodlchi } from "@/lib/hodlchi-store";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+const LEARNER_NAME_KEY = "hodlchi-learner-name-v1";
+
 
 function certIdFor(name: string, count: number) {
   const seed = `${name}-${count}`;
