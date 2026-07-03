@@ -189,7 +189,7 @@ function CertificatePage() {
           ← Back
         </Link>
 
-        <header className="mt-4 rounded-3xl bg-white p-6 text-center shadow-soft print:hidden">
+        <header className="mt-4 rounded-3xl bg-white p-6 text-center shadow-soft">
           <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
             {unlocked ? "🎉 Certificate unlocked" : "Free certificate of completion"}
           </div>
