@@ -276,7 +276,7 @@ function Onboarding() {
               onClick={() => setStep(step - 1)}
               className="rounded-2xl border-2 border-foreground/15 bg-white/70 px-5 py-4 font-semibold"
             >
-              Back
+              {es ? "Atrás" : "Back"}
             </button>
           )}
           <button
@@ -284,10 +284,10 @@ function Onboarding() {
             onClick={handleNext}
             className="flex-1 rounded-2xl bg-foreground px-6 py-4 font-bold text-primary shadow-pop transition active:scale-[0.98] disabled:opacity-40"
           >
-            {step === 0 && "Continue"}
-            {step === 1 && "Hatch!"}
-            {step === 2 && (hatchCTAReady ? `Meet ${displayName} →` : "Hatching…")}
-            {step === 3 && "Start my journey"}
+            {step === 0 && (es ? "Continuar" : "Continue")}
+            {step === 1 && (es ? "¡A incubar!" : "Hatch!")}
+            {step === 2 && (hatchCTAReady ? (es ? `Conoce a ${displayName} →` : `Meet ${displayName} →`) : (es ? "Incubando…" : "Hatching…"))}
+            {step === 3 && t("onboarding.start_journey")}
           </button>
         </div>
       </div>
