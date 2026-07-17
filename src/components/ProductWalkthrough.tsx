@@ -1,28 +1,29 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
+import { useI18n } from "@/lib/i18n";
 
 type Scene = {
   key: string;
   emoji: string;
-  label: string;
-  caption: string;
+  captionKey: string;
   duration: number; // ms
 };
 
 const SCENES: Scene[] = [
-  { key: "hatch", emoji: "🥚", label: "Step 1", caption: "Hatch your egg", duration: 5000 },
-  { key: "name", emoji: "🦊", label: "Step 2", caption: "Name your companion", duration: 5000 },
-  { key: "lesson", emoji: "📚", label: "Step 3", caption: "Finish a 5-minute lesson", duration: 7000 },
-  { key: "xp", emoji: "✨", label: "Step 4", caption: "Earn XP — they smile", duration: 5000 },
-  { key: "evolve", emoji: "🌱", label: "Step 5", caption: "Evolve to the next stage", duration: 6000 },
+  { key: "hatch", emoji: "🥚", captionKey: "tour.hatch.caption", duration: 5000 },
+  { key: "name", emoji: "🦊", captionKey: "tour.name.caption", duration: 5000 },
+  { key: "lesson", emoji: "📚", captionKey: "tour.lesson.caption", duration: 7000 },
+  { key: "xp", emoji: "✨", captionKey: "tour.xp.caption", duration: 5000 },
+  { key: "evolve", emoji: "🌱", captionKey: "tour.evolve.caption", duration: 6000 },
 ];
 
 const TOTAL = SCENES.reduce((a, s) => a + s.duration, 0);
 
 export function ProductWalkthrough() {
+  const { t } = useI18n();
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [elapsed, setElapsed] = useState(0); // ms accumulated across scenes
+  const [elapsed, setElapsed] = useState(0);
   const rafRef = useRef<number | null>(null);
   const lastTsRef = useRef<number | null>(null);
 
@@ -64,9 +65,10 @@ export function ProductWalkthrough() {
     setIdx(i);
   };
 
+  const stepLabel = useMemo(() => `${t("tour.step")} ${idx + 1}`, [t, idx]);
+
   return (
     <div className="relative mx-auto max-w-[380px]">
-      {/* Soft ambient glow behind the phone */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 blur-3xl"
         style={{
@@ -76,19 +78,15 @@ export function ProductWalkthrough() {
         aria-hidden
       />
 
-      {/* Phone device frame */}
       <div
         className="relative animate-tour-float select-none rounded-[44px] bg-foreground p-3 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.45),0_10px_25px_-10px_rgba(0,0,0,0.3)]"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
-        aria-label="Hodlchi product walkthrough"
+        aria-label={t("tour.aria.title")}
       >
-        {/* Notch */}
         <div className="pointer-events-none absolute left-1/2 top-3 z-20 h-6 w-32 -translate-x-1/2 rounded-b-2xl bg-foreground" />
 
-        {/* Screen */}
         <div className="relative overflow-hidden rounded-[32px] bg-white">
-          {/* Status bar */}
           <div className="flex items-center justify-between px-6 pt-3 pb-1 text-[10px] font-bold text-foreground/70">
             <span>9:41</span>
             <span className="flex items-center gap-1">
@@ -98,9 +96,7 @@ export function ProductWalkthrough() {
             </span>
           </div>
 
-          {/* Stage */}
           <div className="relative h-[380px] bg-gradient-hero">
-            {/* Subtle top highlight sweep */}
             <div
               className="pointer-events-none absolute inset-x-0 top-0 h-24 opacity-60"
               style={{
@@ -121,19 +117,17 @@ export function ProductWalkthrough() {
               </div>
             ))}
 
-            {/* Caption */}
             <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-gradient-to-t from-foreground/85 via-foreground/40 to-transparent p-4 text-white">
               <div className="text-[10px] font-bold uppercase tracking-widest text-white/80">
-                {scene.label}
+                {stepLabel}
               </div>
               <div className="text-lg font-extrabold leading-tight">
                 <span className="mr-1.5">{scene.emoji}</span>
-                {scene.caption}
+                {t(scene.captionKey as any)}
               </div>
             </div>
           </div>
 
-          {/* Progress + dots */}
           <div className="bg-white px-5 py-4">
             <div className="h-1 w-full overflow-hidden rounded-full bg-foreground/10">
               <div
@@ -150,7 +144,7 @@ export function ProductWalkthrough() {
                     className={`text-base leading-none transition ${
                       i === idx ? "scale-110 opacity-100" : "opacity-40 hover:opacity-80"
                     }`}
-                    aria-label={`Jump to ${s.caption}`}
+                    aria-label={`${t("tour.aria.jump")} ${t(s.captionKey as any)}`}
                   >
                     {s.emoji}
                   </button>
@@ -159,7 +153,7 @@ export function ProductWalkthrough() {
               <button
                 onClick={() => setPaused((p) => !p)}
                 className="text-[11px] font-semibold text-foreground/60 hover:text-foreground"
-                aria-label={paused ? "Play walkthrough" : "Pause walkthrough"}
+                aria-label={paused ? t("tour.aria.play") : t("tour.aria.pause")}
               >
                 {paused ? "▶" : "❚❚"}
               </button>
@@ -170,7 +164,6 @@ export function ProductWalkthrough() {
     </div>
   );
 }
-
 
 function SceneView({ sceneKey }: { sceneKey: string }) {
   switch (sceneKey) {
@@ -190,6 +183,7 @@ function SceneView({ sceneKey }: { sceneKey: string }) {
 }
 
 function HatchScene() {
+  const { t } = useI18n();
   const [stage, setStage] = useState<"Egg" | "Baby">("Egg");
   const [shake, setShake] = useState(false);
   useEffect(() => {
@@ -208,13 +202,14 @@ function HatchScene() {
         <HodlchiAvatar egg="mint" personality="fox" stage={stage} size={170} />
       </div>
       <div className="rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-foreground/70 shadow-soft">
-        {stage === "Egg" ? "Tap to hatch…" : "It hatched! 🎉"}
+        {stage === "Egg" ? t("tour.hatch.tap") : t("tour.hatch.done")}
       </div>
     </div>
   );
 }
 
 function NameScene() {
+  const { t } = useI18n();
   const target = "Foxy";
   const [typed, setTyped] = useState("");
   useEffect(() => {
@@ -234,7 +229,7 @@ function NameScene() {
       </div>
       <div className="w-full">
         <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
-          Name your companion
+          {t("tour.name.label")}
         </div>
         <div className="mt-1 flex h-11 items-center rounded-xl border-2 border-primary-deep bg-white px-3 text-base font-bold">
           {typed}
@@ -246,9 +241,10 @@ function NameScene() {
 }
 
 function LessonScene() {
+  const { t } = useI18n();
   const questions = [
-    { q: "What is a budget?", opts: ["A savings app", "A money plan", "A type of bank"], correct: 1 },
-    { q: "Best way to build savings?", opts: ["Automate deposits", "Wait until year-end", "Buy crypto"], correct: 0 },
+    { q: t("tour.lesson.q1"), opts: [t("tour.lesson.q1.o1"), t("tour.lesson.q1.o2"), t("tour.lesson.q1.o3")], correct: 1 },
+    { q: t("tour.lesson.q2"), opts: [t("tour.lesson.q2.o1"), t("tour.lesson.q2.o2"), t("tour.lesson.q2.o3")], correct: 0 },
   ];
   const [step, setStep] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
@@ -267,7 +263,7 @@ function LessonScene() {
     <div className="w-full max-w-xs">
       <div className="rounded-2xl bg-white p-4 shadow-soft">
         <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-          Saving · Lesson 1
+          {t("tour.lesson.header")}
         </div>
         <div className="mt-1 text-sm font-bold">{cur.q}</div>
         <div className="mt-3 grid gap-2">
@@ -299,6 +295,7 @@ function LessonScene() {
 }
 
 function XpScene() {
+  const { t } = useI18n();
   const [xp, setXp] = useState(40);
   const [pop, setPop] = useState(false);
   useEffect(() => {
@@ -328,7 +325,7 @@ function XpScene() {
       </div>
       <div className="w-full">
         <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-foreground/60">
-          <span>Level 1</span>
+          <span>{t("tour.xp.level")}</span>
           <span>{xp} / 100 XP</span>
         </div>
         <div className="mt-1 h-2.5 w-full overflow-hidden rounded-full bg-foreground/10">
@@ -343,6 +340,7 @@ function XpScene() {
 }
 
 function EvolveScene() {
+  const { t, locale } = useI18n();
   const [stage, setStage] = useState<"Baby" | "Student">("Baby");
   const [flash, setFlash] = useState(false);
   useEffect(() => {
@@ -357,6 +355,7 @@ function EvolveScene() {
       clearTimeout(t3);
     };
   }, []);
+  const studentLabel = locale === "es" ? "Estudiante" : "Student";
   return (
     <div className="flex flex-col items-center gap-3">
       <div className="relative">
@@ -368,7 +367,7 @@ function EvolveScene() {
         </div>
       </div>
       <div className="rounded-full bg-foreground px-3 py-1 text-xs font-bold text-primary shadow-pop">
-        Evolved → {stage === "Student" ? "Student" : "…"}
+        {t("tour.evolve.label")} {stage === "Student" ? studentLabel : "…"}
       </div>
     </div>
   );
