@@ -9,6 +9,7 @@ import {
   PERSONALITIES,
 } from "@/components/HodlchiAvatar";
 import { useHodlchi, type EggColor, type Personality } from "@/lib/hodlchi-store";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/onboarding")({
   component: Onboarding,
@@ -32,22 +33,32 @@ export const Route = createFileRoute("/onboarding")({
   }),
 });
 
-const EGG_HINTS: Record<EggColor, { emoji: string; hint: string }> = {
-  mint: { emoji: "🟢", hint: "Calm & balanced" },
-  sun: { emoji: "🟡", hint: "Bright & optimistic" },
-  berry: { emoji: "🩷", hint: "Curious & playful" },
+const EGG_HINTS: Record<EggColor, { emoji: string; hint_en: string; hint_es: string; label_es: string }> = {
+  mint: { emoji: "🟢", hint_en: "Calm & balanced", hint_es: "Tranquilo y equilibrado", label_es: "menta" },
+  sun: { emoji: "🟡", hint_en: "Bright & optimistic", hint_es: "Brillante y optimista", label_es: "sol" },
+  berry: { emoji: "🩷", hint_en: "Curious & playful", hint_es: "Curioso y juguetón", label_es: "baya" },
 };
 
-const PERSONALITY_HINTS: Record<Personality, string> = {
+const PERSONALITY_HINTS_EN: Record<Personality, string> = {
   ape: "Learns by trying.",
   turtle: "Learns one step at a time.",
   fox: "Loves solving puzzles.",
 };
+const PERSONALITY_HINTS_ES: Record<Personality, string> = {
+  ape: "Aprende probando.",
+  turtle: "Aprende paso a paso.",
+  fox: "Le encanta resolver acertijos.",
+};
 
-const PERSONALITY_GREETINGS: Record<Personality, string> = {
+const PERSONALITY_GREETINGS_EN: Record<Personality, string> = {
   ape: "Let's try something new today!",
   turtle: "One lesson at a time. 🐢",
   fox: "Let's solve some money puzzles!",
+};
+const PERSONALITY_GREETINGS_ES: Record<Personality, string> = {
+  ape: "¡Vamos a probar algo nuevo hoy!",
+  turtle: "Una lección a la vez. 🐢",
+  fox: "¡Resolvamos algunos acertijos de dinero!",
 };
 
 
@@ -60,6 +71,10 @@ const RANDOM_NAMES = [
 function Onboarding() {
   const nav = useNavigate();
   const { setOnboarding } = useHodlchi();
+  const { locale, t } = useI18n();
+  const es = locale === "es";
+  const PERSONALITY_HINTS = es ? PERSONALITY_HINTS_ES : PERSONALITY_HINTS_EN;
+  const PERSONALITY_GREETINGS = es ? PERSONALITY_GREETINGS_ES : PERSONALITY_GREETINGS_EN;
   // steps: 0 egg, 1 name, 2 hatch, 3 personality
   const [step, setStep] = useState(0);
   const [egg, setEgg] = useState<EggColor>("mint");
