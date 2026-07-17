@@ -301,11 +301,13 @@ function HatchScene({
   name,
   personality,
   phase,
+  es,
 }: {
   egg: EggColor;
   name: string;
   personality: Personality;
   phase: "idle" | "cracking" | "revealed";
+  es: boolean;
 }) {
   const confetti = useMemo(
     () =>
@@ -359,8 +361,8 @@ function HatchScene({
       <div className="mt-6 min-h-[120px] text-center">
         {phase !== "revealed" ? (
           <>
-            <p className="text-lg font-semibold">Something's stirring…</p>
-            <p className="mt-1 text-sm text-foreground/60">Hold tight, {name} is on the way.</p>
+            <p className="text-lg font-semibold">{es ? "Algo se mueve…" : "Something's stirring…"}</p>
+            <p className="mt-1 text-sm text-foreground/60">{es ? `Aguanta, ${name} ya viene.` : `Hold tight, ${name} is on the way.`}</p>
           </>
         ) : (
           <>
@@ -368,19 +370,19 @@ function HatchScene({
               className="animate-pop text-lg font-semibold"
               style={{ animationDelay: "0.3s", animationFillMode: "both" }}
             >
-              *waves* 👋
+              {es ? "*saluda* 👋" : "*waves* 👋"}
             </p>
             <p
               className="animate-pop mt-2 text-2xl font-extrabold"
               style={{ animationDelay: "1.1s", animationFillMode: "both" }}
             >
-              Hi! I'm {name}. ✨
+              {es ? `¡Hola! Soy ${name}. ✨` : `Hi! I'm ${name}. ✨`}
             </p>
             <p
               className="animate-pop mt-1 text-sm text-foreground/70"
               style={{ animationDelay: "1.9s", animationFillMode: "both" }}
             >
-              Thanks for choosing me.
+              {es ? "Gracias por elegirme." : "Thanks for choosing me."}
             </p>
           </>
         )}
