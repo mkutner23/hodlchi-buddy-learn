@@ -140,8 +140,8 @@ function Onboarding() {
         <div className="mt-8 flex-1">
           {step === 0 && (
             <div className="animate-pop">
-              <h1 className="text-3xl font-extrabold">Choose your egg</h1>
-              <p className="mt-2 text-foreground/70">Your Hodlchi will hatch from here.</p>
+              <h1 className="text-3xl font-extrabold">{es ? "Elige tu huevo" : "Choose your egg"}</h1>
+              <p className="mt-2 text-foreground/70">{es ? "Tu Hodlchi eclosionará desde aquí." : "Your Hodlchi will hatch from here."}</p>
               <div className="mt-8 grid grid-cols-3 gap-3">
                 {EGGS.map((e) => {
                   const active = egg === e;
@@ -158,10 +158,10 @@ function Onboarding() {
                         </div>
                       </div>
                       <div className="mt-2 text-sm font-semibold capitalize">
-                        {hint.emoji} {e}
+                        {hint.emoji} {es ? hint.label_es : e}
                       </div>
                       <div className="mt-0.5 text-[11px] leading-tight text-foreground/60">
-                        {hint.hint}
+                        {es ? hint.hint_es : hint.hint_en}
                       </div>
                     </button>
                   );
@@ -172,9 +172,9 @@ function Onboarding() {
 
           {step === 1 && (
             <div className="animate-pop">
-              <h1 className="text-3xl font-extrabold">What should your Hodlchi call themselves?</h1>
+              <h1 className="text-3xl font-extrabold">{t("onboarding.step_name.title")}</h1>
               <p className="mt-2 text-foreground/70">
-                Pick anything. You can't change it later — kidding, you can.
+                {es ? "Elige lo que quieras. No puedes cambiarlo después — es broma, sí puedes." : "Pick anything. You can't change it later — kidding, you can."}
               </p>
               <div className="mt-8 grid place-items-center">
                 <div className="animate-wiggle">
@@ -186,18 +186,18 @@ function Onboarding() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 maxLength={20}
-                placeholder="e.g. Pip, Sage, Nugget"
-                aria-label="Hodlchi name"
+                placeholder={es ? "ej. Pip, Sage, Nugget" : "e.g. Pip, Sage, Nugget"}
+                aria-label={es ? "Nombre del Hodlchi" : "Hodlchi name"}
                 className="mt-8 w-full rounded-2xl border-2 border-foreground/15 bg-white/80 px-5 py-4 text-lg font-semibold outline-none focus:border-foreground"
               />
               <div className="mt-3 flex items-center justify-between">
-                <span className="text-xs text-foreground/60">Need inspiration?</span>
+                <span className="text-xs text-foreground/60">{es ? "¿Necesitas inspiración?" : "Need inspiration?"}</span>
                 <button
                   type="button"
                   onClick={rollRandomName}
                   className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-white/80 px-3 py-1.5 text-xs font-semibold hover:bg-white"
                 >
-                  <Dice5 className="h-3.5 w-3.5" /> Random name
+                  <Dice5 className="h-3.5 w-3.5" /> {es ? "Nombre al azar" : "Random name"}
                 </button>
               </div>
             </div>
@@ -214,9 +214,9 @@ function Onboarding() {
 
           {step === 3 && (
             <div className="animate-pop">
-              <h1 className="text-3xl font-extrabold">How does {displayName} learn?</h1>
+              <h1 className="text-3xl font-extrabold">{es ? `¿Cómo aprende ${displayName}?` : `How does ${displayName} learn?`}</h1>
               <p className="mt-2 text-foreground/70">
-                Pick a learning style. You'll unlock the others as you grow.
+                {es ? "Elige un estilo de aprendizaje. Desbloquearás los otros a medida que crezcas." : "Pick a learning style. You'll unlock the others as you grow."}
               </p>
 
               <div key={personality} className="mt-5 flex items-start gap-3 animate-pop">
