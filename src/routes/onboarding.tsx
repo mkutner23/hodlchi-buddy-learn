@@ -209,6 +209,7 @@ function Onboarding() {
               name={displayName}
               personality={personality}
               phase={hatchPhase}
+              es={es}
             />
           )}
 
