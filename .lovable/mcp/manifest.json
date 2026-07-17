@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "sdk_version": "0.23.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "hodlchi-mcp",
+      "version": "0.1.0",
+      "title": "Hodlchi"
+    },
+    "tools": [
+      {
+        "name": "list_learning_paths",
+        "title": "List learning paths",
+        "description": "List all Hodlchi learning paths (Saving, Investing, Credit, Entrepreneurship, Crypto) with tagline and lesson count.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_lesson",
+        "title": "Get lesson",
+        "description": "Fetch a single Hodlchi lesson (intro text + 3-question quiz) by path id and lesson id. Use list_learning_paths to discover valid ids.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "pathId": {
+              "type": "string",
+              "enum": [
+                "saving",
+                "investing",
+                "credit",
+                "entrepreneurship",
+                "crypto"
+              ],
+              "description": "Learning path id, e.g. 'saving'."
+            },
+            "lessonId": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Lesson id within the path, e.g. 's1'."
+            }
+          },
+          "required": [
+            "pathId",
+            "lessonId"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_money_basics",
+        "title": "List money basics topics",
+        "description": "List all Hodlchi Money Basics glossary topics (budgeting, saving, APR, credit score, etc.) with slug and short description.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_money_basics_topic",
+        "title": "Get money basics topic",
+        "description": "Fetch a full Hodlchi Money Basics glossary entry (definition, body sections, example, FAQ) by slug. Use list_money_basics to discover valid slugs.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Topic slug, e.g. 'budgeting' or 'credit-score'."
+            }
+          },
+          "required": [
+            "slug"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
