@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as FinancialLiteracyForEveryoneRouteImport } from './routes/financial-literacy-for-everyone'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CertificateRouteImport } from './routes/certificate'
@@ -20,8 +21,11 @@ import { Route as PathPathIdRouteImport } from './routes/path.$pathId'
 import { Route as MoneyBasicsTopicRouteImport } from './routes/money-basics.$topic'
 import { Route as CompareKhanAcademyRouteImport } from './routes/compare.khan-academy'
 import { Route as BlogWhatIsFinancialLiteracyRouteImport } from './routes/blog.what-is-financial-literacy'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as LessonPathIdLessonIdRouteImport } from './routes/lesson.$pathId.$lessonId'
 import { Route as ApiPublicHeroSfxRouteImport } from './routes/api/public/hero-sfx'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -31,6 +35,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FinancialLiteracyForEveryoneRoute =
@@ -80,6 +89,18 @@ const BlogWhatIsFinancialLiteracyRoute =
     path: '/blog/what-is-financial-literacy',
     getParentRoute: () => rootRouteImport,
   } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LessonPathIdLessonIdRoute = LessonPathIdLessonIdRouteImport.update({
   id: '/lesson/$pathId/$lessonId',
   path: '/lesson/$pathId/$lessonId',
@@ -90,19 +111,29 @@ const ApiPublicHeroSfxRoute = ApiPublicHeroSfxRouteImport.update({
   path: '/api/public/hero-sfx',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
   '/dashboard': typeof DashboardRoute
   '/financial-literacy-for-everyone': typeof FinancialLiteracyForEveryoneRoute
+  '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/what-is-financial-literacy': typeof BlogWhatIsFinancialLiteracyRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
   '/money-basics/$topic': typeof MoneyBasicsTopicRoute
   '/path/$pathId': typeof PathPathIdRoute
   '/money-basics/': typeof MoneyBasicsIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
 }
@@ -111,13 +142,17 @@ export interface FileRoutesByTo {
   '/certificate': typeof CertificateRoute
   '/dashboard': typeof DashboardRoute
   '/financial-literacy-for-everyone': typeof FinancialLiteracyForEveryoneRoute
+  '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/what-is-financial-literacy': typeof BlogWhatIsFinancialLiteracyRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
   '/money-basics/$topic': typeof MoneyBasicsTopicRoute
   '/path/$pathId': typeof PathPathIdRoute
   '/money-basics': typeof MoneyBasicsIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
 }
@@ -127,13 +162,17 @@ export interface FileRoutesById {
   '/certificate': typeof CertificateRoute
   '/dashboard': typeof DashboardRoute
   '/financial-literacy-for-everyone': typeof FinancialLiteracyForEveryoneRoute
+  '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/what-is-financial-literacy': typeof BlogWhatIsFinancialLiteracyRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
   '/money-basics/$topic': typeof MoneyBasicsTopicRoute
   '/path/$pathId': typeof PathPathIdRoute
   '/money-basics/': typeof MoneyBasicsIndexRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
 }
@@ -144,13 +183,17 @@ export interface FileRouteTypes {
     | '/certificate'
     | '/dashboard'
     | '/financial-literacy-for-everyone'
+    | '/mcp'
     | '/onboarding'
     | '/sitemap.xml'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/blog/what-is-financial-literacy'
     | '/compare/khan-academy'
     | '/money-basics/$topic'
     | '/path/$pathId'
     | '/money-basics/'
+    | '/.mcp/invoke-tool/$tool'
     | '/api/public/hero-sfx'
     | '/lesson/$pathId/$lessonId'
   fileRoutesByTo: FileRoutesByTo
@@ -159,13 +202,17 @@ export interface FileRouteTypes {
     | '/certificate'
     | '/dashboard'
     | '/financial-literacy-for-everyone'
+    | '/mcp'
     | '/onboarding'
     | '/sitemap.xml'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/blog/what-is-financial-literacy'
     | '/compare/khan-academy'
     | '/money-basics/$topic'
     | '/path/$pathId'
     | '/money-basics'
+    | '/.mcp/invoke-tool/$tool'
     | '/api/public/hero-sfx'
     | '/lesson/$pathId/$lessonId'
   id:
@@ -174,13 +221,17 @@ export interface FileRouteTypes {
     | '/certificate'
     | '/dashboard'
     | '/financial-literacy-for-everyone'
+    | '/mcp'
     | '/onboarding'
     | '/sitemap.xml'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/blog/what-is-financial-literacy'
     | '/compare/khan-academy'
     | '/money-basics/$topic'
     | '/path/$pathId'
     | '/money-basics/'
+    | '/.mcp/invoke-tool/$tool'
     | '/api/public/hero-sfx'
     | '/lesson/$pathId/$lessonId'
   fileRoutesById: FileRoutesById
@@ -190,13 +241,17 @@ export interface RootRouteChildren {
   CertificateRoute: typeof CertificateRoute
   DashboardRoute: typeof DashboardRoute
   FinancialLiteracyForEveryoneRoute: typeof FinancialLiteracyForEveryoneRoute
+  McpRoute: typeof McpRoute
   OnboardingRoute: typeof OnboardingRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   BlogWhatIsFinancialLiteracyRoute: typeof BlogWhatIsFinancialLiteracyRoute
   CompareKhanAcademyRoute: typeof CompareKhanAcademyRoute
   MoneyBasicsTopicRoute: typeof MoneyBasicsTopicRoute
   PathPathIdRoute: typeof PathPathIdRoute
   MoneyBasicsIndexRoute: typeof MoneyBasicsIndexRoute
+  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicHeroSfxRoute: typeof ApiPublicHeroSfxRoute
   LessonPathIdLessonIdRoute: typeof LessonPathIdLessonIdRoute
 }
@@ -215,6 +270,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/financial-literacy-for-everyone': {
@@ -280,6 +342,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogWhatIsFinancialLiteracyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lesson/$pathId/$lessonId': {
       id: '/lesson/$pathId/$lessonId'
       path: '/lesson/$pathId/$lessonId'
@@ -294,6 +370,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHeroSfxRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -302,13 +385,18 @@ const rootRouteChildren: RootRouteChildren = {
   CertificateRoute: CertificateRoute,
   DashboardRoute: DashboardRoute,
   FinancialLiteracyForEveryoneRoute: FinancialLiteracyForEveryoneRoute,
+  McpRoute: McpRoute,
   OnboardingRoute: OnboardingRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   BlogWhatIsFinancialLiteracyRoute: BlogWhatIsFinancialLiteracyRoute,
   CompareKhanAcademyRoute: CompareKhanAcademyRoute,
   MoneyBasicsTopicRoute: MoneyBasicsTopicRoute,
   PathPathIdRoute: PathPathIdRoute,
   MoneyBasicsIndexRoute: MoneyBasicsIndexRoute,
+  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicHeroSfxRoute: ApiPublicHeroSfxRoute,
   LessonPathIdLessonIdRoute: LessonPathIdLessonIdRoute,
 }
