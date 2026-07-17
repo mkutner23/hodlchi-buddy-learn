@@ -3,7 +3,9 @@ import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointer
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
 import { PathFruit } from "@/components/PathFruit";
-import { PATHS, PATH_ACCENT, getDailyChallenge, type PathId } from "@/lib/lessons-data";
+import { PATH_ACCENT, getDailyChallenge, getLocalizedPaths, type PathId } from "@/lib/lessons-data";
+import { useI18n } from "@/lib/i18n";
+
 import { EvolveCinematic } from "@/components/EvolveCinematic";
 import { sfx } from "@/lib/sfx";
 import { pickContextualGreeting } from "@/lib/penny-greetings";
@@ -74,6 +76,9 @@ function greetingFor(
 function Home() {
   const nav = useNavigate();
   const { state, reset, demoMode, evolve } = useHodlchi();
+  const { locale, t } = useI18n();
+  const PATHS = getLocalizedPaths(locale);
+
   const [showTools, setShowTools] = useState(false);
   const [wobble, setWobble] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
@@ -118,7 +123,7 @@ function Home() {
   const stage = displayStage;
 
   const prog = progressToNextStage(state.level, state.xp);
-  const challenge = useMemo(() => getDailyChallenge(), []);
+  const challenge = useMemo(() => getDailyChallenge(locale), [locale]);
   const totalLessons = PATHS.reduce((n, p) => n + p.lessons.length, 0);
   const doneLessons = state.completedLessons.length;
   const isFirstTime = doneLessons === 0;

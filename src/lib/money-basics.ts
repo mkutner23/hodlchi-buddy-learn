@@ -321,6 +321,13 @@ export const MONEY_BASICS_TOPICS: MoneyBasicsTopic[] = [
   },
 ];
 
-export function getTopic(slug: string) {
-  return MONEY_BASICS_TOPICS.find((t) => t.slug === slug);
+import { MONEY_BASICS_TOPICS_ES } from "./money-basics-es";
+
+export function getLocalizedTopics(locale: "en" | "es"): MoneyBasicsTopic[] {
+  return locale === "es" ? MONEY_BASICS_TOPICS_ES : MONEY_BASICS_TOPICS;
 }
+
+export function getTopic(slug: string, locale: "en" | "es" = "en") {
+  return getLocalizedTopics(locale).find((t) => t.slug === slug);
+}
+

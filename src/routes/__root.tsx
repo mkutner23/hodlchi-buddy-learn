@@ -12,6 +12,9 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { HodlchiProvider } from "@/lib/hodlchi-store";
+import { I18nProvider } from "@/lib/i18n";
+import { LanguageToggle } from "@/components/LanguageToggle";
+
 
 function NotFoundComponent() {
   return (
@@ -137,9 +140,13 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
-      <HodlchiProvider>
-        <Outlet />
-      </HodlchiProvider>
+      <I18nProvider>
+        <HodlchiProvider>
+          <LanguageToggle />
+          <Outlet />
+        </HodlchiProvider>
+      </I18nProvider>
     </QueryClientProvider>
   );
 }
+

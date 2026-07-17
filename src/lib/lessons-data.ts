@@ -705,7 +705,20 @@ export const DAILY_CHALLENGES = [
   "Review one lesson you found tricky last time.",
 ];
 
-export function getDailyChallenge() {
+export function getDailyChallenge(locale: "en" | "es" = "en") {
   const day = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
-  return DAILY_CHALLENGES[day % DAILY_CHALLENGES.length];
+  const list = locale === "es" ? DAILY_CHALLENGES_ES : DAILY_CHALLENGES;
+  return list[day % list.length];
 }
+
+/** Locale-aware accessors. Non-string metadata (ids, accents, fruit) stays canonical from PATHS. */
+import { PATHS_ES, DAILY_CHALLENGES_ES } from "./lessons-data-es";
+
+export function getLocalizedPaths(locale: "en" | "es"): LearningPath[] {
+  return locale === "es" ? PATHS_ES : PATHS;
+}
+
+export function getLocalizedPath(id: PathId, locale: "en" | "es"): LearningPath | undefined {
+  return getLocalizedPaths(locale).find((p) => p.id === id);
+}
+

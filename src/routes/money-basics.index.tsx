@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MONEY_BASICS_TOPICS } from "@/lib/money-basics";
+import { MONEY_BASICS_TOPICS, getLocalizedTopics } from "@/lib/money-basics";
+import { useI18n } from "@/lib/i18n";
+
 
 const URL = "https://hodlchi.com/money-basics";
 const TITLE = "Money Basics: Plain-English Financial Answers | Hodlchi";
@@ -42,28 +44,31 @@ export const Route = createFileRoute("/money-basics/")({
 });
 
 function MoneyBasicsHub() {
+  const { locale, t: tr } = useI18n();
+  const topics = getLocalizedTopics(locale);
   return (
     <main className="min-h-screen bg-gradient-sky pb-20">
       <div className="mx-auto max-w-2xl px-5 pt-6">
         <Link to="/" className="text-sm font-semibold text-foreground/60">
-          ← Back
+          ← {tr("common.back")}
         </Link>
 
         <header className="mt-4 rounded-3xl bg-white p-6 text-center shadow-soft">
           <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-            Money Basics
+            {tr("money_basics.title")}
           </div>
           <h1 className="mt-2 text-3xl font-black leading-tight sm:text-4xl">
-            Plain-English answers to the money questions everyone Googles
+            {tr("money_basics.subtitle")}
           </h1>
           <p className="mt-3 text-foreground/70">
-            Short, honest explainers. Every topic ends with a 5-minute Hodlchi lesson so the idea
-            actually sticks.
+            {locale === "es"
+              ? "Explicaciones cortas y honestas. Cada tema termina con una lección de 5 minutos en Hodlchi para que la idea se quede."
+              : "Short, honest explainers. Every topic ends with a 5-minute Hodlchi lesson so the idea actually sticks."}
           </p>
         </header>
 
         <section className="mt-8 grid gap-3 sm:grid-cols-2">
-          {MONEY_BASICS_TOPICS.map((t) => (
+          {topics.map((t) => (
             <Link
               key={t.slug}
               to="/money-basics/$topic"
@@ -80,7 +85,7 @@ function MoneyBasicsHub() {
                 </div>
               </div>
               <div className="mt-3 text-xs font-semibold text-primary-deep">
-                Read →
+                {locale === "es" ? "Leer →" : "Read →"}
               </div>
             </Link>
           ))}
@@ -88,22 +93,25 @@ function MoneyBasicsHub() {
 
         <section className="mt-10 rounded-3xl bg-foreground p-6 text-center shadow-pop">
           <div className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
-            Learn by playing
+            {locale === "es" ? "Aprende jugando" : "Learn by playing"}
           </div>
           <h2 className="mt-1 text-xl font-extrabold text-primary">
-            Turn these ideas into a daily habit
+            {locale === "es" ? "Convierte estas ideas en un hábito diario" : "Turn these ideas into a daily habit"}
           </h2>
           <p className="mt-2 text-sm text-primary/80">
-            Hatch a Hodlchi and complete 5-minute lessons that make the basics stick.
+            {locale === "es"
+              ? "Incuba a un Hodlchi y completa lecciones de 5 minutos para que lo básico se quede."
+              : "Hatch a Hodlchi and complete 5-minute lessons that make the basics stick."}
           </p>
           <Link
             to="/onboarding"
             className="mt-4 inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-bold text-foreground shadow-pop"
           >
-            Hatch your Hodlchi →
+            {tr("landing.hero.cta_hatch")} →
           </Link>
         </section>
       </div>
     </main>
   );
 }
+
