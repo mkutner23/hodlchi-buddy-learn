@@ -1,51 +1,53 @@
-# Four bigger builds for Hodlchi
+# Spanish language version
 
-Four independent workstreams. I'll ship them in this order so each unlocks something visible before the next.
+Ship a neutral Latin American Spanish version of Hodlchi with an in-app EN/ES toggle. Same URLs — the toggle swaps rendered strings and persists the choice in localStorage. Full coverage: UI copy, all 20 lessons + quizzes, Money Basics glossary, Penny's dialog, SEO metadata, blog post, and comparison page.
 
-## 1. Money Basics hub (SEO)
+## Language infrastructure
 
-Goal: capture "what is X" search intent and funnel to onboarding.
+Add a lightweight i18n layer (no library — small footprint, no server complexity):
 
-- New index route `/money-basics` listing all topics in a clean card grid, with hub-level metadata + `CollectionPage` JSON-LD.
-- New leaf route `/money-basics/$topic` with 8 topics: `budgeting`, `saving`, `investing`, `compound-interest`, `apr`, `credit-score`, `inflation`, `diversification`.
-- Each leaf: unique title/description/canonical, `DefinitionText` + `FAQPage` JSON-LD, ~350–500 word plain-English explainer, a "Learn this in 5 minutes with Hodlchi →" CTA linking to the most relevant `/path/*`, and internal links to 2–3 sibling topics.
-- Wire hub into homepage footer Resources, `llms.txt`, and `sitemap.xml.ts`.
+- `src/lib/i18n.tsx` — React context providing `{ locale, setLocale, t }`. Persists to `localStorage` under `hodlchi-locale`. Defaults to `en`.
+- `src/lib/i18n-strings.ts` — flat `{ en: {...}, es: {...} }` dictionary for all UI copy (landing, nav, buttons, dashboard, onboarding, lesson chrome, certificate, footer, walkthrough, empty states, toasts).
+- Wrap the app in `<I18nProvider>` inside `__root.tsx` alongside `HodlchiProvider`.
+- Add a subtle `EN | ES` pill toggle in the top-right of every page (header of landing/dashboard/lesson/etc.).
 
-## 2. Post-lesson reflection
+## Translated content
 
-Goal: bridge learning to real life without grading.
+Restructure content files to hold both languages side-by-side rather than duplicating routes:
 
-- After the quiz results screen in `lesson.$pathId.$lessonId.tsx`, insert one optional reflection step before returning to the dashboard.
-- Penny asks one topic-appropriate question (e.g. Saving → "What's one thing you might save for this month?"). Question bank keyed by `pathId` + lesson index in `lessons-data.ts`.
-- Free-text input, "Save reflection" and "Skip" buttons. No validation, no scoring.
-- Reflections stored in the local Hodlchi store (`reflections: {lessonKey, text, ts}[]`) so future greetings can reference them ("Still thinking about that savings goal?").
-- New dashboard card "Your reflections" showing the last 3, collapsible.
+- `src/lib/lessons-data.ts` — every `title`, `tagline`, `intro`, `question`, `options[]`, `explanation` becomes `{ en, es }`. Helper `getLocalized(field, locale)` returns the right string. All 20 lessons across Saving, Investing, Credit, Entrepreneurship, Crypto — including 60 quiz questions with 4 options and explanations each — get Spanish translations.
+- `src/lib/money-basics.ts` — every glossary topic (title, short description, body sections, example, FAQ) gets Spanish alongside English.
+- `src/lib/penny-greetings.ts` — mood-based dialog translated per key.
+- `src/lib/reflections.ts` and `src/lib/social-proof.ts` — prompts and testimonials translated.
 
-## 3. Social proof (framework + honest placeholders)
+## Routes and SEO
 
-Goal: build the trust surface now so real numbers slot in later.
+Every route reads `locale` and renders the right language. Head metadata (title, description, og:*, JSON-LD) becomes locale-aware:
 
-- New `src/lib/social-proof.ts` central config with `enabled` flags per stat so nothing shows until it's real.
-- Homepage stat strip below the hero: hatched Hodlchis, lessons completed, average lesson length, star rating. Hidden by default; renders only when `enabled: true`.
-- Testimonial section (parents/teachers/learners) driven by the same config, hidden until populated.
-- Certificate + curriculum pages get a small trust row when enabled.
-- No fake numbers shipped — every stat starts disabled with a TODO comment.
+- Landing (`/`), dashboard, onboarding, lesson runner, path index, certificate, Money Basics hub + topic pages, blog post, comparison page, financial-literacy-for-everyone.
+- Each route's `head()` returns Spanish title/description when locale is `es`. `<html lang>` in `__root.tsx` shell reads the persisted locale on first render.
+- Add `<link rel="alternate" hreflang="es">` and `hreflang="en"` pairs on shareable pages so Google understands the two versions live at the same URL under different app state.
+- `robots.txt` and `sitemap.xml` unchanged (same URLs).
 
-## 4. Polished product-tour frame
+## Voice guidelines
 
-Goal: make `ProductWalkthrough` visually match the rest of the brand.
+Neutral Latin American Spanish. Uses "tú" (never "vosotros" or "usted"). Currency examples stay generic ("$100") — no peseta/euro localization. Financial terms use widely-recognized forms: "ahorro", "inversión", "puntaje de crédito" (with "score" in parens the first time), "emprendimiento", "criptomonedas". Penny's tone stays warm and playful. "Streak" translates as "racha", "XP" stays "XP", "Money Legend" becomes "Leyenda del Dinero".
 
-- Replace the generic browser chrome with a phone-style device frame (rounded bezel, subtle notch, layered shadow, soft gradient background).
-- Add a slow floating idle animation (~6s ease-in-out) and a subtle parallax highlight.
-- Tighten spacing so the frame reads as a hero artifact, not a screenshot.
-- Reuse existing shadow tokens (`shadow-pop`, `shadow-soft`) and path accent colors — no new palette.
+## Delivery order
 
-## Technical notes
+1. i18n infrastructure + toggle UI + `<html lang>` wiring.
+2. UI dictionary (all interface strings across every route).
+3. Lessons + quizzes (largest translation surface).
+4. Money Basics glossary.
+5. Penny dialog + reflections + social proof.
+6. SEO head metadata + hreflang alternates + blog + comparison page.
 
-- All routes use the standard TanStack pattern: `createFileRoute` + `head()` with title/description/canonical/og tags, leaf-only og:image where relevant.
-- Money Basics topics stored as a typed const map so the leaf route validates `$topic` and 404s cleanly for unknown slugs (`notFoundComponent` + `errorComponent`).
-- Reflections and social-proof config live client-side (localStorage / static config) — no backend changes.
-- Add each new URL to `sitemap.xml.ts` and `llms.txt` in the same edit batch that creates the route.
-- Typecheck after each workstream.
+## Technical section
 
-Reply "go" to start, or tell me to reorder / drop any of the four.
+- No new dependencies. Context + dictionary is enough for this scope.
+- `useLocale()` hook reads context; components call `t("dashboard.feed_button")` for UI copy and `getLocalized(lesson.intro, locale)` for content.
+- Locale reads happen on the client; `__root.tsx` sets `<html lang="en">` at SSR and a client effect updates it to the persisted value. This is fine because the toggle is client-driven and search engines will get either version via hreflang.
+- No route changes — the MCP server, sitemap, and existing SEO fixes stay intact.
+- Once done, mark any Spanish-relevant SEO findings fixed and note the hreflang additions.
+
+Approve to build.

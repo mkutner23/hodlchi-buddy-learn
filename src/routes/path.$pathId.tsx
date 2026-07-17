@@ -1,7 +1,9 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { PATHS, PATH_ACCENT } from "@/lib/lessons-data";
+import { PATHS, PATH_ACCENT, getLocalizedPath } from "@/lib/lessons-data";
 import { PathFruit } from "@/components/PathFruit";
 import { useHodlchi } from "@/lib/hodlchi-store";
+import { useI18n } from "@/lib/i18n";
+
 
 export const Route = createFileRoute("/path/$pathId")({
   component: PathView,
@@ -47,7 +49,8 @@ export const Route = createFileRoute("/path/$pathId")({
 
 function PathView() {
   const { pathId } = Route.useParams();
-  const path = PATHS.find((p) => p.id === pathId);
+  const { locale, t } = useI18n();
+  const path = getLocalizedPath(pathId as any, locale) ?? PATHS.find((p) => p.id === pathId);
   const { state } = useHodlchi();
   if (!path) throw notFound();
 
@@ -59,8 +62,9 @@ function PathView() {
     <main className="min-h-screen pb-16" style={{ background: `linear-gradient(180deg, ${accent.soft} 0%, #fafbf7 100%)` }}>
       <div className="mx-auto max-w-md px-5 pt-6">
         <Link to="/dashboard" className="text-sm font-semibold text-foreground/60">
-          ← Back
+          ← {t("common.back")}
         </Link>
+
         <header
           className="mt-4 rounded-3xl bg-white p-5 shadow-soft"
           style={{ boxShadow: `0 12px 40px -18px ${accent.ring}` }}
@@ -80,8 +84,9 @@ function PathView() {
             </div>
           </div>
           <div className="mt-4 text-xs font-bold" style={{ color: accent.deep }}>
-            {done} of {path.lessons.length} lessons complete
+            {locale === "es" ? `${done} de ${path.lessons.length} lecciones completadas` : `${done} of ${path.lessons.length} lessons complete`}
           </div>
+
           <div
             className="mt-2 h-1.5 overflow-hidden rounded-full"
             style={{ backgroundColor: `${accent.hex}20` }}
@@ -127,8 +132,9 @@ function PathView() {
                 <div className="min-w-0 flex-1">
                   <div className="font-bold">{lesson.title}</div>
                   <div className="text-xs text-foreground/60">
-                    {lesson.minutes} min · {lesson.quiz.length} questions
+                    {lesson.minutes} {t("common.minutes")} · {lesson.quiz.length} {locale === "es" ? "preguntas" : "questions"}
                   </div>
+
                 </div>
                 {!locked && <span className="text-lg" style={{ color: accent.deep }}>→</span>}
               </div>

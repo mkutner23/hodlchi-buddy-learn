@@ -9,6 +9,7 @@ import {
   PERSONALITIES,
 } from "@/components/HodlchiAvatar";
 import { useHodlchi, type EggColor, type Personality } from "@/lib/hodlchi-store";
+import { useI18n } from "@/lib/i18n";
 
 export const Route = createFileRoute("/onboarding")({
   component: Onboarding,
@@ -32,22 +33,32 @@ export const Route = createFileRoute("/onboarding")({
   }),
 });
 
-const EGG_HINTS: Record<EggColor, { emoji: string; hint: string }> = {
-  mint: { emoji: "🟢", hint: "Calm & balanced" },
-  sun: { emoji: "🟡", hint: "Bright & optimistic" },
-  berry: { emoji: "🩷", hint: "Curious & playful" },
+const EGG_HINTS: Record<EggColor, { emoji: string; hint_en: string; hint_es: string; label_es: string }> = {
+  mint: { emoji: "🟢", hint_en: "Calm & balanced", hint_es: "Tranquilo y equilibrado", label_es: "menta" },
+  sun: { emoji: "🟡", hint_en: "Bright & optimistic", hint_es: "Brillante y optimista", label_es: "sol" },
+  berry: { emoji: "🩷", hint_en: "Curious & playful", hint_es: "Curioso y juguetón", label_es: "baya" },
 };
 
-const PERSONALITY_HINTS: Record<Personality, string> = {
+const PERSONALITY_HINTS_EN: Record<Personality, string> = {
   ape: "Learns by trying.",
   turtle: "Learns one step at a time.",
   fox: "Loves solving puzzles.",
 };
+const PERSONALITY_HINTS_ES: Record<Personality, string> = {
+  ape: "Aprende probando.",
+  turtle: "Aprende paso a paso.",
+  fox: "Le encanta resolver acertijos.",
+};
 
-const PERSONALITY_GREETINGS: Record<Personality, string> = {
+const PERSONALITY_GREETINGS_EN: Record<Personality, string> = {
   ape: "Let's try something new today!",
   turtle: "One lesson at a time. 🐢",
   fox: "Let's solve some money puzzles!",
+};
+const PERSONALITY_GREETINGS_ES: Record<Personality, string> = {
+  ape: "¡Vamos a probar algo nuevo hoy!",
+  turtle: "Una lección a la vez. 🐢",
+  fox: "¡Resolvamos algunos acertijos de dinero!",
 };
 
 
@@ -60,6 +71,10 @@ const RANDOM_NAMES = [
 function Onboarding() {
   const nav = useNavigate();
   const { setOnboarding } = useHodlchi();
+  const { locale, t } = useI18n();
+  const es = locale === "es";
+  const PERSONALITY_HINTS = es ? PERSONALITY_HINTS_ES : PERSONALITY_HINTS_EN;
+  const PERSONALITY_GREETINGS = es ? PERSONALITY_GREETINGS_ES : PERSONALITY_GREETINGS_EN;
   // steps: 0 egg, 1 name, 2 hatch, 3 personality
   const [step, setStep] = useState(0);
   const [egg, setEgg] = useState<EggColor>("mint");
@@ -125,8 +140,8 @@ function Onboarding() {
         <div className="mt-8 flex-1">
           {step === 0 && (
             <div className="animate-pop">
-              <h1 className="text-3xl font-extrabold">Choose your egg</h1>
-              <p className="mt-2 text-foreground/70">Your Hodlchi will hatch from here.</p>
+              <h1 className="text-3xl font-extrabold">{es ? "Elige tu huevo" : "Choose your egg"}</h1>
+              <p className="mt-2 text-foreground/70">{es ? "Tu Hodlchi eclosionará desde aquí." : "Your Hodlchi will hatch from here."}</p>
               <div className="mt-8 grid grid-cols-3 gap-3">
                 {EGGS.map((e) => {
                   const active = egg === e;
@@ -143,10 +158,10 @@ function Onboarding() {
                         </div>
                       </div>
                       <div className="mt-2 text-sm font-semibold capitalize">
-                        {hint.emoji} {e}
+                        {hint.emoji} {es ? hint.label_es : e}
                       </div>
                       <div className="mt-0.5 text-[11px] leading-tight text-foreground/60">
-                        {hint.hint}
+                        {es ? hint.hint_es : hint.hint_en}
                       </div>
                     </button>
                   );
@@ -157,9 +172,9 @@ function Onboarding() {
 
           {step === 1 && (
             <div className="animate-pop">
-              <h1 className="text-3xl font-extrabold">What should your Hodlchi call themselves?</h1>
+              <h1 className="text-3xl font-extrabold">{t("onboarding.step_name.title")}</h1>
               <p className="mt-2 text-foreground/70">
-                Pick anything. You can't change it later — kidding, you can.
+                {es ? "Elige lo que quieras. No puedes cambiarlo después — es broma, sí puedes." : "Pick anything. You can't change it later — kidding, you can."}
               </p>
               <div className="mt-8 grid place-items-center">
                 <div className="animate-wiggle">
@@ -171,18 +186,18 @@ function Onboarding() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 maxLength={20}
-                placeholder="e.g. Pip, Sage, Nugget"
-                aria-label="Hodlchi name"
+                placeholder={es ? "ej. Pip, Sage, Nugget" : "e.g. Pip, Sage, Nugget"}
+                aria-label={es ? "Nombre del Hodlchi" : "Hodlchi name"}
                 className="mt-8 w-full rounded-2xl border-2 border-foreground/15 bg-white/80 px-5 py-4 text-lg font-semibold outline-none focus:border-foreground"
               />
               <div className="mt-3 flex items-center justify-between">
-                <span className="text-xs text-foreground/60">Need inspiration?</span>
+                <span className="text-xs text-foreground/60">{es ? "¿Necesitas inspiración?" : "Need inspiration?"}</span>
                 <button
                   type="button"
                   onClick={rollRandomName}
                   className="inline-flex items-center gap-1.5 rounded-full border border-foreground/15 bg-white/80 px-3 py-1.5 text-xs font-semibold hover:bg-white"
                 >
-                  <Dice5 className="h-3.5 w-3.5" /> Random name
+                  <Dice5 className="h-3.5 w-3.5" /> {es ? "Nombre al azar" : "Random name"}
                 </button>
               </div>
             </div>
@@ -194,14 +209,15 @@ function Onboarding() {
               name={displayName}
               personality={personality}
               phase={hatchPhase}
+              es={es}
             />
           )}
 
           {step === 3 && (
             <div className="animate-pop">
-              <h1 className="text-3xl font-extrabold">How does {displayName} learn?</h1>
+              <h1 className="text-3xl font-extrabold">{es ? `¿Cómo aprende ${displayName}?` : `How does ${displayName} learn?`}</h1>
               <p className="mt-2 text-foreground/70">
-                Pick a learning style. You'll unlock the others as you grow.
+                {es ? "Elige un estilo de aprendizaje. Desbloquearás los otros a medida que crezcas." : "Pick a learning style. You'll unlock the others as you grow."}
               </p>
 
               <div key={personality} className="mt-5 flex items-start gap-3 animate-pop">
@@ -261,7 +277,7 @@ function Onboarding() {
               onClick={() => setStep(step - 1)}
               className="rounded-2xl border-2 border-foreground/15 bg-white/70 px-5 py-4 font-semibold"
             >
-              Back
+              {es ? "Atrás" : "Back"}
             </button>
           )}
           <button
@@ -269,10 +285,10 @@ function Onboarding() {
             onClick={handleNext}
             className="flex-1 rounded-2xl bg-foreground px-6 py-4 font-bold text-primary shadow-pop transition active:scale-[0.98] disabled:opacity-40"
           >
-            {step === 0 && "Continue"}
-            {step === 1 && "Hatch!"}
-            {step === 2 && (hatchCTAReady ? `Meet ${displayName} →` : "Hatching…")}
-            {step === 3 && "Start my journey"}
+            {step === 0 && (es ? "Continuar" : "Continue")}
+            {step === 1 && (es ? "¡A incubar!" : "Hatch!")}
+            {step === 2 && (hatchCTAReady ? (es ? `Conoce a ${displayName} →` : `Meet ${displayName} →`) : (es ? "Incubando…" : "Hatching…"))}
+            {step === 3 && t("onboarding.start_journey")}
           </button>
         </div>
       </div>
@@ -285,11 +301,13 @@ function HatchScene({
   name,
   personality,
   phase,
+  es,
 }: {
   egg: EggColor;
   name: string;
   personality: Personality;
   phase: "idle" | "cracking" | "revealed";
+  es: boolean;
 }) {
   const confetti = useMemo(
     () =>
@@ -343,8 +361,8 @@ function HatchScene({
       <div className="mt-6 min-h-[120px] text-center">
         {phase !== "revealed" ? (
           <>
-            <p className="text-lg font-semibold">Something's stirring…</p>
-            <p className="mt-1 text-sm text-foreground/60">Hold tight, {name} is on the way.</p>
+            <p className="text-lg font-semibold">{es ? "Algo se mueve…" : "Something's stirring…"}</p>
+            <p className="mt-1 text-sm text-foreground/60">{es ? `Aguanta, ${name} ya viene.` : `Hold tight, ${name} is on the way.`}</p>
           </>
         ) : (
           <>
@@ -352,19 +370,19 @@ function HatchScene({
               className="animate-pop text-lg font-semibold"
               style={{ animationDelay: "0.3s", animationFillMode: "both" }}
             >
-              *waves* 👋
+              {es ? "*saluda* 👋" : "*waves* 👋"}
             </p>
             <p
               className="animate-pop mt-2 text-2xl font-extrabold"
               style={{ animationDelay: "1.1s", animationFillMode: "both" }}
             >
-              Hi! I'm {name}. ✨
+              {es ? `¡Hola! Soy ${name}. ✨` : `Hi! I'm ${name}. ✨`}
             </p>
             <p
               className="animate-pop mt-1 text-sm text-foreground/70"
               style={{ animationDelay: "1.9s", animationFillMode: "both" }}
             >
-              Thanks for choosing me.
+              {es ? "Gracias por elegirme." : "Thanks for choosing me."}
             </p>
           </>
         )}

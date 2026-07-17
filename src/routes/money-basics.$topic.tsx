@@ -1,5 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { getTopic, MONEY_BASICS_TOPICS, type MoneyBasicsTopic } from "@/lib/money-basics";
+import { getTopic, MONEY_BASICS_TOPICS, getLocalizedTopics, type MoneyBasicsTopic } from "@/lib/money-basics";
+import { useI18n } from "@/lib/i18n";
+
 
 export const Route = createFileRoute("/money-basics/$topic")({
   component: TopicPage,
@@ -67,16 +69,19 @@ export const Route = createFileRoute("/money-basics/$topic")({
 });
 
 function TopicPage() {
-  const { topic } = Route.useLoaderData() as { topic: MoneyBasicsTopic };
+  const { topic: enTopic } = Route.useLoaderData() as { topic: MoneyBasicsTopic };
+  const { locale, t: tr } = useI18n();
+  const topic = getTopic(enTopic.slug, locale) ?? enTopic;
+  const allTopics = getLocalizedTopics(locale);
   const related = topic.related
-    .map((slug) => MONEY_BASICS_TOPICS.find((t) => t.slug === slug))
+    .map((slug) => allTopics.find((t) => t.slug === slug))
     .filter((t): t is MoneyBasicsTopic => Boolean(t));
 
   return (
     <main className="min-h-screen bg-gradient-sky pb-20">
       <div className="mx-auto max-w-2xl px-5 pt-6">
         <Link to="/money-basics" className="text-sm font-semibold text-foreground/60">
-          ← Money Basics
+          ← {tr("money_basics.title")}
         </Link>
 
         <header className="mt-4 rounded-3xl bg-white p-6 shadow-soft">
@@ -85,7 +90,7 @@ function TopicPage() {
               {topic.emoji}
             </div>
             <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-              Money Basics
+              {tr("money_basics.title")}
             </div>
           </div>
           <h1 className="mt-3 text-3xl font-black leading-tight sm:text-4xl">{topic.title}</h1>
@@ -105,7 +110,7 @@ function TopicPage() {
           {topic.example && (
             <section className="rounded-3xl border-l-4 border-primary-deep bg-white/80 p-5 shadow-soft backdrop-blur">
               <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-                Quick example
+                {tr("money_basics.example")}
               </div>
               <p className="mt-2 text-[15px] leading-relaxed text-foreground/80">{topic.example}</p>
             </section>
@@ -114,11 +119,13 @@ function TopicPage() {
 
         <section className="mt-8 rounded-3xl bg-foreground p-6 text-center shadow-pop">
           <div className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
-            Make it stick
+            {locale === "es" ? "Haz que se quede" : "Make it stick"}
           </div>
           <h2 className="mt-1 text-xl font-extrabold text-primary">{topic.ctaCopy}</h2>
           <p className="mt-2 text-sm text-primary/80">
-            Feed your Hodlchi a short lesson on this topic — takes about 5 minutes.
+            {locale === "es"
+              ? "Aliméntale a tu Hodlchi una lección corta sobre este tema — toma unos 5 minutos."
+              : "Feed your Hodlchi a short lesson on this topic — takes about 5 minutes."}
           </p>
           <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center">
             <Link
@@ -126,20 +133,20 @@ function TopicPage() {
               params={{ pathId: topic.ctaPath }}
               className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-bold text-foreground shadow-pop"
             >
-              Learn this in 5 minutes with Hodlchi →
+              {locale === "es" ? "Aprende esto en 5 minutos con Hodlchi →" : "Learn this in 5 minutes with Hodlchi →"}
             </Link>
             <Link
               to="/onboarding"
               className="inline-flex items-center justify-center rounded-full border border-primary/40 px-6 py-3 text-sm font-bold text-primary"
             >
-              Hatch a Hodlchi
+              {tr("landing.hero.cta_hatch")}
             </Link>
           </div>
         </section>
 
         <section className="mt-8">
           <h2 className="text-sm font-extrabold uppercase tracking-widest text-foreground/60">
-            Frequently asked
+            {tr("money_basics.faq")}
           </h2>
           <div className="mt-3 space-y-3">
             {topic.faq.map((f) => (
@@ -154,7 +161,7 @@ function TopicPage() {
         {related.length > 0 && (
           <section className="mt-10">
             <h2 className="text-sm font-extrabold uppercase tracking-widest text-foreground/60">
-              Related topics
+              {tr("money_basics.related")}
             </h2>
             <div className="mt-3 grid gap-2 sm:grid-cols-3">
               {related.map((r) => (
@@ -175,6 +182,7 @@ function TopicPage() {
     </main>
   );
 }
+
 
 function TopicNotFound() {
   return (

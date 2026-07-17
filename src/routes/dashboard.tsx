@@ -3,7 +3,9 @@ import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointer
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
 import { PathFruit } from "@/components/PathFruit";
-import { PATHS, PATH_ACCENT, getDailyChallenge, type PathId } from "@/lib/lessons-data";
+import { PATH_ACCENT, getDailyChallenge, getLocalizedPaths, type PathId } from "@/lib/lessons-data";
+import { useI18n } from "@/lib/i18n";
+
 import { EvolveCinematic } from "@/components/EvolveCinematic";
 import { sfx } from "@/lib/sfx";
 import { pickContextualGreeting } from "@/lib/penny-greetings";
@@ -74,6 +76,9 @@ function greetingFor(
 function Home() {
   const nav = useNavigate();
   const { state, reset, demoMode, evolve } = useHodlchi();
+  const { locale, t } = useI18n();
+  const PATHS = getLocalizedPaths(locale);
+
   const [showTools, setShowTools] = useState(false);
   const [wobble, setWobble] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
@@ -118,7 +123,7 @@ function Home() {
   const stage = displayStage;
 
   const prog = progressToNextStage(state.level, state.xp);
-  const challenge = useMemo(() => getDailyChallenge(), []);
+  const challenge = useMemo(() => getDailyChallenge(locale), [locale]);
   const totalLessons = PATHS.reduce((n, p) => n + p.lessons.length, 0);
   const doneLessons = state.completedLessons.length;
   const isFirstTime = doneLessons === 0;
@@ -165,7 +170,7 @@ function Home() {
     [mounted, readyToEvolve, state],
   );
   const speech: ReactNode = readyToEvolve
-    ? `🎉 We did it! I'm ready to become a ${naturalStage}!`
+    ? `${t("dashboard.evolve_ready")} ${naturalStage}!`
     : contextualGreeting
       ? contextualGreeting.line
       : greetingFor(
@@ -312,13 +317,13 @@ function Home() {
             <div className="flex items-baseline justify-between">
               <div className="text-left">
                 <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-                  Current
+                  {t("dashboard.evolution.current")}
                 </div>
                 <div className="font-display text-lg font-extrabold leading-tight">{stage}</div>
               </div>
               <div className="text-right">
                 <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
-                  Next
+                  {t("dashboard.evolution.next")}
                 </div>
                 <div className="font-display text-sm font-bold text-foreground/70">
                   {prog.nextStage}
@@ -333,8 +338,8 @@ function Home() {
             </div>
             <div className="mt-1 text-right text-[11px] font-semibold text-foreground/60">
               {atMaxStage
-                ? "Max stage reached ✨"
-                : `${xpToNext} XP until ${prog.nextStage}`}
+                ? (locale === "es" ? "Etapa máxima alcanzada ✨" : "Max stage reached ✨")
+                : (locale === "es" ? `${xpToNext} XP hasta ${prog.nextStage}` : `${xpToNext} XP until ${prog.nextStage}`)}
             </div>
 
           </div>
@@ -349,13 +354,13 @@ function Home() {
           >
             <div className="min-w-0 flex-1">
               <div className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/80">
-                🎉 Milestone unlocked
+                {locale === "es" ? "🎉 Hito desbloqueado" : "🎉 Milestone unlocked"}
               </div>
               <div className="mt-1 truncate font-display text-xl font-extrabold leading-tight">
-                Evolve into {naturalStage}
+                {locale === "es" ? `Evoluciona a ${naturalStage}` : `Evolve into ${naturalStage}`}
               </div>
               <div className="mt-1 text-[11px] font-semibold text-primary-foreground/80">
-                Tap to help {state.name} grow up ✨
+                {locale === "es" ? `Toca para ayudar a ${state.name} a crecer ✨` : `Tap to help ${state.name} grow up ✨`}
               </div>
             </div>
             <span className="ml-3 text-3xl">✨</span>
@@ -370,20 +375,20 @@ function Home() {
             <div className="min-w-0 flex-1">
               <div className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
                 {isFirstTime
-                  ? "⭐ Start here"
+                  ? (locale === "es" ? "⭐ Empieza aquí" : "⭐ Start here")
                   : nextLesson
-                    ? `⭐ Today's Lesson · ${nextLesson.lesson.minutes} min`
-                    : "You're all caught up"}
+                    ? (locale === "es" ? `⭐ Lección de hoy · ${nextLesson.lesson.minutes} min` : `⭐ Today's Lesson · ${nextLesson.lesson.minutes} min`)
+                    : (locale === "es" ? "Estás al día" : "You're all caught up")}
               </div>
 
               <div className="mt-1 truncate font-display text-xl font-extrabold leading-tight">
                 {nextLesson
                   ? `${nextLesson.path.emoji}  ${nextLesson.lesson.title}`
-                  : "All lessons complete 🎉"}
+                  : (locale === "es" ? "Todas las lecciones completas 🎉" : "All lessons complete 🎉")}
               </div>
               {nextLesson && (
                 <div className="mt-1 text-[11px] font-semibold text-primary/70">
-                  {nextLesson.lesson.minutes} min · +30 XP · feed {state.name}{" "}
+                  {nextLesson.lesson.minutes} {t("common.minutes")} · +30 XP · {locale === "es" ? `alimenta a ${state.name}` : `feed ${state.name}`}{" "}
                   <PathFruit pathId={nextLesson.path.id} animate={false} />
                 </div>
               )}
@@ -397,17 +402,17 @@ function Home() {
         {isFirstTime && (
           <section className="mt-4 rounded-2xl border-2 border-dashed border-primary-deep/30 bg-primary/10 p-4">
             <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-              How Hodlchi grows
+              {locale === "es" ? "Cómo crece Hodlchi" : "How Hodlchi grows"}
             </div>
             <ol className="mt-2 grid grid-cols-4 gap-2 text-center">
-              <LoopStep n="1" emoji="📚" label="Learn" />
-              <LoopStep n="2" emoji="🍎" label="Feed" />
+              <LoopStep n="1" emoji="📚" label={locale === "es" ? "Aprende" : "Learn"} />
+              <LoopStep n="2" emoji="🍎" label={locale === "es" ? "Alimenta" : "Feed"} />
               <LoopStep n="3" emoji="⭐" label="XP" />
-              <LoopStep n="4" emoji="✨" label="Evolve" />
+              <LoopStep n="4" emoji="✨" label={locale === "es" ? "Evoluciona" : "Evolve"} />
             </ol>
             <div className="mt-3 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-primary-deep">
               <span>🔥</span>
-              <span>Come back tomorrow to keep the streak alive</span>
+              <span>{locale === "es" ? "Vuelve mañana para mantener la racha viva" : "Come back tomorrow to keep the streak alive"}</span>
             </div>
           </section>
         )}
@@ -420,7 +425,7 @@ function Home() {
             </div>
             <div className="min-w-0">
               <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
-                Today's challenge
+                {t("dashboard.daily_challenge")}
               </div>
               <div className="truncate text-sm font-semibold">{challenge}</div>
             </div>
@@ -439,10 +444,10 @@ function Home() {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-                  Certificate unlocked
+                  {t("dashboard.certificate_unlocked")}
                 </div>
                 <div className="font-display font-extrabold">
-                  Claim your Financial Literacy Certificate
+                  {locale === "es" ? "Reclama tu Certificado de Alfabetización Financiera" : "Claim your Financial Literacy Certificate"}
                 </div>
               </div>
               <div className="text-sm font-bold text-primary-deep">→</div>
@@ -455,10 +460,10 @@ function Home() {
         <section className="mt-6">
           <div className="flex items-baseline justify-between px-1">
             <h2 className="font-display text-sm font-extrabold uppercase tracking-widest text-foreground/60">
-              Learning Paths
+              {t("dashboard.paths.title")}
             </h2>
             <div className="text-[11px] font-semibold text-foreground/50">
-              {doneLessons}/{totalLessons} done
+              {doneLessons}/{totalLessons} {locale === "es" ? "hechas" : "done"}
             </div>
           </div>
           <div className="mt-2 grid gap-2">
@@ -499,7 +504,7 @@ function Home() {
                           className="rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white"
                           style={{ backgroundColor: accent.hex }}
                         >
-                          Up next
+                          {locale === "es" ? "Siguiente" : "Up next"}
                         </span>
                       )}
                       {isDone && (

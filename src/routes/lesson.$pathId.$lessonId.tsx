@@ -1,12 +1,14 @@
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
 import { useState } from "react";
-import { PATHS, PATH_ACCENT } from "@/lib/lessons-data";
+import { PATHS, PATH_ACCENT, getLocalizedPath } from "@/lib/lessons-data";
 import { useHodlchi, deriveMood } from "@/lib/hodlchi-store";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { PathFruit } from "@/components/PathFruit";
 import { sfx } from "@/lib/sfx";
 import { getReflectionPrompt } from "@/lib/reflections";
+import { useI18n } from "@/lib/i18n";
+
 
 
 
@@ -59,9 +61,11 @@ function LessonView() {
   const { pathId, lessonId } = Route.useParams();
   const nav = useNavigate();
   const { state, completeLesson, flashMood, addReflection } = useHodlchi();
-  const path = PATHS.find((p) => p.id === pathId);
+  const { locale, t } = useI18n();
+  const path = getLocalizedPath(pathId as any, locale) ?? PATHS.find((p) => p.id === pathId);
   const lesson = path?.lessons.find((l) => l.id === lessonId);
   if (!path || !lesson) throw notFound();
+
 
   const [phase, setPhase] = useState<Phase>("intro");
   const [qIdx, setQIdx] = useState(0);
@@ -114,7 +118,7 @@ function LessonView() {
             onClick={() => nav({ to: "/path/$pathId", params: { pathId: path.id } })}
             className="text-sm font-semibold text-foreground/60"
           >
-            ← Exit
+            {"← " + t("common.back")}
           </button>
           <div className="text-xs font-semibold text-foreground/60">
             {path.emoji} {path.title}
@@ -129,7 +133,7 @@ function LessonView() {
             <div className="mt-6 animate-pop">
               <div className="rounded-3xl bg-white p-5 shadow-soft">
                 <div className="text-xs font-bold uppercase tracking-widest" style={{ color: accent.deep }}>
-                  Lesson · {lesson.minutes} min
+                  {t("common.lesson")} · {lesson.minutes} {t("common.minutes")}
                 </div>
                 <h1 className="mt-1 text-2xl font-extrabold">{lesson.title}</h1>
                 <p
@@ -147,7 +151,7 @@ function LessonView() {
                 className="btn-squish mt-5 w-full rounded-2xl px-5 py-4 font-bold text-white shadow-pop"
                 style={{ backgroundColor: accent.hex, boxShadow: `0 12px 30px -10px ${accent.ring}` }}
               >
-                Start the quiz →
+                {t("lesson.intro.begin_quiz") + " →"}
               </button>
 
             </div>
@@ -168,7 +172,7 @@ function LessonView() {
             </div>
             <div className="mt-6 rounded-3xl bg-white p-5 shadow-soft">
               <div className="text-xs font-bold text-foreground/60">
-                Question {qIdx + 1} of {lesson.quiz.length}
+                {`${t("lesson.quiz.question_of")} ${qIdx + 1} ${t("lesson.quiz.of")} ${lesson.quiz.length}`}
               </div>
               <h2 className="mt-1 text-xl font-extrabold leading-snug">{q.q}</h2>
               <div className="mt-5 space-y-2.5">
@@ -206,7 +210,7 @@ function LessonView() {
                 <div
                   className={`mt-4 rounded-2xl p-3 text-sm ${isCorrect ? "bg-success/15 text-foreground" : "bg-destructive/10 text-foreground"}`}
                 >
-                  <div className="font-bold">{isCorrect ? "✅ Nice!" : "💡 Not quite."}</div>
+                  <div className="font-bold">{isCorrect ? `✅ ${t("lesson.feedback.correct")}` : `💡 ${t("lesson.feedback.incorrect")}`}</div>
                   <div className="mt-0.5 text-foreground/80">{q.explain}</div>
                 </div>
               )}
@@ -241,7 +245,7 @@ function LessonView() {
               className="btn-squish mt-5 w-full rounded-2xl px-5 py-4 font-bold text-white shadow-pop disabled:opacity-40"
               style={{ backgroundColor: accent.hex, boxShadow: `0 12px 30px -10px ${accent.ring}` }}
             >
-              {locked ? (qIdx + 1 < lesson.quiz.length ? "Next question" : "Finish lesson") : "Check answer"}
+              {locked ? (qIdx + 1 < lesson.quiz.length ? t("lesson.quiz.next") : t("lesson.quiz.finish")) : t("lesson.quiz.check")}
             </button>
 
           </div>
@@ -283,10 +287,10 @@ function LessonView() {
               </div>
             </div>
             <h1 className="mt-4 text-3xl font-extrabold">
-              <PathFruit pathId={path.id} animate={false} className="text-4xl" /> {state.name} enjoyed that lesson!
+              <PathFruit pathId={path.id} animate={false} className="text-4xl" /> {`${state.name} ${locale === "es" ? "disfrutó esta lección" : "enjoyed that lesson"}!`}
             </h1>
             <p className="mt-1 text-foreground/70">
-              +{xpGained} XP · {state.name} feels {correctCount === lesson.quiz.length ? "amazing" : "a little wiser"}.
+              +{xpGained} XP · {state.name} feels {correctCount === lesson.quiz.length ? (locale==="es"?"increíble":"amazing") : (locale==="es"?"un poco más sabio":"a little wiser")}.
             </p>
             <div className="mt-6 grid grid-cols-3 gap-2">
               <div
@@ -319,28 +323,28 @@ function LessonView() {
                 </div>
               </div>
 
-              <Stat label="Streak" value={`🔥 ${state.streak}`} />
-              <Stat label="Correct" value={`✅ ${correctCount}/${lesson.quiz.length}`} />
+              <Stat label={t("lesson.result.streak")} value={`🔥 ${state.streak}`} />
+              <Stat label={t("lesson.result.correct")} value={`✅ ${correctCount}/${lesson.quiz.length}`} />
             </div>
 
             {/* Optional, non-graded reflection — bridges lesson to real life */}
             <div className="mt-6 rounded-3xl bg-white p-5 text-left shadow-soft">
               <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: accent.deep }}>
-                A quick reflection · optional
+                {locale === "es" ? "Una reflexión rápida · opcional" : "A quick reflection · optional"}
               </div>
               <p className="mt-1 text-[15px] font-bold leading-snug">
                 {getReflectionPrompt(path.id, lessonIdx)}
               </p>
               {reflectionSaved ? (
                 <div className="mt-3 rounded-2xl bg-primary/15 p-3 text-sm font-semibold text-primary-deep">
-                  💚 Saved. {state.name} will remember this.
+                  {`💚 ${locale === "es" ? "Guardado. " + state.name + " lo recordará." : "Saved. " + state.name + " will remember this."}`}
                 </div>
               ) : (
                 <>
                   <textarea
                     value={reflection}
                     onChange={(e) => setReflection(e.target.value)}
-                    placeholder="Type anything — no right or wrong answer."
+                    placeholder={locale==="es" ? "Escribe lo que sea — no hay respuesta correcta." : "Type anything — no right or wrong answer."}
                     maxLength={280}
                     rows={3}
                     className="mt-3 w-full resize-none rounded-2xl border-2 border-foreground/15 bg-white p-3 text-sm outline-none focus:border-foreground/40"
@@ -356,14 +360,15 @@ function LessonView() {
                       className="flex-1 rounded-2xl px-4 py-2.5 text-sm font-bold text-white shadow-pop disabled:opacity-40"
                       style={{ backgroundColor: accent.hex }}
                     >
-                      Save reflection
+                      {t("lesson.reflection.save")}
                     </button>
                     <button
                       onClick={() => setReflectionSaved(true)}
                       className="rounded-2xl border-2 border-foreground/15 px-4 py-2.5 text-sm font-bold text-foreground/70"
                     >
-                      Skip
+                      {t("lesson.reflection.skip")}
                     </button>
+
                   </div>
                 </>
               )}
@@ -374,14 +379,15 @@ function LessonView() {
                 onClick={() => nav({ to: "/path/$pathId", params: { pathId: path.id } })}
                 className="flex-1 rounded-2xl border-2 border-foreground/15 bg-white px-5 py-4 font-bold"
               >
-                Back to path
+                {locale === "es" ? "Volver al camino" : "Back to path"}
               </button>
               <button
                 onClick={() => nav({ to: "/dashboard" })}
                 className="flex-1 rounded-2xl bg-foreground px-5 py-4 font-bold text-primary shadow-pop"
               >
-                Home
+                {t("common.home")}
               </button>
+
             </div>
           </div>
         )}

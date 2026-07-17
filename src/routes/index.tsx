@@ -2,6 +2,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
 import { ProductWalkthrough } from "@/components/ProductWalkthrough";
 import { useHodlchi } from "@/lib/hodlchi-store";
+import { useI18n } from "@/lib/i18n";
+
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -19,6 +21,8 @@ export const Route = createFileRoute("/")({
 function Landing() {
   const { demoMode } = useHodlchi();
   const nav = useNavigate();
+  const { locale, t } = useI18n();
+  const es = locale === "es";
 
   return (
     <main className="min-h-screen bg-gradient-hero">
@@ -29,18 +33,19 @@ function Landing() {
             Hodlchi
           </span>
           <span className="mt-1 text-sm font-semibold text-primary-deep">
-            The Duolingo of Money
+            {t("landing.footer.tagline")}
           </span>
         </header>
 
         <section className="mt-8 text-center">
           <h1 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
-            Learn money.<br />Raise your <span className="text-primary-deep">Hodlchi.</span>
+            {t("landing.hero.title_1")}<br />
+            {es ? "Cría a tu " : "Raise your "}
+            <span className="text-primary-deep">Hodlchi.</span>
           </h1>
           <p className="mx-auto mt-4 max-w-md text-center text-base text-foreground/80">
-            5-minute lessons. Daily streaks. A companion that grows with you.
+            {t("landing.hero.subtitle")}
           </p>
-
 
           <div className="mt-8 grid place-items-center">
             <div className="relative">
@@ -57,24 +62,24 @@ function Landing() {
             to="/onboarding"
             className="mt-8 inline-flex w-full max-w-sm items-center justify-center rounded-2xl bg-foreground px-6 py-4 text-base font-bold text-primary shadow-pop transition active:scale-[0.98]"
           >
-            Hatch my Hodlchi →
+            {t("landing.hero.cta_hatch")} →
           </Link>
 
           <p className="mt-3 text-xs text-foreground/60">
-            Educational only. No trading, wallets, or investment advice.
+            {es ? "Solo educativo. Sin trading, wallets ni asesoría de inversión." : "Educational only. No trading, wallets, or investment advice."}
           </p>
           <p className="mt-2 text-[11px] font-semibold uppercase tracking-widest text-foreground/50">
-            Meet your Money Companion
+            {es ? "Conoce a tu compañero de dinero" : "Meet your Money Companion"}
           </p>
         </section>
 
         <section className="mt-10">
           <div className="mb-3 text-center">
             <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-              30-second product tour
+              {es ? "Tour de producto de 30 segundos" : "30-second product tour"}
             </div>
             <h2 className="mt-1 text-xl font-extrabold tracking-tight">
-              See the core loop in action
+              {es ? "Mira el ciclo principal en acción" : "See the core loop in action"}
             </h2>
           </div>
           <ProductWalkthrough />
@@ -82,43 +87,57 @@ function Landing() {
 
         <section className="mt-10 rounded-2xl bg-foreground p-5 text-center shadow-pop">
           <p className="text-lg font-extrabold text-primary">
-            5 minutes today. Smarter money tomorrow.
+            {es ? "5 minutos hoy. Dinero más inteligente mañana." : "5 minutes today. Smarter money tomorrow."}
           </p>
           <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-primary/70">
-            Designed to build lifelong money habits
+            {es ? "Diseñado para crear hábitos financieros de por vida" : "Designed to build lifelong money habits"}
           </p>
         </section>
 
         <section className="mt-10">
-          <h2 className="text-center text-2xl font-extrabold tracking-tight">Why learn with Hodlchi?</h2>
+          <h2 className="text-center text-2xl font-extrabold tracking-tight">
+            {t("landing.features.title")}
+          </h2>
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            <FeatureCard emoji="🥚" title="Learn by raising a companion you'll actually care about" body="Hatch, name, and grow a Hodlchi that evolves with every lesson you finish." />
-            <FeatureCard emoji="📚" title="Master the money skills schools rarely teach" body="Simple lessons that make money easier to understand." />
-            <FeatureCard emoji="🔥" title="Build a daily money habit that lasts" body="Streaks, daily challenges, and evolutions turn 5 minutes a day into real confidence." />
+            <FeatureCard
+              emoji="🥚"
+              title={es ? "Aprende criando a un compañero que sí te importará" : "Learn by raising a companion you'll actually care about"}
+              body={es ? "Incuba, ponle nombre y haz crecer a un Hodlchi que evoluciona con cada lección que terminas." : "Hatch, name, and grow a Hodlchi that evolves with every lesson you finish."}
+            />
+            <FeatureCard
+              emoji="📚"
+              title={es ? "Domina las habilidades de dinero que las escuelas rara vez enseñan" : "Master the money skills schools rarely teach"}
+              body={es ? "Lecciones simples que hacen el dinero más fácil de entender." : "Simple lessons that make money easier to understand."}
+            />
+            <FeatureCard
+              emoji="🔥"
+              title={es ? "Construye un hábito diario de dinero que dura" : "Build a daily money habit that lasts"}
+              body={es ? "Rachas, retos diarios y evoluciones convierten 5 minutos al día en confianza real." : "Streaks, daily challenges, and evolutions turn 5 minutes a day into real confidence."}
+            />
           </div>
         </section>
 
         <section className="mt-8 rounded-2xl bg-white/80 p-4 text-center shadow-soft backdrop-blur">
           <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
-            For students, parents, teachers &amp; anyone learning money
+            {es ? "Para estudiantes, padres, profesores y cualquiera que aprenda de dinero" : "For students, parents, teachers & anyone learning money"}
           </div>
-          <h2 className="mt-1 text-lg font-bold">Financial literacy for everyone</h2>
+          <h2 className="mt-1 text-lg font-bold">{t("for_everyone.title")}</h2>
           <div className="mt-2 flex flex-col items-center gap-1 text-sm">
             <Link to="/financial-literacy-for-everyone" className="font-semibold text-primary-deep underline underline-offset-2">
-              See the curriculum →
+              {es ? "Ver el currículo →" : "See the curriculum →"}
             </Link>
             <Link to="/certificate" className="font-semibold text-primary-deep underline underline-offset-2">
-              Free financial literacy certificate →
+              {es ? "Certificado gratuito de alfabetización financiera →" : "Free financial literacy certificate →"}
             </Link>
             <Link to="/blog/what-is-financial-literacy" className="font-semibold text-foreground/70 underline underline-offset-2">
-              What is financial literacy? →
+              {es ? "¿Qué es la alfabetización financiera? →" : "What is financial literacy? →"}
             </Link>
           </div>
         </section>
 
         <section className="mt-10 border-t border-foreground/10 pt-6 text-center">
           <p className="text-xs uppercase tracking-widest text-foreground/50 font-semibold">
-            Just want to look around?
+            {es ? "¿Solo quieres echar un vistazo?" : "Just want to look around?"}
           </p>
           <button
             onClick={() => {
@@ -127,52 +146,53 @@ function Landing() {
             }}
             className="mt-2 rounded-full border border-foreground/20 bg-white/80 px-4 py-2 text-xs font-semibold backdrop-blur"
           >
-            Try the Demo →
+            {t("landing.hero.cta_demo")} →
           </button>
           <p className="mt-2 text-[11px] text-foreground/50">
-            Preview a Hodlchi with sample progress.
+            {es ? "Vista previa de un Hodlchi con progreso de ejemplo." : "Preview a Hodlchi with sample progress."}
           </p>
         </section>
 
         <footer className="mt-12 border-t border-foreground/10 pt-6">
           <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">
-            Resources
+            {es ? "Recursos" : "Resources"}
           </div>
           <ul className="mt-3 grid gap-2 text-sm">
             <li>
               <Link to="/financial-literacy-for-everyone" className="font-semibold text-foreground/80 underline underline-offset-2">
-                Curriculum
+                {t("nav.curriculum")}
               </Link>
             </li>
             <li>
               <Link to="/certificate" className="font-semibold text-foreground/80 underline underline-offset-2">
-                Financial Literacy Certificate
+                {es ? "Certificado de Alfabetización Financiera" : "Financial Literacy Certificate"}
               </Link>
             </li>
             <li>
               <Link to="/blog/what-is-financial-literacy" className="font-semibold text-foreground/80 underline underline-offset-2">
-                What is Financial Literacy?
+                {es ? "¿Qué es la alfabetización financiera?" : "What is Financial Literacy?"}
               </Link>
             </li>
             <li>
               <Link to="/money-basics" className="font-semibold text-foreground/80 underline underline-offset-2">
-                Money Basics glossary
+                {es ? "Glosario de conceptos básicos" : "Money Basics glossary"}
               </Link>
             </li>
             <li>
               <Link to="/compare/khan-academy" className="font-semibold text-foreground/80 underline underline-offset-2">
-                Compare to Khan Academy
+                {es ? "Comparar con Khan Academy" : "Compare to Khan Academy"}
               </Link>
             </li>
           </ul>
           <p className="mt-6 text-[11px] text-foreground/50">
-            © Hodlchi · Educational only. No trading, wallets, or investment advice.
+            © Hodlchi · {t("landing.footer.disclaimer")}
           </p>
         </footer>
       </div>
     </main>
   );
 }
+
 
 function FeatureCard({ emoji, title, body }: { emoji: string; title: string; body: string }) {
   return (
