@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useLoaderData } from "@tanstack/react-router";
 import { getTopic, MONEY_BASICS_TOPICS, getLocalizedTopics, type MoneyBasicsTopic } from "@/lib/money-basics";
 import { useI18n } from "@/lib/i18n";
 
