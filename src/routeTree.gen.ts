@@ -21,6 +21,7 @@ import { Route as MoneyBasicsIndexRouteImport } from './routes/money-basics.inde
 import { Route as EsIndexRouteImport } from './routes/es.index'
 import { Route as PathPathIdRouteImport } from './routes/path.$pathId'
 import { Route as MoneyBasicsTopicRouteImport } from './routes/money-basics.$topic'
+import { Route as EsOnboardingRouteImport } from './routes/es.onboarding'
 import { Route as CompareKhanAcademyRouteImport } from './routes/compare.khan-academy'
 import { Route as BlogWhatIsFinancialLiteracyRouteImport } from './routes/blog.what-is-financial-literacy'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
@@ -90,6 +91,11 @@ const MoneyBasicsTopicRoute = MoneyBasicsTopicRouteImport.update({
   path: '/money-basics/$topic',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EsOnboardingRoute = EsOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => EsRoute,
+} as any)
 const CompareKhanAcademyRoute = CompareKhanAcademyRouteImport.update({
   id: '/compare/khan-academy',
   path: '/compare/khan-academy',
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/what-is-financial-literacy': typeof BlogWhatIsFinancialLiteracyRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
+  '/es/onboarding': typeof EsOnboardingRoute
   '/money-basics/$topic': typeof MoneyBasicsTopicRoute
   '/path/$pathId': typeof PathPathIdRoute
   '/es/': typeof EsIndexRoute
@@ -163,6 +170,7 @@ export interface FileRoutesByTo {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/what-is-financial-literacy': typeof BlogWhatIsFinancialLiteracyRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
+  '/es/onboarding': typeof EsOnboardingRoute
   '/money-basics/$topic': typeof MoneyBasicsTopicRoute
   '/path/$pathId': typeof PathPathIdRoute
   '/es': typeof EsIndexRoute
@@ -185,6 +193,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/what-is-financial-literacy': typeof BlogWhatIsFinancialLiteracyRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
+  '/es/onboarding': typeof EsOnboardingRoute
   '/money-basics/$topic': typeof MoneyBasicsTopicRoute
   '/path/$pathId': typeof PathPathIdRoute
   '/es/': typeof EsIndexRoute
@@ -208,6 +217,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/blog/what-is-financial-literacy'
     | '/compare/khan-academy'
+    | '/es/onboarding'
     | '/money-basics/$topic'
     | '/path/$pathId'
     | '/es/'
@@ -228,6 +238,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/blog/what-is-financial-literacy'
     | '/compare/khan-academy'
+    | '/es/onboarding'
     | '/money-basics/$topic'
     | '/path/$pathId'
     | '/es'
@@ -249,6 +260,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/blog/what-is-financial-literacy'
     | '/compare/khan-academy'
+    | '/es/onboarding'
     | '/money-basics/$topic'
     | '/path/$pathId'
     | '/es/'
@@ -365,6 +377,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MoneyBasicsTopicRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/es/onboarding': {
+      id: '/es/onboarding'
+      path: '/onboarding'
+      fullPath: '/es/onboarding'
+      preLoaderRoute: typeof EsOnboardingRouteImport
+      parentRoute: typeof EsRoute
+    }
     '/compare/khan-academy': {
       id: '/compare/khan-academy'
       path: '/compare/khan-academy'
@@ -418,10 +437,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface EsRouteChildren {
+  EsOnboardingRoute: typeof EsOnboardingRoute
   EsIndexRoute: typeof EsIndexRoute
 }
 
 const EsRouteChildren: EsRouteChildren = {
+  EsOnboardingRoute: EsOnboardingRoute,
   EsIndexRoute: EsIndexRoute,
 }
 
