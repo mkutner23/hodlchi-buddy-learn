@@ -37,6 +37,7 @@ import { Route as EsCompareKhanAcademyRouteImport } from './routes/es.compare.kh
 import { Route as EsBlogWhatIsFinancialLiteracyRouteImport } from './routes/es.blog.what-is-financial-literacy'
 import { Route as ApiPublicHeroSfxRouteImport } from './routes/api/public/hero-sfx'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as EsLessonPathIdLessonIdRouteImport } from './routes/es.lesson.$pathId.$lessonId'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -185,6 +186,11 @@ const Char91DotmcpChar93InvokeToolToolRoute =
     path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
+const EsLessonPathIdLessonIdRoute = EsLessonPathIdLessonIdRouteImport.update({
+  id: '/lesson/$pathId/$lessonId',
+  path: '/lesson/$pathId/$lessonId',
+  getParentRoute: () => EsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -215,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/es/path/$pathId': typeof EsPathPathIdRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
   '/es/money-basics/': typeof EsMoneyBasicsIndexRoute
+  '/es/lesson/$pathId/$lessonId': typeof EsLessonPathIdLessonIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -244,6 +251,7 @@ export interface FileRoutesByTo {
   '/es/path/$pathId': typeof EsPathPathIdRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
   '/es/money-basics': typeof EsMoneyBasicsIndexRoute
+  '/es/lesson/$pathId/$lessonId': typeof EsLessonPathIdLessonIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/es/path/$pathId': typeof EsPathPathIdRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
   '/es/money-basics/': typeof EsMoneyBasicsIndexRoute
+  '/es/lesson/$pathId/$lessonId': typeof EsLessonPathIdLessonIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
     | '/es/path/$pathId'
     | '/lesson/$pathId/$lessonId'
     | '/es/money-basics/'
+    | '/es/lesson/$pathId/$lessonId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -336,6 +346,7 @@ export interface FileRouteTypes {
     | '/es/path/$pathId'
     | '/lesson/$pathId/$lessonId'
     | '/es/money-basics'
+    | '/es/lesson/$pathId/$lessonId'
   id:
     | '__root__'
     | '/'
@@ -366,6 +377,7 @@ export interface FileRouteTypes {
     | '/es/path/$pathId'
     | '/lesson/$pathId/$lessonId'
     | '/es/money-basics/'
+    | '/es/lesson/$pathId/$lessonId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -587,6 +599,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/es/lesson/$pathId/$lessonId': {
+      id: '/es/lesson/$pathId/$lessonId'
+      path: '/lesson/$pathId/$lessonId'
+      fullPath: '/es/lesson/$pathId/$lessonId'
+      preLoaderRoute: typeof EsLessonPathIdLessonIdRouteImport
+      parentRoute: typeof EsRoute
+    }
   }
 }
 
@@ -601,6 +620,7 @@ interface EsRouteChildren {
   EsMoneyBasicsTopicRoute: typeof EsMoneyBasicsTopicRoute
   EsPathPathIdRoute: typeof EsPathPathIdRoute
   EsMoneyBasicsIndexRoute: typeof EsMoneyBasicsIndexRoute
+  EsLessonPathIdLessonIdRoute: typeof EsLessonPathIdLessonIdRoute
 }
 
 const EsRouteChildren: EsRouteChildren = {
@@ -614,6 +634,7 @@ const EsRouteChildren: EsRouteChildren = {
   EsMoneyBasicsTopicRoute: EsMoneyBasicsTopicRoute,
   EsPathPathIdRoute: EsPathPathIdRoute,
   EsMoneyBasicsIndexRoute: EsMoneyBasicsIndexRoute,
+  EsLessonPathIdLessonIdRoute: EsLessonPathIdLessonIdRoute,
 }
 
 const EsRouteWithChildren = EsRoute._addFileChildren(EsRouteChildren)
