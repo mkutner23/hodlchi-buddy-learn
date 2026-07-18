@@ -14,7 +14,12 @@ export const Route = createFileRoute("/")({
       { property: "og:url", content: "https://hodlchi.com/" },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "https://hodlchi.com/" }],
+    links: [
+      { rel: "canonical", href: "https://hodlchi.com/" },
+      { rel: "alternate", hrefLang: "en", href: "https://hodlchi.com/" },
+      { rel: "alternate", hrefLang: "es", href: "https://hodlchi.com/es" },
+      { rel: "alternate", hrefLang: "x-default", href: "https://hodlchi.com/" },
+    ],
   }),
 });
 
