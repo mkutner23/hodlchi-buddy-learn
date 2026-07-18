@@ -1,23 +1,36 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, type ReactNode } from "react";
+import { useRouterState } from "@tanstack/react-router";
 import { STRINGS, type StringKey, type Locale } from "./i18n-strings";
 
 interface I18nCtx {
   locale: Locale;
-  setLocale: (l: Locale) => void;
   t: (key: StringKey) => string;
 }
 
 const Ctx = createContext<I18nCtx | null>(null);
-const STORAGE_KEY = "hodlchi-locale";
 
-function loadLocale(): Locale {
-  if (typeof window === "undefined") return "en";
-  const v = localStorage.getItem(STORAGE_KEY);
-  return v === "es" ? "es" : "en";
+/** Strip the /es prefix from a pathname. Returns "/" for "/es". */
+export function stripLocalePrefix(pathname: string): string {
+  if (pathname === "/es") return "/";
+  if (pathname.startsWith("/es/")) return pathname.slice(3);
+  return pathname;
+}
+
+/** Add the /es prefix to a pathname. Idempotent. */
+export function addLocalePrefix(pathname: string, locale: Locale): string {
+  const base = stripLocalePrefix(pathname);
+  if (locale === "en") return base;
+  if (base === "/") return "/es";
+  return `/es${base}`;
+}
+
+export function localeFromPathname(pathname: string): Locale {
+  return pathname === "/es" || pathname.startsWith("/es/") ? "es" : "en";
 }
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => loadLocale());
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const locale = localeFromPathname(pathname);
 
   useEffect(() => {
     if (typeof document !== "undefined") {
@@ -25,14 +38,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     }
   }, [locale]);
 
-  const setLocale = (l: Locale) => {
-    setLocaleState(l);
-    if (typeof window !== "undefined") localStorage.setItem(STORAGE_KEY, l);
-  };
-
   const t = (key: StringKey) => STRINGS[locale][key] ?? STRINGS.en[key] ?? key;
 
-  return <Ctx.Provider value={{ locale, setLocale, t }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ locale, t }}>{children}</Ctx.Provider>;
 }
 
 export function useI18n() {
@@ -49,7 +57,7 @@ export function useLocale(): Locale {
 export function pick<T>(field: { en: T; es?: T } | T, locale: Locale): T {
   if (field && typeof field === "object" && "en" in (field as object)) {
     const f = field as { en: T; es?: T };
-    return (locale === "es" && f.es !== undefined ? f.es : f.en);
+    return locale === "es" && f.es !== undefined ? f.es : f.en;
   }
   return field as T;
 }
