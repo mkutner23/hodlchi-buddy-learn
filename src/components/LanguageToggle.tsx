@@ -1,16 +1,26 @@
-import { useI18n } from "@/lib/i18n";
+import { useRouter, useRouterState } from "@tanstack/react-router";
+import { useI18n, addLocalePrefix, stripLocalePrefix } from "@/lib/i18n";
 import { sfx } from "@/lib/sfx";
 
-/** Fixed pill in the top-right corner. Toggles EN ↔ ES globally. */
+/** Fixed pill in the top-right corner. Toggles EN ↔ ES globally by navigating between /path and /es/path. */
 export function LanguageToggle() {
-  const { locale, setLocale, t } = useI18n();
+  const { locale, t } = useI18n();
+  const router = useRouter();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const search = useRouterState({ select: (s) => s.location.searchStr });
+  const hash = useRouterState({ select: (s) => s.location.hash });
   const isEs = locale === "es";
 
   const toggle = () => {
     sfx.pop();
-    setLocale(isEs ? "en" : "es");
+    const nextLocale = isEs ? "en" : "es";
+    const nextPath =
+      nextLocale === "es"
+        ? addLocalePrefix(pathname, "es")
+        : stripLocalePrefix(pathname);
+    const target = `${nextPath}${search ?? ""}${hash ? `#${hash}` : ""}`;
+    router.navigate({ to: target, replace: false });
   };
-
 
   return (
     <button
