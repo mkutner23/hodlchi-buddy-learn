@@ -1,4 +1,4 @@
-import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate, useParams } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 import { PATHS, PATH_ACCENT, getLocalizedPath } from "@/lib/lessons-data";
