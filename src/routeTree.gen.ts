@@ -18,6 +18,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CertificateRouteImport } from './routes/certificate'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MoneyBasicsIndexRouteImport } from './routes/money-basics.index'
+import { Route as EsIndexRouteImport } from './routes/es.index'
 import { Route as PathPathIdRouteImport } from './routes/path.$pathId'
 import { Route as MoneyBasicsTopicRouteImport } from './routes/money-basics.$topic'
 import { Route as CompareKhanAcademyRouteImport } from './routes/compare.khan-academy'
@@ -74,6 +75,11 @@ const MoneyBasicsIndexRoute = MoneyBasicsIndexRouteImport.update({
   path: '/money-basics/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EsIndexRoute = EsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EsRoute,
+} as any)
 const PathPathIdRoute = PathPathIdRouteImport.update({
   id: '/path/$pathId',
   path: '/path/$pathId',
@@ -128,7 +134,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
   '/dashboard': typeof DashboardRoute
-  '/es': typeof EsRoute
+  '/es': typeof EsRouteWithChildren
   '/financial-literacy-for-everyone': typeof FinancialLiteracyForEveryoneRoute
   '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
   '/money-basics/$topic': typeof MoneyBasicsTopicRoute
   '/path/$pathId': typeof PathPathIdRoute
+  '/es/': typeof EsIndexRoute
   '/money-basics/': typeof MoneyBasicsIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
@@ -148,7 +155,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
   '/dashboard': typeof DashboardRoute
-  '/es': typeof EsRoute
   '/financial-literacy-for-everyone': typeof FinancialLiteracyForEveryoneRoute
   '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
@@ -159,6 +165,7 @@ export interface FileRoutesByTo {
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
   '/money-basics/$topic': typeof MoneyBasicsTopicRoute
   '/path/$pathId': typeof PathPathIdRoute
+  '/es': typeof EsIndexRoute
   '/money-basics': typeof MoneyBasicsIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
@@ -169,7 +176,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
   '/dashboard': typeof DashboardRoute
-  '/es': typeof EsRoute
+  '/es': typeof EsRouteWithChildren
   '/financial-literacy-for-everyone': typeof FinancialLiteracyForEveryoneRoute
   '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
@@ -180,6 +187,7 @@ export interface FileRoutesById {
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
   '/money-basics/$topic': typeof MoneyBasicsTopicRoute
   '/path/$pathId': typeof PathPathIdRoute
+  '/es/': typeof EsIndexRoute
   '/money-basics/': typeof MoneyBasicsIndexRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
@@ -202,6 +210,7 @@ export interface FileRouteTypes {
     | '/compare/khan-academy'
     | '/money-basics/$topic'
     | '/path/$pathId'
+    | '/es/'
     | '/money-basics/'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/hero-sfx'
@@ -211,7 +220,6 @@ export interface FileRouteTypes {
     | '/'
     | '/certificate'
     | '/dashboard'
-    | '/es'
     | '/financial-literacy-for-everyone'
     | '/mcp'
     | '/onboarding'
@@ -222,6 +230,7 @@ export interface FileRouteTypes {
     | '/compare/khan-academy'
     | '/money-basics/$topic'
     | '/path/$pathId'
+    | '/es'
     | '/money-basics'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/hero-sfx'
@@ -242,6 +251,7 @@ export interface FileRouteTypes {
     | '/compare/khan-academy'
     | '/money-basics/$topic'
     | '/path/$pathId'
+    | '/es/'
     | '/money-basics/'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/hero-sfx'
@@ -252,7 +262,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CertificateRoute: typeof CertificateRoute
   DashboardRoute: typeof DashboardRoute
-  EsRoute: typeof EsRoute
+  EsRoute: typeof EsRouteWithChildren
   FinancialLiteracyForEveryoneRoute: typeof FinancialLiteracyForEveryoneRoute
   McpRoute: typeof McpRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -334,6 +344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MoneyBasicsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/es/': {
+      id: '/es/'
+      path: '/'
+      fullPath: '/es/'
+      preLoaderRoute: typeof EsIndexRouteImport
+      parentRoute: typeof EsRoute
+    }
     '/path/$pathId': {
       id: '/path/$pathId'
       path: '/path/$pathId'
@@ -400,11 +417,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface EsRouteChildren {
+  EsIndexRoute: typeof EsIndexRoute
+}
+
+const EsRouteChildren: EsRouteChildren = {
+  EsIndexRoute: EsIndexRoute,
+}
+
+const EsRouteWithChildren = EsRoute._addFileChildren(EsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CertificateRoute: CertificateRoute,
   DashboardRoute: DashboardRoute,
-  EsRoute: EsRoute,
+  EsRoute: EsRouteWithChildren,
   FinancialLiteracyForEveryoneRoute: FinancialLiteracyForEveryoneRoute,
   McpRoute: McpRoute,
   OnboardingRoute: OnboardingRoute,
