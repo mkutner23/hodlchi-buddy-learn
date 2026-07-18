@@ -29,6 +29,7 @@ import { Route as CompareKhanAcademyRouteImport } from './routes/compare.khan-ac
 import { Route as BlogWhatIsFinancialLiteracyRouteImport } from './routes/blog.what-is-financial-literacy'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
+import { Route as EsMoneyBasicsIndexRouteImport } from './routes/es.money-basics.index'
 import { Route as LessonPathIdLessonIdRouteImport } from './routes/lesson.$pathId.$lessonId'
 import { Route as EsCompareKhanAcademyRouteImport } from './routes/es.compare.khan-academy'
 import { Route as EsBlogWhatIsFinancialLiteracyRouteImport } from './routes/es.blog.what-is-financial-literacy'
@@ -140,6 +141,11 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
+const EsMoneyBasicsIndexRoute = EsMoneyBasicsIndexRouteImport.update({
+  id: '/money-basics/',
+  path: '/money-basics/',
+  getParentRoute: () => EsRoute,
+} as any)
 const LessonPathIdLessonIdRoute = LessonPathIdLessonIdRouteImport.update({
   id: '/lesson/$pathId/$lessonId',
   path: '/lesson/$pathId/$lessonId',
@@ -194,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/es/blog/what-is-financial-literacy': typeof EsBlogWhatIsFinancialLiteracyRoute
   '/es/compare/khan-academy': typeof EsCompareKhanAcademyRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
+  '/es/money-basics/': typeof EsMoneyBasicsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -220,6 +227,7 @@ export interface FileRoutesByTo {
   '/es/blog/what-is-financial-literacy': typeof EsBlogWhatIsFinancialLiteracyRoute
   '/es/compare/khan-academy': typeof EsCompareKhanAcademyRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
+  '/es/money-basics': typeof EsMoneyBasicsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -248,6 +256,7 @@ export interface FileRoutesById {
   '/es/blog/what-is-financial-literacy': typeof EsBlogWhatIsFinancialLiteracyRoute
   '/es/compare/khan-academy': typeof EsCompareKhanAcademyRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
+  '/es/money-basics/': typeof EsMoneyBasicsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -277,6 +286,7 @@ export interface FileRouteTypes {
     | '/es/blog/what-is-financial-literacy'
     | '/es/compare/khan-academy'
     | '/lesson/$pathId/$lessonId'
+    | '/es/money-basics/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -303,6 +313,7 @@ export interface FileRouteTypes {
     | '/es/blog/what-is-financial-literacy'
     | '/es/compare/khan-academy'
     | '/lesson/$pathId/$lessonId'
+    | '/es/money-basics'
   id:
     | '__root__'
     | '/'
@@ -330,6 +341,7 @@ export interface FileRouteTypes {
     | '/es/blog/what-is-financial-literacy'
     | '/es/compare/khan-academy'
     | '/lesson/$pathId/$lessonId'
+    | '/es/money-basics/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -495,6 +507,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/es/money-basics/': {
+      id: '/es/money-basics/'
+      path: '/money-basics'
+      fullPath: '/es/money-basics/'
+      preLoaderRoute: typeof EsMoneyBasicsIndexRouteImport
+      parentRoute: typeof EsRoute
+    }
     '/lesson/$pathId/$lessonId': {
       id: '/lesson/$pathId/$lessonId'
       path: '/lesson/$pathId/$lessonId'
@@ -541,6 +560,7 @@ interface EsRouteChildren {
   EsIndexRoute: typeof EsIndexRoute
   EsBlogWhatIsFinancialLiteracyRoute: typeof EsBlogWhatIsFinancialLiteracyRoute
   EsCompareKhanAcademyRoute: typeof EsCompareKhanAcademyRoute
+  EsMoneyBasicsIndexRoute: typeof EsMoneyBasicsIndexRoute
 }
 
 const EsRouteChildren: EsRouteChildren = {
@@ -551,6 +571,7 @@ const EsRouteChildren: EsRouteChildren = {
   EsIndexRoute: EsIndexRoute,
   EsBlogWhatIsFinancialLiteracyRoute: EsBlogWhatIsFinancialLiteracyRoute,
   EsCompareKhanAcademyRoute: EsCompareKhanAcademyRoute,
+  EsMoneyBasicsIndexRoute: EsMoneyBasicsIndexRoute,
 }
 
 const EsRouteWithChildren = EsRoute._addFileChildren(EsRouteChildren)
