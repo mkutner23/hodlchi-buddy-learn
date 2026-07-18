@@ -68,7 +68,7 @@ export const Route = createFileRoute("/money-basics/$topic")({
   errorComponent: TopicError,
 });
 
-function TopicPage() {
+export function TopicPage() {
   const { topic: enTopic } = Route.useLoaderData() as { topic: MoneyBasicsTopic };
   const { locale, t: tr } = useI18n();
   const topic = getTopic(enTopic.slug, locale) ?? enTopic;

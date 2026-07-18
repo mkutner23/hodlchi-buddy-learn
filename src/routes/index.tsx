@@ -18,7 +18,7 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-function Landing() {
+export function Landing() {
   const { demoMode } = useHodlchi();
   const nav = useNavigate();
   const { locale, t } = useI18n();

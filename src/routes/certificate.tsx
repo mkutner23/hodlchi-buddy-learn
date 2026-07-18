@@ -229,7 +229,7 @@ export const Route = createFileRoute("/certificate")({
   }),
 });
 
-function CertificatePage() {
+export function CertificatePage() {
   const { state } = useHodlchi();
   const totalLessons = PATHS.reduce((n, p) => n + p.lessons.length, 0);
   const totalMinutes = PATHS.reduce(

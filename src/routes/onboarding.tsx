@@ -68,7 +68,7 @@ const RANDOM_NAMES = [
   "Mango", "Nova", "Tofu", "Miso",
 ];
 
-function Onboarding() {
+export function Onboarding() {
   const nav = useNavigate();
   const { setOnboarding } = useHodlchi();
   const { locale, t } = useI18n();

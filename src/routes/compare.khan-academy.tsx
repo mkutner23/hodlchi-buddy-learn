@@ -107,7 +107,7 @@ export const Route = createFileRoute("/compare/khan-academy")({
   }),
 });
 
-function ComparePage() {
+export function ComparePage() {
   return (
     <main className="min-h-screen bg-gradient-hero">
       <div className="mx-auto max-w-2xl px-5 pt-10 pb-16">

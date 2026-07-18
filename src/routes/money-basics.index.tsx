@@ -43,7 +43,7 @@ export const Route = createFileRoute("/money-basics/")({
   }),
 });
 
-function MoneyBasicsHub() {
+export function MoneyBasicsHub() {
   const { locale, t: tr } = useI18n();
   const topics = getLocalizedTopics(locale);
   return (

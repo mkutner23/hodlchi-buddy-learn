@@ -67,7 +67,7 @@ export const Route = createFileRoute("/blog/what-is-financial-literacy")({
   }),
 });
 
-function GuidePage() {
+export function GuidePage() {
   return (
     <main className="min-h-screen bg-gradient-hero">
       <div className="mx-auto max-w-2xl px-5 pt-10 pb-16">

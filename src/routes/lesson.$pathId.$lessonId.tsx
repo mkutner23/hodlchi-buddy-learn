@@ -57,7 +57,7 @@ export const Route = createFileRoute("/lesson/$pathId/$lessonId")({
 
 type Phase = "intro" | "quiz" | "done";
 
-function LessonView() {
+export function LessonView() {
   const { pathId, lessonId } = Route.useParams();
   const nav = useNavigate();
   const { state, completeLesson, flashMood, addReflection } = useHodlchi();
