@@ -31,6 +31,7 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as EsMoneyBasicsIndexRouteImport } from './routes/es.money-basics.index'
 import { Route as LessonPathIdLessonIdRouteImport } from './routes/lesson.$pathId.$lessonId'
+import { Route as EsMoneyBasicsTopicRouteImport } from './routes/es.money-basics.$topic'
 import { Route as EsCompareKhanAcademyRouteImport } from './routes/es.compare.khan-academy'
 import { Route as EsBlogWhatIsFinancialLiteracyRouteImport } from './routes/es.blog.what-is-financial-literacy'
 import { Route as ApiPublicHeroSfxRouteImport } from './routes/api/public/hero-sfx'
@@ -151,6 +152,11 @@ const LessonPathIdLessonIdRoute = LessonPathIdLessonIdRouteImport.update({
   path: '/lesson/$pathId/$lessonId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EsMoneyBasicsTopicRoute = EsMoneyBasicsTopicRouteImport.update({
+  id: '/money-basics/$topic',
+  path: '/money-basics/$topic',
+  getParentRoute: () => EsRoute,
+} as any)
 const EsCompareKhanAcademyRoute = EsCompareKhanAcademyRouteImport.update({
   id: '/compare/khan-academy',
   path: '/compare/khan-academy',
@@ -199,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
   '/es/blog/what-is-financial-literacy': typeof EsBlogWhatIsFinancialLiteracyRoute
   '/es/compare/khan-academy': typeof EsCompareKhanAcademyRoute
+  '/es/money-basics/$topic': typeof EsMoneyBasicsTopicRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
   '/es/money-basics/': typeof EsMoneyBasicsIndexRoute
 }
@@ -226,6 +233,7 @@ export interface FileRoutesByTo {
   '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
   '/es/blog/what-is-financial-literacy': typeof EsBlogWhatIsFinancialLiteracyRoute
   '/es/compare/khan-academy': typeof EsCompareKhanAcademyRoute
+  '/es/money-basics/$topic': typeof EsMoneyBasicsTopicRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
   '/es/money-basics': typeof EsMoneyBasicsIndexRoute
 }
@@ -255,6 +263,7 @@ export interface FileRoutesById {
   '/api/public/hero-sfx': typeof ApiPublicHeroSfxRoute
   '/es/blog/what-is-financial-literacy': typeof EsBlogWhatIsFinancialLiteracyRoute
   '/es/compare/khan-academy': typeof EsCompareKhanAcademyRoute
+  '/es/money-basics/$topic': typeof EsMoneyBasicsTopicRoute
   '/lesson/$pathId/$lessonId': typeof LessonPathIdLessonIdRoute
   '/es/money-basics/': typeof EsMoneyBasicsIndexRoute
 }
@@ -285,6 +294,7 @@ export interface FileRouteTypes {
     | '/api/public/hero-sfx'
     | '/es/blog/what-is-financial-literacy'
     | '/es/compare/khan-academy'
+    | '/es/money-basics/$topic'
     | '/lesson/$pathId/$lessonId'
     | '/es/money-basics/'
   fileRoutesByTo: FileRoutesByTo
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
     | '/api/public/hero-sfx'
     | '/es/blog/what-is-financial-literacy'
     | '/es/compare/khan-academy'
+    | '/es/money-basics/$topic'
     | '/lesson/$pathId/$lessonId'
     | '/es/money-basics'
   id:
@@ -340,6 +351,7 @@ export interface FileRouteTypes {
     | '/api/public/hero-sfx'
     | '/es/blog/what-is-financial-literacy'
     | '/es/compare/khan-academy'
+    | '/es/money-basics/$topic'
     | '/lesson/$pathId/$lessonId'
     | '/es/money-basics/'
   fileRoutesById: FileRoutesById
@@ -521,6 +533,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LessonPathIdLessonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/es/money-basics/$topic': {
+      id: '/es/money-basics/$topic'
+      path: '/money-basics/$topic'
+      fullPath: '/es/money-basics/$topic'
+      preLoaderRoute: typeof EsMoneyBasicsTopicRouteImport
+      parentRoute: typeof EsRoute
+    }
     '/es/compare/khan-academy': {
       id: '/es/compare/khan-academy'
       path: '/compare/khan-academy'
@@ -560,6 +579,7 @@ interface EsRouteChildren {
   EsIndexRoute: typeof EsIndexRoute
   EsBlogWhatIsFinancialLiteracyRoute: typeof EsBlogWhatIsFinancialLiteracyRoute
   EsCompareKhanAcademyRoute: typeof EsCompareKhanAcademyRoute
+  EsMoneyBasicsTopicRoute: typeof EsMoneyBasicsTopicRoute
   EsMoneyBasicsIndexRoute: typeof EsMoneyBasicsIndexRoute
 }
 
@@ -571,6 +591,7 @@ const EsRouteChildren: EsRouteChildren = {
   EsIndexRoute: EsIndexRoute,
   EsBlogWhatIsFinancialLiteracyRoute: EsBlogWhatIsFinancialLiteracyRoute,
   EsCompareKhanAcademyRoute: EsCompareKhanAcademyRoute,
+  EsMoneyBasicsTopicRoute: EsMoneyBasicsTopicRoute,
   EsMoneyBasicsIndexRoute: EsMoneyBasicsIndexRoute,
 }
 
