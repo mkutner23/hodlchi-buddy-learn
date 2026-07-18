@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useParams } from "@tanstack/react-router";
 import { PATHS, PATH_ACCENT, getLocalizedPath } from "@/lib/lessons-data";
 import { PathFruit } from "@/components/PathFruit";
 import { useHodlchi } from "@/lib/hodlchi-store";
