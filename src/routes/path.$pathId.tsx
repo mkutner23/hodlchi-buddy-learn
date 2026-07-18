@@ -48,7 +48,7 @@ export const Route = createFileRoute("/path/$pathId")({
 });
 
 export function PathView() {
-  const { pathId } = Route.useParams();
+  const { pathId } = useParams({ strict: false }) as { pathId: string };
   const { locale, t } = useI18n();
   const path = getLocalizedPath(pathId as any, locale) ?? PATHS.find((p) => p.id === pathId);
   const { state } = useHodlchi();
