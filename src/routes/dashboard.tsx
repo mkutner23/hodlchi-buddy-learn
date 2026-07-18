@@ -73,7 +73,7 @@ function greetingFor(
 
 
 
-function Home() {
+export function Home() {
   const nav = useNavigate();
   const { state, reset, demoMode, evolve } = useHodlchi();
   const { locale, t } = useI18n();

@@ -15,7 +15,7 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const entries: SitemapEntry[] = [
+        const enEntries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/onboarding", changefreq: "monthly", priority: "0.6" },
           { path: "/dashboard", changefreq: "weekly", priority: "0.8" },
@@ -42,6 +42,13 @@ export const Route = createFileRoute("/sitemap.xml")({
             })),
           ),
         ];
+        // Mirror every English URL to /es/* for the Spanish version.
+        const esEntries: SitemapEntry[] = enEntries.map((e) => ({
+          ...e,
+          path: e.path === "/" ? "/es" : `/es${e.path}`,
+          priority: e.priority ? String(Math.max(0.1, Number(e.priority) - 0.1)) : undefined,
+        }));
+        const entries: SitemapEntry[] = [...enEntries, ...esEntries];
         const urls = entries
           .map(
             (e) =>

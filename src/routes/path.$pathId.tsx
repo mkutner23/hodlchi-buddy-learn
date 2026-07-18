@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useParams } from "@tanstack/react-router";
 import { PATHS, PATH_ACCENT, getLocalizedPath } from "@/lib/lessons-data";
 import { PathFruit } from "@/components/PathFruit";
 import { useHodlchi } from "@/lib/hodlchi-store";
@@ -47,8 +47,8 @@ export const Route = createFileRoute("/path/$pathId")({
   },
 });
 
-function PathView() {
-  const { pathId } = Route.useParams();
+export function PathView() {
+  const { pathId } = useParams({ strict: false }) as { pathId: string };
   const { locale, t } = useI18n();
   const path = getLocalizedPath(pathId as any, locale) ?? PATHS.find((p) => p.id === pathId);
   const { state } = useHodlchi();

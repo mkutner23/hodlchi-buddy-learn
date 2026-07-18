@@ -1,4 +1,4 @@
-import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate, useParams } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 import { PATHS, PATH_ACCENT, getLocalizedPath } from "@/lib/lessons-data";
@@ -57,8 +57,8 @@ export const Route = createFileRoute("/lesson/$pathId/$lessonId")({
 
 type Phase = "intro" | "quiz" | "done";
 
-function LessonView() {
-  const { pathId, lessonId } = Route.useParams();
+export function LessonView() {
+  const { pathId, lessonId } = useParams({ strict: false }) as { pathId: string; lessonId: string };
   const nav = useNavigate();
   const { state, completeLesson, flashMood, addReflection } = useHodlchi();
   const { locale, t } = useI18n();

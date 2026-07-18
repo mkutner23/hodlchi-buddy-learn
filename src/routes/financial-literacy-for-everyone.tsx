@@ -90,7 +90,7 @@ export const Route = createFileRoute("/financial-literacy-for-everyone")({
   }),
 });
 
-function TeensPage() {
+export function TeensPage() {
   const totalLessons = PATHS.reduce((n, p) => n + p.lessons.length, 0);
   const totalMinutes = PATHS.reduce(
     (n, p) => n + p.lessons.reduce((m, l) => m + l.minutes, 0),
