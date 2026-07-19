@@ -2,8 +2,11 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
 import { SmileCheck } from "@/components/SmileCheck";
+import { PennyRemembers } from "@/components/PennyRemembers";
+import { HelpPennyGrow } from "@/components/HelpPennyGrow";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
 import { PathFruit } from "@/components/PathFruit";
+
 import { PATH_ACCENT, getDailyChallenge, getLocalizedPaths, type PathId } from "@/lib/lessons-data";
 import { useI18n } from "@/lib/i18n";
 
