@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { HodlchiProvider } from "@/lib/hodlchi-store";
 import { I18nProvider } from "@/lib/i18n";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import { InviteGate } from "@/lib/invite-gate";
 
 
 function NotFoundComponent() {
@@ -143,7 +144,9 @@ function RootComponent() {
       <I18nProvider>
         <HodlchiProvider>
           <LanguageToggle />
-          <Outlet />
+          <InviteGate>
+            <Outlet />
+          </InviteGate>
         </HodlchiProvider>
       </I18nProvider>
     </QueryClientProvider>
