@@ -83,7 +83,11 @@ export function pickContextualGreeting(
   state: HodlchiState,
   now: number = Date.now(),
 ): Greeting | null {
-  const today = new Date(now).toISOString().slice(0, 10);
+  const nowDate = new Date(now);
+  const today = nowDate.toISOString().slice(0, 10);
+  const hour = nowDate.getHours();
+  const partOfDay: "morning" | "afternoon" | "evening" =
+    hour < 5 ? "evening" : hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
   const doneToday = state.lastActiveDay === today;
   const daysSince = state.lastActiveDay ? daysBetween(state.lastActiveDay, now) : null;
   const doneLessons = state.completedLessons.length;
