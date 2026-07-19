@@ -81,7 +81,11 @@ export interface AnalyticsSummary {
   feedback: Array<{ rating: string; count: number }>;
   inviteCodes: Array<{ code: string; label: string | null; redeemed_devices: number }>;
   activeInviteFilter: string | null;
+  smile: { yes: number; meh: number; no: number; rate: number };
+  interviewSignups: number;
+  productFeedback: number;
 }
+
 
 /**
  * Token-gated admin summary. Uses service role to read events (RLS blocks anon reads).
