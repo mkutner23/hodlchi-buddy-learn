@@ -107,7 +107,14 @@ function loadState(): HodlchiState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_STATE;
-    return { ...DEFAULT_STATE, ...JSON.parse(raw) };
+    const parsed = JSON.parse(raw) as Partial<HodlchiState>;
+    return {
+      ...DEFAULT_STATE,
+      ...parsed,
+      memory: { ...DEFAULT_MEMORY, ...(parsed.memory ?? {}) },
+      feedback: { ...DEFAULT_STATE.feedback, ...(parsed.feedback ?? {}) },
+      events: Array.isArray(parsed.events) ? parsed.events : [],
+    };
   } catch {
     return DEFAULT_STATE;
   }
