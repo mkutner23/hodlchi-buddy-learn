@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { initAnalyticsSink, trackEvent } from "./analytics-client";
 
 export type Personality = "ape" | "turtle" | "fox";
 export type Mood =
