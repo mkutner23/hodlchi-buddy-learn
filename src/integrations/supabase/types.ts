@@ -47,6 +47,65 @@ export type Database = {
         }
         Relationships: []
       }
+      invite_codes: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          expires_at: string | null
+          label: string | null
+          max_uses: number
+          used_count: number
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          expires_at?: string | null
+          label?: string | null
+          max_uses?: number
+          used_count?: number
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          expires_at?: string | null
+          label?: string | null
+          max_uses?: number
+          used_count?: number
+        }
+        Relationships: []
+      }
+      invite_redemptions: {
+        Row: {
+          code: string
+          created_at: string
+          device_id: string
+          id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          device_id: string
+          id?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          device_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invite_redemptions_code_fkey"
+            columns: ["code"]
+            isOneToOne: false
+            referencedRelation: "invite_codes"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
