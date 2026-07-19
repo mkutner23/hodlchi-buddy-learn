@@ -121,8 +121,36 @@ function pct(n: number) {
 
 function SummaryView({ data }: { data: AnalyticsSummary }) {
   const t = data.totals;
+  const d1 = computeD1Trend(data);
   return (
     <>
+      <section className="mt-5 rounded-3xl bg-gradient-to-br from-primary/15 to-primary/5 p-5 shadow-soft">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-primary/80">
+          Day-1 retention · this week
+        </div>
+        <div className="mt-1 flex items-baseline gap-3">
+          <div className="font-display text-5xl font-extrabold text-primary">
+            {d1.thisWeek === null ? "—" : pct(d1.thisWeek)}
+          </div>
+          {d1.delta !== null && d1.lastWeek !== null && (
+            <div
+              className={`text-sm font-bold ${d1.delta >= 0 ? "text-primary" : "text-red-600"}`}
+            >
+              {d1.delta >= 0 ? "▲" : "▼"} {pct(Math.abs(d1.delta))} vs last week
+            </div>
+          )}
+        </div>
+        <div className="mt-1 text-xs text-foreground/60">
+          {d1.thisWeekSize} devices this week
+          {d1.lastWeek !== null && d1.lastWeekSize
+            ? ` · last week ${pct(d1.lastWeek)} (${d1.lastWeekSize} devices)`
+            : ""}
+        </div>
+        <p className="mt-3 text-xs italic text-foreground/60">
+          The one number to watch: are new users coming back the day after they hatch Penny?
+        </p>
+      </section>
+
       <section className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
         <Stat label="Devices" v={t.devices} />
         <Stat label="Events" v={t.events} />
