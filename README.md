@@ -34,7 +34,7 @@
 
 > 🚧 **Currently in Private Beta**
 >
-> Building the future of financial education through AI, game design, and emotional engagement.
+> Building The Money Pet to help people build confidence with money.
 
 ---
 
