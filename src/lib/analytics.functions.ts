@@ -4,7 +4,7 @@ import { z } from "zod";
 
 const EventInput = z.object({
   name: z.string().min(1).max(80),
-  meta: z.record(z.union([z.string(), z.number(), z.boolean(), z.null()])).optional(),
+  meta: z.record(z.string(), z.union([z.string(), z.number(), z.boolean(), z.null()])).optional(),
   ts: z.number().optional(), // client timestamp (not stored; server time wins)
 });
 
