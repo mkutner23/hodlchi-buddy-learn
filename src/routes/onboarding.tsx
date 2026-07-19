@@ -148,7 +148,7 @@ export function Onboarding() {
     <main className="min-h-screen bg-gradient-hero">
       <div className="mx-auto flex min-h-screen max-w-md flex-col px-5 pt-8 pb-8">
         <div className="flex gap-2">
-          {[0, 1, 2, 3].map((i) => (
+          {[0, 1, 2, 3, 4].map((i) => (
             <div
               key={i}
               className={`h-2 flex-1 rounded-full transition-colors ${i <= step ? "bg-foreground" : "bg-foreground/15"}`}
