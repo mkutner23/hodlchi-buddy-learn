@@ -51,9 +51,10 @@ Every five-minute lesson helps Penny grow — and helps you build real financial
 
 ## 🐣 Meet Penny
 
-Penny isn't just another chatbot. She's a companion who learns alongside you —
-with moods, memory, and idle life. She yawns, stretches, and reacts when you
-tap. Feed her a 5-minute lesson and watch her evolve.
+Penny isn't just another chatbot. She remembers your progress, celebrates your
+wins, misses you when you're away, and grows because of the time you spend
+together. Every five-minute lesson makes Penny a little smarter — and helps you
+build better money habits.
 
 <p align="center">
   <img src="public/screenshots/meet-penny.png" alt="Meet Penny — mood, XP, streak, and the daily-habit dashboard" width="300">
