@@ -295,5 +295,9 @@ export const getAnalyticsSummary = createServerFn({ method: "POST" })
       feedback: [...feedbackCounts.entries()].map(([rating, count]) => ({ rating, count })),
       inviteCodes,
       activeInviteFilter: data.invite_code ?? null,
+      smile: { ...smile, rate: smileRate },
+      interviewSignups,
+      productFeedback,
     };
+
   });
