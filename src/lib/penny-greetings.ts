@@ -105,12 +105,35 @@ export function pickContextualGreeting(
   const lastLesson = lastKey ? lookupLesson(lastKey) : null;
   const memory = state.memory;
 
-  // 0a. MISSED YOU — long absence beats every other line.
+  // 0a. MISSED YOU — long absence. Reference the specific topic we left off on.
   if (daysSince !== null && daysSince >= 3) {
+    if (lastTopic) {
+      return {
+        key: `worried-${lastKey}-${today}`,
+        line: `I was starting to worry… 🥺 We were learning about ${lastTopic}. Ready to keep going?`,
+        tone: "sleepy",
+      };
+    }
+    if (lastLesson) {
+      return {
+        key: `worried-path-${lastLesson.pathId}-${today}`,
+        line: `I was starting to worry… 🥺 We were in the middle of ${lastLesson.pathId}. Come back?`,
+        tone: "sleepy",
+      };
+    }
     return {
       key: `missed-${today}`,
       line: `I missed you… 🥺 It's been ${daysSince} days.`,
       tone: "sleepy",
+    };
+  }
+
+  // 0a2. Shorter absence (2 days) — soft nudge with memory.
+  if (daysSince === 2 && lastTopic && !doneToday) {
+    return {
+      key: `two-days-${lastKey}-${today}`,
+      line: `Two days already? We were on ${lastTopic} — pick it up together?`,
+      tone: "hungry",
     };
   }
 
