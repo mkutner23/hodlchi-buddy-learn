@@ -1,6 +1,6 @@
 import { createFileRoute, notFound, useNavigate, useParams } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PATHS, PATH_ACCENT, getLocalizedPath } from "@/lib/lessons-data";
 import { useHodlchi, deriveMood } from "@/lib/hodlchi-store";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
