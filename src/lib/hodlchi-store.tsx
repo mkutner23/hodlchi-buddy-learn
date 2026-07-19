@@ -30,6 +30,25 @@ export interface Reflection {
   ts: number;
 }
 
+export interface PennyMemory {
+  firstHatchedAt: number | null; // birthday
+  firstLessonAt: number | null;
+  firstLessonKey: string | null;
+  firstStreakAt: number | null; // ts when streak first hit >= 2
+  firstInvestingAt: number | null;
+  firstEvolutionAt: number | null;
+  visitCount: number;
+  lastLoginAt: number | null;
+}
+
+export type FeedbackRating = "love" | "good" | "ok" | "confusing";
+
+export interface AnalyticsEvent {
+  name: string;
+  ts: number;
+  meta?: Record<string, string | number | boolean | null>;
+}
+
 export interface HodlchiState {
   onboarded: boolean;
   name: string;
@@ -41,11 +60,25 @@ export interface HodlchiState {
   lastActiveDay: string | null;
   completedLessons: string[]; // "pathId:lessonId"
   mood: Mood;
-  moodExpiresAt: number | null; // timestamp; after this, mood is derived from context
-  lastQuizPct: number | null; // 0..1 last quiz score
+  moodExpiresAt: number | null;
+  lastQuizPct: number | null;
   acknowledgedStage: Stage;
   reflections: Reflection[];
+  memory: PennyMemory;
+  events: AnalyticsEvent[]; // capped, most-recent last
+  feedback: { firstLesson: FeedbackRating | null };
 }
+
+const DEFAULT_MEMORY: PennyMemory = {
+  firstHatchedAt: null,
+  firstLessonAt: null,
+  firstLessonKey: null,
+  firstStreakAt: null,
+  firstInvestingAt: null,
+  firstEvolutionAt: null,
+  visitCount: 0,
+  lastLoginAt: null,
+};
 
 const DEFAULT_STATE: HodlchiState = {
   onboarded: false,
@@ -62,6 +95,9 @@ const DEFAULT_STATE: HodlchiState = {
   lastQuizPct: null,
   acknowledgedStage: "Baby",
   reflections: [],
+  memory: { ...DEFAULT_MEMORY },
+  events: [],
+  feedback: { firstLesson: null },
 };
 
 const STORAGE_KEY = "hodlchi-state-v1";
