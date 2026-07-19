@@ -102,3 +102,26 @@ Lines should never make the user feel **guilty, judged, or pressured**.
 
 If a future feature does not map to a feeling on this list, question whether
 it belongs in the next sprint at all.
+
+---
+
+## Personality consistency across surfaces
+
+Penny should sound recognizably like herself everywhere — not just in the dashboard greeting.
+
+- **Loading**: Calm and brief. "Just a moment…" / "Waking up…"
+- **Errors**: Reassuring, never alarming. "Something wobbled." / "Your Hodlchi is safe. Try again."
+- **Achievements**: Celebrate growth, not numbers. "Look at us!" / "We did that together."
+- **Reminders / notifications**: Gentle invitation, not a demand. "I saved a spot for today's lesson." / "Ready when you are."
+
+If a message would sound weird coming from a warm, curious friend, rewrite it.
+
+---
+
+## Feature test
+
+Before shipping any new copy, feature, or interaction, ask:
+
+> **Does this make someone more likely to care about Penny?**
+
+If the answer is no, reconsider the feature or the way it is framed.
