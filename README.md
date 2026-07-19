@@ -190,27 +190,9 @@ On Lovable, these are provisioned automatically when Cloud is enabled —
 | `/mcp` | Public MCP server for AI agents |
 | `/es/*` | Full Spanish mirror |
 
-### How Codex and GPT-5.6 were used
+### Built with
 
-Hodlchi was built end-to-end with **OpenAI Codex-style agentic coding** inside
-Lovable, using **GPT-5.6** as the primary reasoning + code-generation model.
-
-- **Curriculum** — 20 lessons across 5 paths (`src/lib/lessons-data.ts`) plus
-  the Money Basics glossary (`src/lib/money-basics.ts`).
-- **Spanish localization** — full translation of curriculum, UI strings, and
-  SEO metadata (`src/lib/lessons-data-es.ts`, `src/lib/money-basics-es.ts`,
-  `src/lib/i18n-strings.ts`).
-- **Penny's mood + memory** — `deriveMood` state machine and
-  personality-specific dialog (`src/lib/hodlchi-store.tsx`,
-  `src/lib/penny-greetings.ts`, `src/lib/reflections.ts`).
-- **Procedural Web Audio** sound design (`src/lib/sfx.ts`), cinematic
-  evolution (`EvolveCinematic.tsx`), and idle-life micro-animations
-  (`useIdleLife.ts`).
-- **MCP tool schemas** — public curriculum tools at `/mcp`.
-
-**Model routing:** `openai/gpt-5.6-sol` for hard reasoning (curriculum, i18n,
-mood state machine); `openai/gpt-5.6-terra` for everyday coding; Lovable AI
-Gateway for in-app AI (no user API key required).
+Built with OpenAI-powered agentic coding inside Lovable. Detailed model routing and build notes live in the developer docs.
 
 ---
 
