@@ -105,35 +105,36 @@ export function pickContextualGreeting(
   const lastLesson = lastKey ? lookupLesson(lastKey) : null;
   const memory = state.memory;
 
-  // 0a. MISSED YOU — long absence. Reference the specific topic we left off on.
+  // 0a. WELCOME BACK — long absence. Warm and positive, never guilt-inducing.
+  // Reference the specific topic we left off on so it feels personal, not pressuring.
   if (daysSince !== null && daysSince >= 3) {
     if (lastTopic) {
       return {
-        key: `worried-${lastKey}-${today}`,
-        line: `I was starting to worry… 🥺 We were learning about ${lastTopic}. Ready to keep going?`,
-        tone: "sleepy",
+        key: `welcome-back-${lastKey}-${today}`,
+        line: `Welcome back! 💚 I saved our spot on ${lastTopic}.`,
+        tone: "happy",
       };
     }
     if (lastLesson) {
       return {
-        key: `worried-path-${lastLesson.pathId}-${today}`,
-        line: `I was starting to worry… 🥺 We were in the middle of ${lastLesson.pathId}. Come back?`,
-        tone: "sleepy",
+        key: `welcome-back-path-${lastLesson.pathId}-${today}`,
+        line: `Great to see you again! Ready to help me grow?`,
+        tone: "happy",
       };
     }
     return {
-      key: `missed-${today}`,
-      line: `I missed you… 🥺 It's been ${daysSince} days.`,
-      tone: "sleepy",
+      key: `welcome-back-${today}`,
+      line: `Welcome back! I saved today's challenge for us.`,
+      tone: "happy",
     };
   }
 
-  // 0a2. Shorter absence (2 days) — soft nudge with memory.
+  // 0a2. Shorter absence (2 days) — friendly, no nagging.
   if (daysSince === 2 && lastTopic && !doneToday) {
     return {
       key: `two-days-${lastKey}-${today}`,
-      line: `Two days already? We were on ${lastTopic} — pick it up together?`,
-      tone: "hungry",
+      line: `Good to see you! We were on ${lastTopic} — pick it up together?`,
+      tone: "happy",
     };
   }
 
