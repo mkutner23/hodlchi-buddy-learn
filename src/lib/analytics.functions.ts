@@ -301,3 +301,180 @@ export const getAnalyticsSummary = createServerFn({ method: "POST" })
     };
 
   });
+
+// ============================================================================
+// Founder Dashboard — glanceable morning metrics.
+// Yesterday (UTC) vs Last 7 days (rolling), for the numbers a founder watches.
+// ============================================================================
+
+const FounderInput = z.object({
+  token: z.string().min(16).max(200),
+});
+
+export interface FounderMetric {
+  label: string;
+  yesterday: number | string;
+  last7: number | string;
+  hint?: string;
+}
+
+export interface FounderMetrics {
+  generatedAt: string;
+  yesterdayLabel: string; // e.g. "2026-07-18"
+  metrics: FounderMetric[];
+}
+
+export const getFounderMetrics = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => FounderInput.parse(data))
+  .handler(async ({ data }): Promise<FounderMetrics | { error: string }> => {
+    const expected = process.env.ANALYTICS_ADMIN_TOKEN;
+    if (!expected) return { error: "not_configured" };
+    if (data.token.length !== expected.length) return { error: "unauthorized" };
+    let diff = 0;
+    for (let i = 0; i < expected.length; i++) diff |= data.token.charCodeAt(i) ^ expected.charCodeAt(i);
+    if (diff !== 0) return { error: "unauthorized" };
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const dayStr = (d: Date) => d.toISOString().slice(0, 10);
+    const now = new Date();
+    const todayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const yesterdayStart = new Date(todayStart.getTime() - 86400_000);
+    const yesterdayLabel = dayStr(yesterdayStart);
+    // Pull enough history to compute D7 retention for last-7-day cohort.
+    const lookbackStart = new Date(todayStart.getTime() - 15 * 86400_000);
+
+    const { data: rows, error } = await supabaseAdmin
+      .from("analytics_events")
+      .select("device_id, name, created_at")
+      .gte("created_at", lookbackStart.toISOString())
+      .order("created_at", { ascending: true })
+      .limit(20000);
+    if (error) return { error: error.message };
+
+    const all = rows ?? [];
+
+    // Per-device: first_seen day, set of active days, set of event names.
+    const firstSeen = new Map<string, string>();
+    const activeDays = new Map<string, Set<string>>();
+    const events = new Map<string, Set<string>>();
+    for (const r of all) {
+      const day = r.created_at.slice(0, 10);
+      if (!firstSeen.has(r.device_id)) firstSeen.set(r.device_id, day);
+      const ad = activeDays.get(r.device_id) ?? new Set<string>();
+      ad.add(day);
+      activeDays.set(r.device_id, ad);
+      const ev = events.get(r.device_id) ?? new Set<string>();
+      ev.add(r.name);
+      events.set(r.device_id, ev);
+    }
+
+    // Windows.
+    const in7 = new Set<string>();
+    for (let i = 1; i <= 7; i++) in7.add(dayStr(new Date(todayStart.getTime() - i * 86400_000)));
+
+    const visitorsY = new Set<string>();
+    const visitors7 = new Set<string>();
+    for (const [dev, days] of activeDays) {
+      if (days.has(yesterdayLabel)) visitorsY.add(dev);
+      for (const d of days) if (in7.has(d)) { visitors7.add(dev); break; }
+    }
+
+    // Named-event counters, scoped to devices whose FIRST event happened in-window.
+    const countBy = (evName: string, dayFilter: (d: string) => boolean) => {
+      let n = 0;
+      for (const [dev, fs] of firstSeen) {
+        if (!dayFilter(fs)) continue;
+        if (events.get(dev)?.has(evName)) n++;
+      }
+      return n;
+    };
+    const isY = (d: string) => d === yesterdayLabel;
+    const is7 = (d: string) => in7.has(d);
+
+    // Retention: of devices whose FIRST day was N days ago, % active +1 day / +7 days later.
+    const retentionForCohortDay = (cohortDay: string, offset: number) => {
+      const devicesInCohort: string[] = [];
+      for (const [dev, fs] of firstSeen) if (fs === cohortDay) devicesInCohort.push(dev);
+      if (devicesInCohort.length === 0) return { size: 0, rate: 0 };
+      const targetDay = dayStr(new Date(new Date(cohortDay + "T00:00:00Z").getTime() + offset * 86400_000));
+      let hit = 0;
+      for (const dev of devicesInCohort) if (activeDays.get(dev)?.has(targetDay)) hit++;
+      return { size: devicesInCohort.length, rate: hit / devicesInCohort.length };
+    };
+
+    // D1 for yesterday's cohort = day-before-yesterday cohort measured at yesterday.
+    const dbyLabel = dayStr(new Date(todayStart.getTime() - 2 * 86400_000));
+    const d1Yesterday = retentionForCohortDay(dbyLabel, 1);
+
+    // D1 rolling across last 7 completed cohort days (cohort at least 1 day old).
+    let d1Num = 0, d1Den = 0;
+    for (let i = 2; i <= 8; i++) {
+      const cohortDay = dayStr(new Date(todayStart.getTime() - i * 86400_000));
+      const r = retentionForCohortDay(cohortDay, 1);
+      d1Num += r.size * r.rate;
+      d1Den += r.size;
+    }
+    const d1Rolling = d1Den ? d1Num / d1Den : 0;
+
+    // D7 rolling across cohorts old enough to have 7 days elapsed.
+    let d7Num = 0, d7Den = 0;
+    for (let i = 8; i <= 14; i++) {
+      const cohortDay = dayStr(new Date(todayStart.getTime() - i * 86400_000));
+      const r = retentionForCohortDay(cohortDay, 7);
+      d7Num += r.size * r.rate;
+      d7Den += r.size;
+    }
+    const d7Rolling = d7Den ? d7Num / d7Den : 0;
+
+    // Avg events per active device (proxy for session depth).
+    const eventsYesterday = all.filter((r) => r.created_at.slice(0, 10) === yesterdayLabel);
+    const events7 = all.filter((r) => in7.has(r.created_at.slice(0, 10)));
+    const avgEventsY = visitorsY.size ? eventsYesterday.length / visitorsY.size : 0;
+    const avgEvents7 = visitors7.size ? events7.length / visitors7.size : 0;
+
+    // Interviews completed — count of interview_signups rows in each window.
+    const { count: intY } = await supabaseAdmin
+      .from("interview_signups")
+      .select("device_id", { count: "exact", head: true })
+      .gte("created_at", yesterdayStart.toISOString())
+      .lt("created_at", todayStart.toISOString());
+    const sevenAgo = new Date(todayStart.getTime() - 7 * 86400_000);
+    const { count: int7 } = await supabaseAdmin
+      .from("interview_signups")
+      .select("device_id", { count: "exact", head: true })
+      .gte("created_at", sevenAgo.toISOString())
+      .lt("created_at", todayStart.toISOString());
+
+    // Sign-ups = invite_redemptions in-window (proxy for "someone unlocked the app").
+    const { count: signY } = await supabaseAdmin
+      .from("invite_redemptions")
+      .select("device_id", { count: "exact", head: true })
+      .gte("created_at", yesterdayStart.toISOString())
+      .lt("created_at", todayStart.toISOString());
+    const { count: sign7 } = await supabaseAdmin
+      .from("invite_redemptions")
+      .select("device_id", { count: "exact", head: true })
+      .gte("created_at", sevenAgo.toISOString())
+      .lt("created_at", todayStart.toISOString());
+
+    const pct = (n: number) => `${Math.round(n * 100)}%`;
+
+    const metrics: FounderMetric[] = [
+      { label: "Visitors", yesterday: visitorsY.size, last7: visitors7.size, hint: "Unique devices with any event" },
+      { label: "Sign-ups", yesterday: signY ?? 0, last7: sign7 ?? 0, hint: "Invite codes redeemed" },
+      { label: "Penny hatched", yesterday: countBy("penny_hatched", isY), last7: countBy("penny_hatched", is7), hint: "First-time hatches (cohort by first day)" },
+      { label: "Lesson 1 completed", yesterday: countBy("first_lesson_completed", isY), last7: countBy("first_lesson_completed", is7), hint: "First lesson finished (cohort by first day)" },
+      { label: "Day 1 retention", yesterday: d1Yesterday.size ? pct(d1Yesterday.rate) : "—", last7: d1Den ? pct(d1Rolling) : "—", hint: "% of new devices back the next day" },
+      { label: "Day 7 retention", yesterday: "—", last7: d7Den ? pct(d7Rolling) : "—", hint: "% of new devices back 7 days later" },
+      { label: "Avg events / device", yesterday: avgEventsY.toFixed(1), last7: avgEvents7.toFixed(1), hint: "Proxy for session depth" },
+      { label: "Interviews signed up", yesterday: intY ?? 0, last7: int7 ?? 0, hint: "'Help Penny grow' opt-ins" },
+    ];
+
+    return {
+      generatedAt: new Date().toISOString(),
+      yesterdayLabel,
+      metrics,
+    };
+  });
+
