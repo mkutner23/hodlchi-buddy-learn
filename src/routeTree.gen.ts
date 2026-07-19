@@ -29,6 +29,7 @@ import { Route as EsCertificateRouteImport } from './routes/es.certificate'
 import { Route as CompareKhanAcademyRouteImport } from './routes/compare.khan-academy'
 import { Route as BlogWhatIsFinancialLiteracyRouteImport } from './routes/blog.what-is-financial-literacy'
 import { Route as AdminInvitesRouteImport } from './routes/admin.invites'
+import { Route as AdminFounderRouteImport } from './routes/admin.founder'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -145,6 +146,11 @@ const AdminInvitesRoute = AdminInvitesRouteImport.update({
   path: '/admin/invites',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminFounderRoute = AdminFounderRouteImport.update({
+  id: '/admin/founder',
+  path: '/admin/founder',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminAnalyticsRoute = AdminAnalyticsRouteImport.update({
   id: '/admin/analytics',
   path: '/admin/analytics',
@@ -223,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/founder': typeof AdminFounderRoute
   '/admin/invites': typeof AdminInvitesRoute
   '/blog/what-is-financial-literacy': typeof BlogWhatIsFinancialLiteracyRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
@@ -256,6 +263,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/founder': typeof AdminFounderRoute
   '/admin/invites': typeof AdminInvitesRoute
   '/blog/what-is-financial-literacy': typeof BlogWhatIsFinancialLiteracyRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
@@ -291,6 +299,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/analytics': typeof AdminAnalyticsRoute
+  '/admin/founder': typeof AdminFounderRoute
   '/admin/invites': typeof AdminInvitesRoute
   '/blog/what-is-financial-literacy': typeof BlogWhatIsFinancialLiteracyRoute
   '/compare/khan-academy': typeof CompareKhanAcademyRoute
@@ -327,6 +336,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/admin/analytics'
+    | '/admin/founder'
     | '/admin/invites'
     | '/blog/what-is-financial-literacy'
     | '/compare/khan-academy'
@@ -360,6 +370,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/admin/analytics'
+    | '/admin/founder'
     | '/admin/invites'
     | '/blog/what-is-financial-literacy'
     | '/compare/khan-academy'
@@ -394,6 +405,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/admin/analytics'
+    | '/admin/founder'
     | '/admin/invites'
     | '/blog/what-is-financial-literacy'
     | '/compare/khan-academy'
@@ -429,6 +441,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
+  AdminFounderRoute: typeof AdminFounderRoute
   AdminInvitesRoute: typeof AdminInvitesRoute
   BlogWhatIsFinancialLiteracyRoute: typeof BlogWhatIsFinancialLiteracyRoute
   CompareKhanAcademyRoute: typeof CompareKhanAcademyRoute
@@ -582,6 +595,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInvitesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/founder': {
+      id: '/admin/founder'
+      path: '/admin/founder'
+      fullPath: '/admin/founder'
+      preLoaderRoute: typeof AdminFounderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/analytics': {
       id: '/admin/analytics'
       path: '/admin/analytics'
@@ -713,6 +733,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   AdminAnalyticsRoute: AdminAnalyticsRoute,
+  AdminFounderRoute: AdminFounderRoute,
   AdminInvitesRoute: AdminInvitesRoute,
   BlogWhatIsFinancialLiteracyRoute: BlogWhatIsFinancialLiteracyRoute,
   CompareKhanAcademyRoute: CompareKhanAcademyRoute,
