@@ -151,14 +151,41 @@ function SummaryView({ data }: { data: AnalyticsSummary }) {
         </p>
       </section>
 
-      <section className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <section className="mt-5 rounded-3xl bg-white p-4 shadow-soft">
+        <div className="flex items-baseline justify-between">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-primary-deep">
+            😊 Smile-check · north star
+          </div>
+          <div className="text-xs font-mono text-foreground/60">
+            {data.smile.yes + data.smile.meh + data.smile.no} responses
+          </div>
+        </div>
+        <div className="mt-1 flex items-baseline gap-3">
+          <div className="font-display text-4xl font-extrabold text-primary">
+            {data.smile.yes + data.smile.meh + data.smile.no === 0 ? "—" : pct(data.smile.rate)}
+          </div>
+          <div className="text-xs text-foreground/60">
+            said Penny made them smile today
+          </div>
+        </div>
+        <div className="mt-2 flex gap-3 text-[11px] font-semibold">
+          <span>😍 yes: {data.smile.yes}</span>
+          <span>😐 meh: {data.smile.meh}</span>
+          <span>😕 no: {data.smile.no}</span>
+        </div>
+      </section>
+
+      <section className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Stat label="Devices" v={t.devices} />
         <Stat label="Events" v={t.events} />
         <Stat label="Hatched" v={t.hatched} />
         <Stat label="1st lesson done" v={t.firstLessonCompleted} />
         <Stat label="Evolutions" v={t.evolutionReached} />
         <Stat label="7-day streaks" v={t.sevenDayStreak} />
+        <Stat label="Interview signups" v={data.interviewSignups} />
+        <Stat label="Feedback msgs" v={data.productFeedback} />
       </section>
+
 
       <section className="mt-5 rounded-3xl bg-white p-4 shadow-soft">
         <div className="text-[10px] font-bold uppercase tracking-widest text-foreground/50">Funnel</div>
