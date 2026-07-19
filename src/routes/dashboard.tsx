@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
+import { SmileCheck } from "@/components/SmileCheck";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
 import { PathFruit } from "@/components/PathFruit";
 import { PATH_ACCENT, getDailyChallenge, getLocalizedPaths, type PathId } from "@/lib/lessons-data";
@@ -398,6 +399,9 @@ export function Home() {
             <span className="ml-3 text-3xl">→</span>
           </button>
         )}
+
+        <SmileCheck />
+
 
 
         {/* First-time explainer */}
