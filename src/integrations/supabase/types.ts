@@ -47,6 +47,30 @@ export type Database = {
         }
         Relationships: []
       }
+      interview_signups: {
+        Row: {
+          created_at: string
+          device_id: string
+          email: string
+          id: string
+          note: string | null
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          email: string
+          id?: string
+          note?: string | null
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          email?: string
+          id?: string
+          note?: string | null
+        }
+        Relationships: []
+      }
       invite_codes: {
         Row: {
           active: boolean
@@ -105,6 +129,33 @@ export type Database = {
             referencedColumns: ["code"]
           },
         ]
+      }
+      product_feedback: {
+        Row: {
+          created_at: string
+          device_id: string
+          id: string
+          rating: string
+          surface: string | null
+          text: string | null
+        }
+        Insert: {
+          created_at?: string
+          device_id: string
+          id?: string
+          rating: string
+          surface?: string | null
+          text?: string | null
+        }
+        Update: {
+          created_at?: string
+          device_id?: string
+          id?: string
+          rating?: string
+          surface?: string | null
+          text?: string | null
+        }
+        Relationships: []
       }
     }
     Views: {
