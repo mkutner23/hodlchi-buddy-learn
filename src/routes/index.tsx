@@ -64,9 +64,7 @@ export function Landing() {
           </div>
 
           <h1 className="mt-6 font-display text-3xl font-extrabold leading-[1.05] tracking-tight sm:text-4xl">
-            {t("landing.hero.title_1")}<br />
-            {es ? "Cría a tu " : "Raise your "}
-            <span className="text-primary-deep">Hodlchi.</span>
+            {t("landing.hero.title")}
           </h1>
           <p className="mx-auto mt-3 max-w-md text-center text-[15px] text-foreground/80">
             {t("landing.hero.subtitle")}
