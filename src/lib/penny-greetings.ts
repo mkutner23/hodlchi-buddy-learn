@@ -105,6 +105,27 @@ export function pickContextualGreeting(
   const lastLesson = lastKey ? lookupLesson(lastKey) : null;
   const memory = state.memory;
 
+  // 0a. MISSED YOU — long absence beats every other line.
+  if (daysSince !== null && daysSince >= 3) {
+    return {
+      key: `missed-${today}`,
+      line: `I missed you… 🥺 It's been ${daysSince} days.`,
+      tone: "sleepy",
+    };
+  }
+
+  // 0b. BIRTHDAY — celebrate the day Penny hatched.
+  if (memory.firstHatchedAt) {
+    const born = new Date(memory.firstHatchedAt);
+    if (born.getMonth() === nowDate.getMonth() && born.getDate() === nowDate.getDate() && born.toISOString().slice(0, 10) !== today) {
+      return {
+        key: `birthday-${today}`,
+        line: "It's my hatch-day today! 🎂 Let's celebrate with a lesson?",
+        tone: "excited",
+      };
+    }
+  }
+
   // 1. Loyal returner — long streak, first visit of the day.
   if (state.streak >= 6 && !doneToday) {
     return {
@@ -114,13 +135,25 @@ export function pickContextualGreeting(
     };
   }
 
-  // 2. MEMORY — returning after a day off, referencing what they just learned.
+  // 2. MEMORY — returning after a day off, referencing what we finished together.
   if (daysSince === 1 && !doneToday && lastTopic) {
     return {
       key: `remember-yesterday-${lastKey}-${today}`,
-      line: `Yesterday you learned about ${lastTopic}. Ready for more?`,
+      line: `Yesterday we finished ${lastTopic}. What should we learn today?`,
       tone: "happy",
     };
+  }
+
+  // 2b. OPINION — returning to their favorite path.
+  if (!doneToday && lastLesson && state.streak >= 2 && Math.random() < 0.35) {
+    const opinion = PATH_OPINION[lastLesson.pathId];
+    if (opinion) {
+      return {
+        key: `opinion-${lastLesson.pathId}-${today}`,
+        line: opinion,
+        tone: lastLesson.pathId === "investing" ? "excited" : "happy",
+      };
+    }
   }
 
   // 3. Streak just broke — gentle re-welcome, still with memory.
