@@ -182,5 +182,29 @@ export function pickContextualGreeting(
     };
   }
 
+  // 9. Time-of-day nudge — Penny reflects the hour when nothing else fits.
+  if (!doneToday) {
+    if (partOfDay === "morning") {
+      return {
+        key: `morning-${today}`,
+        line: "Morning! I'm hungry — one lesson to start the day?",
+        tone: "hungry",
+      };
+    }
+    if (partOfDay === "evening") {
+      return {
+        key: `evening-${today}`,
+        line: "Getting sleepy… one quick lesson before bed? 🌙",
+        tone: "sleepy",
+      };
+    }
+    return {
+      key: `afternoon-${today}`,
+      line: "Afternoon check-in — feed me a lesson? 🍎",
+      tone: "happy",
+    };
+  }
+
   return null;
 }
+
