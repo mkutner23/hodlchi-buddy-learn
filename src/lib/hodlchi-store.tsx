@@ -178,6 +178,9 @@ interface Ctx {
   demoMode: () => void;
   isLessonComplete: (pathId: string, lessonId: string) => boolean;
   addReflection: (pathId: string, lessonId: string, text: string) => void;
+  logEvent: (name: string, meta?: AnalyticsEvent["meta"]) => void;
+  submitFeedback: (rating: FeedbackRating) => void;
+  favoritePath: () => string | null;
 }
 
 export function stageIndex(stage: Stage): number {
