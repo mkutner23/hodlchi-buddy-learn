@@ -7,7 +7,7 @@
 <p align="center"><strong>The Money Pet.</strong></p>
 
 <p align="center">
-  Raise <strong>Penny</strong>, your AI companion, and build confidence
+  Meet <strong>Penny</strong>, your Money Pet, and build confidence
   with money one small win at a time.
 </p>
 
