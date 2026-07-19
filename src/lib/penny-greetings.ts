@@ -79,6 +79,15 @@ const PATH_TEASE: Record<PathId, string> = {
   crypto: "Crypto next? I've been curious about it. 🪙",
 };
 
+// Path opinions Penny occasionally voices.
+const PATH_OPINION: Record<PathId, string> = {
+  investing: "Investing is my favorite! 💚",
+  saving: "Saving is hard… but we're getting better.",
+  credit: "Credit's tricky — glad we're figuring it out together.",
+  entrepreneurship: "Building things is fun. Let's dream a little today. 🚀",
+  crypto: "I'm nervous about crypto… but curious. 🪙",
+};
+
 export function pickContextualGreeting(
   state: HodlchiState,
   now: number = Date.now(),
@@ -94,6 +103,7 @@ export function pickContextualGreeting(
   const lastKey = doneLessons > 0 ? state.completedLessons[doneLessons - 1] : null;
   const lastTopic = lastKey ? LESSON_TOPIC[lastKey] : null;
   const lastLesson = lastKey ? lookupLesson(lastKey) : null;
+  const memory = state.memory;
 
   // 1. Loyal returner — long streak, first visit of the day.
   if (state.streak >= 6 && !doneToday) {
