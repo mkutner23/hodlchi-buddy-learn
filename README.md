@@ -53,8 +53,8 @@ Every five-minute lesson helps Penny grow — and helps you build real confidenc
 
 Penny isn't just another chatbot. She remembers your progress, celebrates your
 wins, misses you when you're away, and grows because of the time you spend
-together. Every five-minute lesson helps Penny grow — and helps you feel a
-little more confident with money.
+together. Every five-minute lesson helps Penny grow — and helps you build
+confidence with money.
 
 <p align="center">
   <img src="public/screenshots/meet-penny.png" alt="Meet Penny — mood, XP, streak, and the daily dashboard" width="300">
