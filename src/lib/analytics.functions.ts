@@ -220,7 +220,7 @@ export const getAnalyticsSummary = createServerFn({ method: "POST" })
         name: r.name,
         created_at: r.created_at,
         device_id: r.device_id.slice(0, 8),
-        meta: r.meta,
+        meta: (r.meta && typeof r.meta === "object" && !Array.isArray(r.meta) ? r.meta : {}) as Record<string, string | number | boolean | null>,
       })),
       feedback: [...feedbackCounts.entries()].map(([rating, count]) => ({ rating, count })),
     };
