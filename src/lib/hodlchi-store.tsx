@@ -239,6 +239,7 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (visitedRef.current) return;
     visitedRef.current = true;
+    initAnalyticsSink();
     setState((s) => ({
       ...s,
       memory: {
@@ -248,7 +249,9 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
       },
       events: appendEvent(s.events, { name: "app_visit", ts: Date.now() }),
     }));
+    trackEvent("app_visit", { visit_count: null });
   }, []);
+
 
   const value = useMemo<Ctx>(
     () => ({
