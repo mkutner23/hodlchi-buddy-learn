@@ -402,9 +402,13 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
 }
 
 function appendEvent(events: AnalyticsEvent[], ev: AnalyticsEvent): AnalyticsEvent[] {
+  // Mirror every locally-appended event to the hosted analytics pipeline.
+  // app_visit is emitted separately by the provider to avoid double-send on init.
+  if (ev.name !== "app_visit") trackEvent(ev.name, ev.meta);
   const next = [...events, ev];
   return next.length > 200 ? next.slice(next.length - 200) : next;
 }
+
 
 export function useHodlchi() {
   const ctx = useContext(HodlchiContext);
