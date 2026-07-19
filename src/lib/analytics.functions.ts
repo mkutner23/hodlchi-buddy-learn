@@ -81,7 +81,11 @@ export interface AnalyticsSummary {
   feedback: Array<{ rating: string; count: number }>;
   inviteCodes: Array<{ code: string; label: string | null; redeemed_devices: number }>;
   activeInviteFilter: string | null;
+  smile: { yes: number; meh: number; no: number; rate: number };
+  interviewSignups: number;
+  productFeedback: number;
 }
+
 
 /**
  * Token-gated admin summary. Uses service role to read events (RLS blocks anon reads).
@@ -218,6 +222,35 @@ export const getAnalyticsSummary = createServerFn({ method: "POST" })
       feedbackCounts.set(rating, (feedbackCounts.get(rating) ?? 0) + 1);
     }
 
+    // Smile-check north-star metric.
+    const smile = { yes: 0, meh: 0, no: 0 };
+    for (const r of all) {
+      if (r.name !== "smile_check") continue;
+      const v = (r.meta as { rating?: string } | null)?.rating;
+      if (v === "yes") smile.yes++;
+      else if (v === "meh") smile.meh++;
+      else if (v === "no") smile.no++;
+    }
+    const smileTotal = smile.yes + smile.meh + smile.no;
+    const smileRate = smileTotal ? smile.yes / smileTotal : 0;
+
+    // Interview & product-feedback counts (from admin-only tables).
+    let interviewSignups = 0;
+    let productFeedback = 0;
+    {
+      const q1 = await supabaseAdmin
+        .from("interview_signups")
+        .select("device_id", { count: "exact", head: true })
+        .gte("created_at", since);
+      interviewSignups = q1.count ?? 0;
+      const q2 = await supabaseAdmin
+        .from("product_feedback")
+        .select("device_id", { count: "exact", head: true })
+        .gte("created_at", since);
+      productFeedback = q2.count ?? 0;
+    }
+
+
     // Invite-code list for the cohort dropdown (with redemption counts).
     const { data: allCodes } = await supabaseAdmin
       .from("invite_codes")
@@ -262,5 +295,9 @@ export const getAnalyticsSummary = createServerFn({ method: "POST" })
       feedback: [...feedbackCounts.entries()].map(([rating, count]) => ({ rating, count })),
       inviteCodes,
       activeInviteFilter: data.invite_code ?? null,
+      smile: { ...smile, rate: smileRate },
+      interviewSignups,
+      productFeedback,
     };
+
   });

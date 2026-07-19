@@ -40,7 +40,9 @@ export interface PennyMemory {
   firstEvolutionAt: number | null;
   visitCount: number;
   lastLoginAt: number | null;
+  longestStreak: number;
 }
+
 
 export type FeedbackRating = "love" | "good" | "ok" | "confusing";
 
@@ -79,7 +81,9 @@ const DEFAULT_MEMORY: PennyMemory = {
   firstEvolutionAt: null,
   visitCount: 0,
   lastLoginAt: null,
+  longestStreak: 0,
 };
+
 
 const DEFAULT_STATE: HodlchiState = {
   onboarded: false,
@@ -319,8 +323,10 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
               firstLessonKey: s.memory.firstLessonKey ?? (isFirstLesson ? key : s.memory.firstLessonKey),
               firstStreakAt: s.memory.firstStreakAt ?? (streak >= 2 ? now : null),
               firstInvestingAt: isFirstInvesting ? now : s.memory.firstInvestingAt,
+              longestStreak: Math.max(s.memory.longestStreak ?? 0, streak),
             },
             events,
+
           };
         });
       },
