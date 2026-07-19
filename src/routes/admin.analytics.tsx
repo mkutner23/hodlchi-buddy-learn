@@ -17,15 +17,18 @@ function AdminAnalytics() {
     if (typeof window === "undefined") return "";
     return sessionStorage.getItem("hodlchi.admin.token") ?? "";
   });
+  const [inviteFilter, setInviteFilter] = useState<string>("");
   const [data, setData] = useState<AnalyticsSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function load(t: string) {
+  async function load(t: string, invite?: string) {
     setLoading(true);
     setError(null);
     try {
-      const res = await getAnalyticsSummary({ data: { token: t } });
+      const res = await getAnalyticsSummary({
+        data: { token: t, invite_code: invite || undefined },
+      });
       if ("error" in res) {
         setError(res.error);
         setData(null);
@@ -45,26 +48,46 @@ function AdminAnalytics() {
       <div className="mx-auto max-w-3xl px-5 pt-6">
         <div className="flex items-center justify-between">
           <h1 className="font-display text-2xl font-extrabold">Hodlchi Analytics</h1>
-          <span className="text-xs font-semibold text-foreground/50">Admin · 30d window</span>
+          <a href="/admin/invites" className="text-xs font-semibold text-primary hover:underline">
+            Manage invites →
+          </a>
         </div>
         <p className="mt-1 text-sm text-foreground/60">
-          Cohort retention, funnel, and event volumes across every device that has visited the app.
+          Cohort retention, funnel, and event volumes. 30-day window.
         </p>
 
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (token.trim()) void load(token.trim());
+            if (token.trim()) void load(token.trim(), inviteFilter);
           }}
-          className="mt-4 flex gap-2 rounded-3xl bg-white p-3 shadow-soft"
+          className="mt-4 flex flex-wrap gap-2 rounded-3xl bg-white p-3 shadow-soft"
         >
           <input
             type="password"
             value={token}
             onChange={(e) => setToken(e.target.value)}
             placeholder="Admin token"
-            className="flex-1 rounded-full border-2 border-foreground/15 bg-white px-4 py-2 text-sm font-semibold outline-none focus:border-primary"
+            className="min-w-0 flex-1 rounded-full border-2 border-foreground/15 bg-white px-4 py-2 text-sm font-semibold outline-none focus:border-primary"
           />
+          {data && data.inviteCodes.length > 0 && (
+            <select
+              value={inviteFilter}
+              onChange={(e) => {
+                setInviteFilter(e.target.value);
+                if (token.trim()) void load(token.trim(), e.target.value);
+              }}
+              className="rounded-full border-2 border-foreground/15 bg-white px-4 py-2 text-sm font-semibold outline-none focus:border-primary"
+            >
+              <option value="">All cohorts</option>
+              {data.inviteCodes.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.code}
+                  {c.label ? ` · ${c.label}` : ""} ({c.redeemed_devices})
+                </option>
+              ))}
+            </select>
+          )}
           <button
             type="submit"
             disabled={loading || !token.trim()}
@@ -73,6 +96,12 @@ function AdminAnalytics() {
             {loading ? "Loading…" : data ? "Refresh" : "Load"}
           </button>
         </form>
+
+        {data?.activeInviteFilter && (
+          <div className="mt-3 rounded-2xl bg-primary/10 px-4 py-2 text-xs font-semibold text-primary">
+            Filtered to cohort: {data.activeInviteFilter}
+          </div>
+        )}
 
         {error && (
           <div className="mt-3 rounded-2xl bg-red-100 p-3 text-sm font-semibold text-red-800">
