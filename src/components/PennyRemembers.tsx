@@ -2,6 +2,12 @@ import { useMemo } from "react";
 import { useHodlchi } from "@/lib/hodlchi-store";
 import { PATH_FRUIT, PATHS, type PathId } from "@/lib/lessons-data";
 import { useI18n } from "@/lib/i18n";
+import {
+  daysSinceTs,
+  getMilestones,
+  lessonTitleFromKey,
+  type Milestone,
+} from "@/lib/penny-memory";
 
 const PATH_LABEL_EN: Record<PathId, string> = {
   saving: "Saving",
@@ -18,87 +24,107 @@ const PATH_LABEL_ES: Record<PathId, string> = {
   crypto: "Cripto",
 };
 
-function daysSince(ts: number, now: number = Date.now()) {
-  return Math.max(0, Math.floor((now - ts) / 86400000));
+function relativeDay(ts: number, locale: "en" | "es", now = Date.now()): string {
+  const d = daysSinceTs(ts, now);
+  if (locale === "es") {
+    if (d === 0) return "hoy";
+    if (d === 1) return "ayer";
+    if (d < 7) return `hace ${d} días`;
+    if (d < 30) return `hace ${Math.floor(d / 7)} sem`;
+    return `hace ${Math.floor(d / 30)} mes`;
+  }
+  if (d === 0) return "today";
+  if (d === 1) return "yesterday";
+  if (d < 7) return `${d} days ago`;
+  if (d < 30) return `${Math.floor(d / 7)} wk ago`;
+  return `${Math.floor(d / 30)} mo ago`;
 }
 
-function lessonTitle(key: string): string | null {
-  const [pathId, lessonId] = key.split(":") as [PathId, string];
-  const path = PATHS.find((p) => p.id === pathId);
-  const lesson = path?.lessons.find((l) => l.id === lessonId);
-  return lesson?.title ?? null;
+function renderRow(
+  m: Milestone,
+  locale: "en" | "es",
+  label: Record<PathId, string>,
+): { icon: string; text: string; meta?: string } | null {
+  const es = locale === "es";
+  switch (m.kind) {
+    case "hatched":
+      return {
+        icon: "🎂",
+        text: es ? "Eclosioné" : "Hatched",
+        meta: m.ts ? relativeDay(m.ts, locale) : undefined,
+      };
+    case "first-lesson": {
+      const key = m.meta?.lessonKey as string | undefined;
+      const t = key ? lessonTitleFromKey(key)?.title : null;
+      if (!t) return null;
+      return {
+        icon: "🌱",
+        text: (es ? "Primera lección: " : "First lesson: ") + t,
+        meta: m.ts ? relativeDay(m.ts, locale) : undefined,
+      };
+    }
+    case "first-streak":
+      return {
+        icon: "🔥",
+        text: es ? "Volviste al día siguiente" : "You came back the next day",
+        meta: m.ts ? relativeDay(m.ts, locale) : undefined,
+      };
+    case "first-investing":
+      return {
+        icon: PATH_FRUIT.investing,
+        text: es ? "Primera lección de inversión" : "First Investing lesson",
+        meta: m.ts ? relativeDay(m.ts, locale) : undefined,
+      };
+    case "first-evolution":
+      return {
+        icon: "✨",
+        text: es ? "Primera evolución" : "First evolution",
+        meta: m.ts ? relativeDay(m.ts, locale) : undefined,
+      };
+    case "longest-streak": {
+      const days = Number(m.meta?.days ?? 0);
+      return {
+        icon: "🏆",
+        text: es ? `Racha más larga: ${days} días` : `Longest streak: ${days} days`,
+      };
+    }
+    case "favorite-topic": {
+      const p = m.meta?.pathId as PathId | undefined;
+      if (!p) return null;
+      return {
+        icon: PATH_FRUIT[p],
+        text: es ? `Tema favorito: ${label[p]}` : `Favorite topic: ${label[p]}`,
+      };
+    }
+    case "visits": {
+      const n = Number(m.meta?.count ?? 0);
+      return {
+        icon: "👋",
+        text: es ? `Nos hemos visto ${n} veces` : `We've met ${n} times`,
+      };
+    }
+    default:
+      return null;
+  }
 }
 
 /**
  * "Penny Remembers" — a soft, personal memory strip. Makes returning users feel
- * recognized. Only renders when there's something worth remembering.
+ * recognized. Renders the milestone ledger from src/lib/penny-memory.ts so
+ * every surface stays in sync.
  */
 export function PennyRemembers() {
-  const { state, favoritePath } = useHodlchi();
+  const { state } = useHodlchi();
   const { locale } = useI18n();
   const label = locale === "es" ? PATH_LABEL_ES : PATH_LABEL_EN;
 
-  const items = useMemo(() => {
-    const out: Array<{ icon: string; text: string; key: string }> = [];
-    const m = state.memory;
-    if (m.firstHatchedAt) {
-      const d = daysSince(m.firstHatchedAt);
-      const line =
-        locale === "es"
-          ? d === 0
-            ? "Nací hoy 🐣"
-            : d === 1
-              ? "Ayer eclosioné"
-              : `Nací hace ${d} días`
-          : d === 0
-            ? "Hatched today 🐣"
-            : d === 1
-              ? "Hatched yesterday"
-              : `Hatched ${d} days ago`;
-      out.push({ icon: "🎂", text: line, key: "hatch" });
-    }
-    if (m.firstLessonKey) {
-      const t = lessonTitle(m.firstLessonKey);
-      if (t) {
-        out.push({
-          icon: "🌱",
-          text: locale === "es" ? `Primera lección: ${t}` : `First lesson: ${t}`,
-          key: "first-lesson",
-        });
-      }
-    }
-    if (m.longestStreak >= 2) {
-      out.push({
-        icon: "🔥",
-        text:
-          locale === "es"
-            ? `Racha más larga: ${m.longestStreak} días`
-            : `Longest streak: ${m.longestStreak} days`,
-        key: "streak",
-      });
-    }
-    const fav = favoritePath() as PathId | null;
-    if (fav && state.completedLessons.length >= 2) {
-      out.push({
-        icon: PATH_FRUIT[fav],
-        text: locale === "es" ? `Tema favorito: ${label[fav]}` : `Favorite topic: ${label[fav]}`,
-        key: "fav",
-      });
-    }
-    if (m.visitCount >= 3) {
-      out.push({
-        icon: "👋",
-        text:
-          locale === "es"
-            ? `Nos vemos por visita nº ${m.visitCount}`
-            : `We've met ${m.visitCount} times`,
-        key: "visits",
-      });
-    }
-    return out;
-  }, [state, favoritePath, locale, label]);
+  const rows = useMemo(() => {
+    return getMilestones(state)
+      .map((m) => ({ m, row: renderRow(m, locale, label) }))
+      .filter((x): x is { m: Milestone; row: NonNullable<ReturnType<typeof renderRow>> } => x.row !== null);
+  }, [state, locale, label]);
 
-  if (items.length === 0) return null;
+  if (rows.length === 0) return null;
 
   return (
     <section className="mt-4 rounded-3xl bg-white/80 p-4 shadow-soft backdrop-blur">
@@ -108,13 +134,18 @@ export function PennyRemembers() {
         </h2>
       </div>
       <ul className="mt-2 grid grid-cols-1 gap-1.5">
-        {items.map((it) => (
+        {rows.map(({ m, row }) => (
           <li
-            key={it.key}
+            key={m.id}
             className="flex items-center gap-2 rounded-2xl bg-primary/10 px-3 py-2 text-sm font-semibold text-foreground/85"
           >
-            <span className="text-base leading-none">{it.icon}</span>
-            <span className="truncate">{it.text}</span>
+            <span className="text-base leading-none">{row.icon}</span>
+            <span className="flex-1 truncate">{row.text}</span>
+            {row.meta && (
+              <span className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-foreground/50">
+                {row.meta}
+              </span>
+            )}
           </li>
         ))}
       </ul>
