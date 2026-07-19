@@ -78,7 +78,7 @@ export const STRINGS = {
     "tour.aria.jump": "Jump to",
     "tour.aria.play": "Play walkthrough",
     "tour.aria.pause": "Pause walkthrough",
-    "landing.footer.tagline": "The Money Pet. Raise Penny and build confidence with money one small win at a time.",
+    "landing.footer.tagline": "The Money Pet. Meet Penny and build confidence with money one small win at a time.",
     "landing.footer.disclaimer": "Educational only. Not financial, investment, or trading advice.",
     "landing.footer.compare": "Compare Hodlchi vs. Khan Academy",
     "landing.footer.money_basics": "Money Basics",
