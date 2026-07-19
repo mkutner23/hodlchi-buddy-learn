@@ -170,7 +170,9 @@ export function Home() {
     [mounted, readyToEvolve, state],
   );
   const speech: ReactNode = readyToEvolve
-    ? `${t("dashboard.evolve_ready")} ${naturalStage}!`
+    ? (locale === "es"
+        ? `¡Mira! ¡Estoy creciendo gracias a ti! Toca para evolucionar a ${naturalStage} 🤩`
+        : `Look! I'm growing because of you! Tap to evolve into ${naturalStage} 🤩`)
     : contextualGreeting
       ? contextualGreeting.line
       : greetingFor(
