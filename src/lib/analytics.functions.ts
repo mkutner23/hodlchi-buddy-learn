@@ -218,6 +218,26 @@ export const getAnalyticsSummary = createServerFn({ method: "POST" })
       feedbackCounts.set(rating, (feedbackCounts.get(rating) ?? 0) + 1);
     }
 
+    // Invite-code list for the cohort dropdown (with redemption counts).
+    const { data: allCodes } = await supabaseAdmin
+      .from("invite_codes")
+      .select("code, label")
+      .order("created_at", { ascending: false });
+    const { data: allReds } = await supabaseAdmin
+      .from("invite_redemptions")
+      .select("code, device_id");
+    const redCounts = new Map<string, Set<string>>();
+    for (const r of allReds ?? []) {
+      const s = redCounts.get(r.code) ?? new Set<string>();
+      s.add(r.device_id);
+      redCounts.set(r.code, s);
+    }
+    const inviteCodes = (allCodes ?? []).map((c) => ({
+      code: c.code,
+      label: c.label,
+      redeemed_devices: redCounts.get(c.code)?.size ?? 0,
+    }));
+
     return {
       totals: {
         events: all.length,
