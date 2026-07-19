@@ -77,7 +77,7 @@ export function Onboarding() {
   const es = locale === "es";
   const PERSONALITY_HINTS = es ? PERSONALITY_HINTS_ES : PERSONALITY_HINTS_EN;
   const PERSONALITY_GREETINGS = es ? PERSONALITY_GREETINGS_ES : PERSONALITY_GREETINGS_EN;
-  // steps: 0 egg, 1 name, 2 hatch, 3 personality
+  // steps: 0 egg, 1 name, 2 hatch, 3 personality, 4 first meal
   const [step, setStep] = useState(0);
   const [egg, setEgg] = useState<EggColor>("mint");
   const [name, setName] = useState("");
@@ -87,6 +87,10 @@ export function Onboarding() {
   const [hatchCTAReady, setHatchCTAReady] = useState(false);
 
   useEffect(() => {
+    trackEvent("onboarding_step_view", { step });
+  }, [step]);
+
+  useEffect(() => {
     if (step !== 2) {
       setHatchPhase("idle");
       setHatchCTAReady(false);
@@ -94,12 +98,15 @@ export function Onboarding() {
     }
     setHatchPhase("cracking");
     const t1 = setTimeout(() => setHatchPhase("revealed"), 1700);
-    const t2 = setTimeout(() => setHatchCTAReady(true), 3600);
+    const t2 = setTimeout(() => {
+      setHatchCTAReady(true);
+      trackEvent("onboarding_hatch_revealed", { egg });
+    }, 3600);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, [step]);
+  }, [step, egg]);
 
   const displayName = name.trim() || "Hodlchi";
 
@@ -107,18 +114,27 @@ export function Onboarding() {
     (step === 0 && !!egg) ||
     (step === 1 && name.trim().length > 0) ||
     (step === 2 && hatchCTAReady) ||
-    step === 3;
+    step === 3 ||
+    step === 4;
 
   const handleNext = () => {
-    if (step === 0 || step === 1) {
-      setStep(step + 1);
+    if (step === 0) {
+      trackEvent("onboarding_egg_chosen", { egg });
+      setStep(1);
+    } else if (step === 1) {
+      trackEvent("onboarding_name_set", { length: name.trim().length });
+      setStep(2);
     } else if (step === 2) {
       if (!hatchCTAReady) return;
       setStep(3);
-
-    } else {
+    } else if (step === 3) {
+      trackEvent("onboarding_personality_chosen", { personality });
+      // Persist companion so the lesson screen has full context.
       setOnboarding({ name: displayName, egg, personality });
-      nav({ to: "/dashboard" });
+      setStep(4);
+    } else {
+      trackEvent("onboarding_first_meal_started", { path: "saving", lesson: "s1" });
+      nav({ to: "/lesson/$pathId/$lessonId", params: { pathId: "saving", lessonId: "s1" } });
     }
   };
 
@@ -126,6 +142,7 @@ export function Onboarding() {
     const pick = RANDOM_NAMES[Math.floor(Math.random() * RANDOM_NAMES.length)];
     setName(pick);
   };
+
 
   return (
     <main className="min-h-screen bg-gradient-hero">
