@@ -32,6 +32,23 @@
 
 ---
 
+> 🚧 **Currently in Private Beta**
+>
+> Building the future of financial education through AI, game design, and emotional engagement.
+
+---
+
+## Why Hodlchi?
+
+Most financial apps ask you to study.
+
+Hodlchi gives you someone worth coming back for.
+
+Every five-minute lesson helps Penny grow — and helps you build real financial habits without relying on willpower.
+
+---
+
+
 ## 🐣 Meet Penny
 
 Penny isn't just another chatbot. She's a companion who learns alongside you —
