@@ -60,7 +60,7 @@ type Phase = "intro" | "quiz" | "done";
 export function LessonView() {
   const { pathId, lessonId } = useParams({ strict: false }) as { pathId: string; lessonId: string };
   const nav = useNavigate();
-  const { state, completeLesson, flashMood, addReflection } = useHodlchi();
+  const { state, completeLesson, flashMood, addReflection, logEvent, submitFeedback } = useHodlchi();
   const { locale, t } = useI18n();
   const path = getLocalizedPath(pathId as any, locale) ?? PATHS.find((p) => p.id === pathId);
   const lesson = path?.lessons.find((l) => l.id === lessonId);
