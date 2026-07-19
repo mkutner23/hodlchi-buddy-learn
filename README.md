@@ -44,7 +44,7 @@ Most financial apps ask you to study.
 
 Hodlchi gives you someone worth coming back for.
 
-Every five-minute lesson helps Penny grow — and helps you build real financial habits without relying on willpower.
+Every five-minute lesson helps Penny grow — and helps you build real confidence with money, one small win at a time.
 
 ---
 
@@ -53,16 +53,15 @@ Every five-minute lesson helps Penny grow — and helps you build real financial
 
 Penny isn't just another chatbot. She remembers your progress, celebrates your
 wins, misses you when you're away, and grows because of the time you spend
-together. Every five-minute lesson makes Penny a little smarter — and helps you
-build better money habits.
+together. Every five-minute lesson helps Penny grow — and helps you feel a
+little more confident with money.
 
 <p align="center">
-  <img src="public/screenshots/meet-penny.png" alt="Meet Penny — mood, XP, streak, and the daily-habit dashboard" width="300">
+  <img src="public/screenshots/meet-penny.png" alt="Meet Penny — mood, XP, streak, and the daily dashboard" width="300">
 </p>
 
-That's Hodlchi in one sentence: a habit product where a cute creature is the
-reason you come back, and financial literacy is what you happen to pick up on
-the way.
+That's Hodlchi in one sentence: a Money Pet you come back for, and the
+confidence with money you build along the way.
 
 ---
 
