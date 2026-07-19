@@ -40,7 +40,9 @@ export interface PennyMemory {
   firstEvolutionAt: number | null;
   visitCount: number;
   lastLoginAt: number | null;
+  longestStreak: number;
 }
+
 
 export type FeedbackRating = "love" | "good" | "ok" | "confusing";
 
