@@ -69,7 +69,7 @@ confidence with money you build along the way.
 
 | | |
 | :-- | :-- |
-| 🐣 **AI-flavored companion** | Penny has moods, memory, and idle life — she yawns, stretches, and reacts to you. |
+| 🐣 **A companion, not a chatbot** | Penny has moods, memory, and idle life — she yawns, stretches, and reacts to you. |
 | 📚 **5 learning paths** | Saving · Investing · Credit · Entrepreneurship · Crypto — 4 lessons each. |
 | 🎯 **3-question quizzes** | Every lesson ends in a short quiz with feedback and XP. |
 | 🔥 **Streaks & levels** | Daily-habit loop: XP → level → evolve → return tomorrow. |
