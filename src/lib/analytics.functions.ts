@@ -260,5 +260,7 @@ export const getAnalyticsSummary = createServerFn({ method: "POST" })
         meta: (r.meta && typeof r.meta === "object" && !Array.isArray(r.meta) ? r.meta : {}) as Record<string, string | number | boolean | null>,
       })),
       feedback: [...feedbackCounts.entries()].map(([rating, count]) => ({ rating, count })),
+      inviteCodes,
+      activeInviteFilter: data.invite_code ?? null,
     };
   });
