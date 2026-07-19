@@ -269,7 +269,7 @@ export const STRINGS = {
     "tour.aria.jump": "Ir a",
     "tour.aria.play": "Reproducir recorrido",
     "tour.aria.pause": "Pausar recorrido",
-    "landing.footer.tagline": "Una mascota virtual que vive mejor cuando tu vida financiera mejora.",
+    "landing.footer.tagline": "La Mascota del Dinero. Cría a Penny y gana confianza con el dinero, una pequeña victoria a la vez.",
     "landing.footer.disclaimer": "Solo educativo. No es asesoría financiera, de inversión ni de trading.",
     "landing.footer.compare": "Compara Hodlchi vs. Khan Academy",
     "landing.footer.money_basics": "Conceptos básicos",
