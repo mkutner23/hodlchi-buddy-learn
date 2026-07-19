@@ -77,9 +77,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Hodlchi — The Money Pet" },
       { property: "og:title", content: "Hodlchi — The Money Pet" },
       { name: "twitter:title", content: "Hodlchi — The Money Pet" },
-      { name: "description", content: "Hodlchi is The Money Pet. Raise Penny, your AI companion, and build confidence with money one small win at a time." },
-      { property: "og:description", content: "Hodlchi is The Money Pet. Raise Penny, your AI companion, and build confidence with money one small win at a time." },
-      { name: "twitter:description", content: "Hodlchi is The Money Pet. Raise Penny, your AI companion, and build confidence with money one small win at a time." },
+      { name: "description", content: "Hodlchi is The Money Pet. Meet Penny and build confidence with money one small win at a time." },
+      { property: "og:description", content: "Hodlchi is The Money Pet. Meet Penny and build confidence with money one small win at a time." },
+      { name: "twitter:description", content: "Hodlchi is The Money Pet. Meet Penny and build confidence with money one small win at a time." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/7167e1d7-9edf-4c1d-a2de-e22cf3e7cd8e" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/7167e1d7-9edf-4c1d-a2de-e22cf3e7cd8e" },
     ],
@@ -105,7 +105,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
               name: "Hodlchi",
               url: "https://hodlchi.com",
               description:
-                "Hodlchi is The Money Pet. Raise Penny, your AI companion, and build confidence with money one small win at a time.",
+                "Hodlchi is The Money Pet. Meet Penny and build confidence with money one small win at a time.",
             },
             {
               "@type": "WebSite",
