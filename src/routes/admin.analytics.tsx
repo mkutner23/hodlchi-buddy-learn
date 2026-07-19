@@ -121,8 +121,36 @@ function pct(n: number) {
 
 function SummaryView({ data }: { data: AnalyticsSummary }) {
   const t = data.totals;
+  const d1 = computeD1Trend(data);
   return (
     <>
+      <section className="mt-5 rounded-3xl bg-gradient-to-br from-primary/15 to-primary/5 p-5 shadow-soft">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-primary/80">
+          Day-1 retention · this week
+        </div>
+        <div className="mt-1 flex items-baseline gap-3">
+          <div className="font-display text-5xl font-extrabold text-primary">
+            {d1.thisWeek === null ? "—" : pct(d1.thisWeek)}
+          </div>
+          {d1.delta !== null && d1.lastWeek !== null && (
+            <div
+              className={`text-sm font-bold ${d1.delta >= 0 ? "text-primary" : "text-red-600"}`}
+            >
+              {d1.delta >= 0 ? "▲" : "▼"} {pct(Math.abs(d1.delta))} vs last week
+            </div>
+          )}
+        </div>
+        <div className="mt-1 text-xs text-foreground/60">
+          {d1.thisWeekSize} devices this week
+          {d1.lastWeek !== null && d1.lastWeekSize
+            ? ` · last week ${pct(d1.lastWeek)} (${d1.lastWeekSize} devices)`
+            : ""}
+        </div>
+        <p className="mt-3 text-xs italic text-foreground/60">
+          The one number to watch: are new users coming back the day after they hatch Penny?
+        </p>
+      </section>
+
       <section className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
         <Stat label="Devices" v={t.devices} />
         <Stat label="Events" v={t.events} />
@@ -249,4 +277,42 @@ function Stat({ label, v }: { label: string; v: number }) {
 function RetCell({ v }: { v: number }) {
   const bg = v === 0 ? "bg-foreground/5" : v < 0.15 ? "bg-primary/15" : v < 0.4 ? "bg-primary/40" : "bg-primary/70";
   return <td className="py-1.5 pr-2"><span className={`inline-block rounded px-1.5 py-0.5 font-mono ${bg}`}>{pct(v)}</span></td>;
+}
+
+// Weighted D1 for cohorts that landed in the [start, end) day window,
+// where cohorts are only counted once at least 1 full day has elapsed.
+function computeD1Trend(data: AnalyticsSummary): {
+  thisWeek: number | null;
+  lastWeek: number | null;
+  delta: number | null;
+  thisWeekSize: number;
+  lastWeekSize: number;
+} {
+  const now = Date.now();
+  const DAY = 86400_000;
+
+  const window = (startDaysAgo: number, endDaysAgo: number) => {
+    let devices = 0;
+    let weighted = 0;
+    for (const c of data.retention.cohorts) {
+      const cohortMs = new Date(c.cohort + "T00:00:00Z").getTime();
+      const ageDays = (now - cohortMs) / DAY;
+      if (ageDays < 1) continue; // needs a full day to measure D1
+      if (ageDays < endDaysAgo || ageDays >= startDaysAgo) continue;
+      devices += c.size;
+      weighted += c.size * c.d1;
+    }
+    return devices > 0 ? { rate: weighted / devices, size: devices } : { rate: null, size: 0 };
+  };
+
+  const thisW = window(7, 0);
+  const lastW = window(14, 7);
+  return {
+    thisWeek: thisW.rate,
+    lastWeek: lastW.rate,
+    delta:
+      thisW.rate !== null && lastW.rate !== null ? thisW.rate - lastW.rate : null,
+    thisWeekSize: thisW.size,
+    lastWeekSize: lastW.size,
+  };
 }
