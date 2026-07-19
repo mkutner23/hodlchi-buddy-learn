@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { initAnalyticsSink, trackEvent } from "./analytics-client";
 
 export type Personality = "ape" | "turtle" | "fox";
 export type Mood =
@@ -238,6 +239,7 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (visitedRef.current) return;
     visitedRef.current = true;
+    initAnalyticsSink();
     setState((s) => ({
       ...s,
       memory: {
@@ -247,7 +249,9 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
       },
       events: appendEvent(s.events, { name: "app_visit", ts: Date.now() }),
     }));
+    trackEvent("app_visit", { visit_count: null });
   }, []);
+
 
   const value = useMemo<Ctx>(
     () => ({
@@ -398,9 +402,13 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
 }
 
 function appendEvent(events: AnalyticsEvent[], ev: AnalyticsEvent): AnalyticsEvent[] {
+  // Mirror every locally-appended event to the hosted analytics pipeline.
+  // app_visit is emitted separately by the provider to avoid double-send on init.
+  if (ev.name !== "app_visit") trackEvent(ev.name, ev.meta);
   const next = [...events, ev];
   return next.length > 200 ? next.slice(next.length - 200) : next;
 }
+
 
 export function useHodlchi() {
   const ctx = useContext(HodlchiContext);
