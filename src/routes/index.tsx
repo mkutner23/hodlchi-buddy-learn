@@ -63,10 +63,10 @@ export function Landing() {
             <span className="absolute -top-1.5 left-10 h-3 w-3 rotate-45 bg-white" />
           </div>
 
-          <h1 className="mt-6 font-display text-3xl font-extrabold leading-[1.05] tracking-tight sm:text-4xl">
+          <h1 className="mt-6 font-display text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl">
             {t("landing.hero.title")}
           </h1>
-          <p className="mx-auto mt-3 max-w-md text-center text-[15px] text-foreground/80">
+          <p className="mx-auto mt-4 max-w-md text-center text-[15px] text-foreground/80">
             {t("landing.hero.subtitle")}
           </p>
 
@@ -79,9 +79,6 @@ export function Landing() {
 
           <p className="mt-3 text-xs text-foreground/60">
             {es ? "Solo educativo. Sin trading, wallets ni asesoría de inversión." : "Educational only. No trading, wallets, or investment advice."}
-          </p>
-          <p className="mt-2 text-[11px] font-semibold uppercase tracking-widest text-foreground/50">
-            {es ? "Conoce a tu mascota de dinero virtual" : "Meet your virtual money pet"}
           </p>
         </section>
 
