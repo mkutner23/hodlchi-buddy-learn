@@ -56,7 +56,10 @@ export const trackEvents = createServerFn({ method: "POST" })
     return { ok: true, count: rows.length };
   });
 
-const SummaryInput = z.object({ token: z.string().min(16).max(200) });
+const SummaryInput = z.object({
+  token: z.string().min(16).max(200),
+  invite_code: z.string().min(3).max(64).optional(),
+});
 
 export interface AnalyticsSummary {
   totals: {
@@ -76,6 +79,8 @@ export interface AnalyticsSummary {
   };
   recentEvents: Array<{ name: string; created_at: string; device_id: string; meta: Record<string, string | number | boolean | null> }>;
   feedback: Array<{ rating: string; count: number }>;
+  inviteCodes: Array<{ code: string; label: string | null; redeemed_devices: number }>;
+  activeInviteFilter: string | null;
 }
 
 /**
@@ -95,6 +100,16 @@ export const getAnalyticsSummary = createServerFn({ method: "POST" })
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+    // Optional cohort filter: only include devices that redeemed a specific invite code.
+    let deviceFilter: Set<string> | null = null;
+    if (data.invite_code) {
+      const { data: reds } = await supabaseAdmin
+        .from("invite_redemptions")
+        .select("device_id")
+        .eq("code", data.invite_code);
+      deviceFilter = new Set((reds ?? []).map((r) => r.device_id));
+    }
+
     // Pull last 30 days of events. For a demo product this stays well under limits.
     const since = new Date(Date.now() - 30 * 86400_000).toISOString();
     const { data: rows, error } = await supabaseAdmin
@@ -105,7 +120,9 @@ export const getAnalyticsSummary = createServerFn({ method: "POST" })
       .limit(5000);
     if (error) return { error: error.message };
 
-    const all = rows ?? [];
+    const all = deviceFilter
+      ? (rows ?? []).filter((r) => deviceFilter!.has(r.device_id))
+      : rows ?? [];
     const byDevice = new Map<string, typeof all>();
     for (const r of all) {
       const arr = byDevice.get(r.device_id) ?? [];
