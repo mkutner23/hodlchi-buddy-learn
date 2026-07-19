@@ -1,19 +1,30 @@
-# 🐣 Hodlchi
+<p align="center">
+  <img src="public/favicon.svg" alt="Hodlchi logo" width="88">
+</p>
 
-> **The Duolingo of Money.**
-> Raise **Penny**, your money companion, while learning saving, investing,
-> credit, entrepreneurship, and crypto basics — one 5-minute lesson at a time.
+<h1 align="center">🐣 Hodlchi</h1>
 
-<p>
+<p align="center"><strong>The Duolingo of Money.</strong></p>
+
+<p align="center">
+  Raise <strong>Penny</strong>, your AI financial companion, while building
+  real-world money habits in just <strong>five minutes a day</strong>.
+</p>
+
+<p align="center">
+  <img src="public/media/core-loop.gif" alt="Hodlchi core loop: hatch → name → lesson → XP → evolve" width="320">
+</p>
+
+<p align="center">
   <a href="https://hodlchi.com">🌐 Live app</a> ·
-  <a href="https://hodlchi.com/es">🇪🇸 Spanish version</a> ·
-  <a href="#-see-it-in-action">🎬 Demo</a> ·
+  <a href="https://hodlchi.com/es">🇪🇸 Spanish</a> ·
+  <a href="public/media/demo-15s.mp4">🎬 15-second demo</a> ·
   <a href="#-screenshots">📸 Screenshots</a>
 </p>
 
-<p>
+<p align="center">
   <img alt="Status: active development" src="https://img.shields.io/badge/status-active%20development-22c55e">
-  <img alt="Made with TanStack Start" src="https://img.shields.io/badge/TanStack%20Start-v1-0f172a">
+  <img alt="TanStack Start v1" src="https://img.shields.io/badge/TanStack%20Start-v1-0f172a">
   <img alt="React 19" src="https://img.shields.io/badge/React-19-149eca">
   <img alt="Tailwind CSS v4" src="https://img.shields.io/badge/Tailwind-v4-38bdf8">
   <img alt="Lovable Cloud" src="https://img.shields.io/badge/Backend-Lovable%20Cloud-8b5cf6">
@@ -23,24 +34,17 @@
 
 ## 🐣 Meet Penny
 
-Penny isn't just another chatbot.
-She's a companion who learns alongside you.
-
-**Feed her knowledge. Watch her evolve. Build better financial habits together.**
-
-That's Hodlchi in one sentence — a habit product where a cute creature is
-the reason you come back, and financial literacy is what you happen to
-pick up on the way.
-
----
-
-## 🎬 See it in action
+Penny isn't just another chatbot. She's a companion who learns alongside you —
+with moods, memory, and idle life. She yawns, stretches, and reacts when you
+tap. Feed her a 5-minute lesson and watch her evolve.
 
 <p align="center">
-  <img src="public/media/core-loop.gif" alt="Hodlchi core loop: hatch → name → lesson → XP → evolve" width="320">
+  <img src="public/screenshots/meet-penny.png" alt="Meet Penny — mood, XP, streak, and the daily-habit dashboard" width="300">
 </p>
 
-Hatch → Name → 5-minute lesson → XP → Evolve → Come back tomorrow.
+That's Hodlchi in one sentence: a habit product where a cute creature is the
+reason you come back, and financial literacy is what you happen to pick up on
+the way.
 
 ---
 
@@ -49,7 +53,7 @@ Hatch → Name → 5-minute lesson → XP → Evolve → Come back tomorrow.
 | | |
 | :-- | :-- |
 | 🐣 **AI-flavored companion** | Penny has moods, memory, and idle life — she yawns, stretches, and reacts to you. |
-| 📚 **5 learning paths** | Saving · Investing · Credit · Entrepreneurship · Crypto basics — 4 lessons each. |
+| 📚 **5 learning paths** | Saving · Investing · Credit · Entrepreneurship · Crypto — 4 lessons each. |
 | 🎯 **3-question quizzes** | Every lesson ends in a short quiz with feedback and XP. |
 | 🔥 **Streaks & levels** | Daily-habit loop: XP → level → evolve → return tomorrow. |
 | 🥚 **Evolution stages** | Egg → Baby → Student → Builder → Investor → Money Legend. |
@@ -64,13 +68,38 @@ Hatch → Name → 5-minute lesson → XP → Evolve → Come back tomorrow.
 
 ## 📸 Screenshots
 
-| Landing | Path | Lesson |
-| :-: | :-: | :-: |
-| <img src="public/screenshots/landing.png" alt="Landing page with Penny greeting" width="240"> | <img src="public/screenshots/path.png" alt="Learning path" width="240"> | <img src="public/screenshots/lesson.png" alt="Lesson screen" width="240"> |
+### 1. Meet Penny — the emotional hook
 
-| Dashboard | Money Basics |
-| :-: | :-: |
-| <img src="public/screenshots/dashboard.png" alt="Daily-habit dashboard" width="240"> | <img src="public/screenshots/money-basics.png" alt="Money Basics glossary" width="240"> |
+<p align="center">
+  <img src="public/screenshots/meet-penny.png" alt="Penny with mood, XP, streak, and today's lesson" width="300">
+</p>
+
+### 2. Learning — quiz UI with progress
+
+<p align="center">
+  <img src="public/screenshots/lesson.png" alt="Lesson with question, answer choices, and progress bar" width="300">
+</p>
+
+### 3. Evolution — from Egg to Investor
+
+<p align="center">
+  <img src="public/screenshots/evolution.png" alt="Evolution stages: Egg → Baby → Student → Builder → Investor" width="720">
+</p>
+
+### 4. Dashboard — streak, level, goals, achievements
+
+<p align="center">
+  <img src="public/screenshots/dashboard.png" alt="Daily-habit dashboard with streak, level, and learning paths" width="300">
+</p>
+
+<details>
+<summary>More screenshots</summary>
+
+| Landing | Path | Money Basics |
+| :-: | :-: | :-: |
+| <img src="public/screenshots/landing.png" alt="Landing page with Penny greeting" width="220"> | <img src="public/screenshots/path.png" alt="Learning path" width="220"> | <img src="public/screenshots/money-basics.png" alt="Money Basics glossary" width="220"> |
+
+</details>
 
 ---
 
@@ -101,60 +130,6 @@ On Lovable, these are provisioned automatically when Cloud is enabled —
 
 ---
 
-## 🧠 How Codex and GPT-5.6 were used
-
-Hodlchi was built end-to-end with **OpenAI Codex-style agentic coding**
-inside Lovable, using **GPT-5.6** as the primary reasoning + code-generation
-model.
-
-### GPT-5.6 (`openai/gpt-5.6-sol` and `openai/gpt-5.6-terra`)
-
-1. **Curriculum** — 20 lessons across 5 paths (`src/lib/lessons-data.ts`)
-   plus the Money Basics glossary (`src/lib/money-basics.ts`).
-2. **Spanish localization** — full translation of curriculum, UI strings,
-   and SEO metadata (`src/lib/lessons-data-es.ts`,
-   `src/lib/money-basics-es.ts`, `src/lib/i18n-strings.ts`).
-3. **Penny's mood + memory** — `deriveMood` state machine and
-   personality-specific dialog (`src/lib/hodlchi-store.tsx`,
-   `src/lib/penny-greetings.ts`, `src/lib/reflections.ts`).
-4. **MCP tool schemas** — public curriculum tools at `/mcp`.
-
-### Codex-style agentic coding
-
-- File-based TanStack Start routes authored and kept in sync with
-  `routeTree.gen.ts` through iterative edits.
-- Procedural Web Audio sound design (`src/lib/sfx.ts`) built and debugged
-  for iOS unlock behavior.
-- Cinematic evolution and idle-life micro-animations
-  (`EvolveCinematic.tsx`, `HodlchiAvatar.tsx`, `useIdleLife.ts`).
-- Certificate print-to-PDF pipeline (`src/routes/certificate.tsx`).
-- Playwright + `ffmpeg` recording of the core-loop tour videos.
-- SEO + i18n hardening (unique `head()` per route, JSON-LD, `robots.txt`,
-  `sitemap.xml`, bidirectional `hreflang`).
-
-### Model routing
-
-- **Reasoning:** `openai/gpt-5.6-sol` for hard tasks (curriculum design,
-  i18n, mood state machine).
-- **Everyday coding:** `openai/gpt-5.6-terra`.
-- **In-app AI:** Lovable AI Gateway — no user API key required.
-
----
-
-## 🧱 Tech stack
-
-- **Framework:** TanStack Start v1 (React 19 + Vite 7, SSR-capable,
-  deployed to Cloudflare Workers via Lovable).
-- **Styling:** Tailwind CSS v4 with semantic design tokens in
-  `src/styles.css`.
-- **Backend:** Lovable Cloud (Supabase) with row-level security.
-- **AI:** Lovable AI Gateway (`openai/gpt-5.6-*`, `google/gemini-3.*`).
-- **Audio:** Procedural Web Audio API (`src/lib/sfx.ts`).
-- **Agent integration:** Public MCP server at `/mcp`
-  (`@lovable.dev/mcp-js`).
-
----
-
 ## 🗺️ Roadmap
 
 - ✅ MVP core loop (hatch → learn → feed → evolve)
@@ -174,7 +149,17 @@ model.
 
 ---
 
-## 🔑 Key routes
+## 🧱 Architecture
+
+- **Framework:** TanStack Start v1 (React 19 + Vite 7, SSR-capable,
+  deployed to Cloudflare Workers via Lovable).
+- **Styling:** Tailwind CSS v4 with semantic design tokens in `src/styles.css`.
+- **Backend:** Lovable Cloud (Supabase) with row-level security.
+- **AI:** Lovable AI Gateway (`openai/gpt-5.6-*`, `google/gemini-3.*`).
+- **Audio:** Procedural Web Audio API (`src/lib/sfx.ts`).
+- **Agent integration:** Public MCP server at `/mcp` (`@lovable.dev/mcp-js`).
+
+### Key routes
 
 | Route | Purpose |
 | --- | --- |
@@ -187,6 +172,28 @@ model.
 | `/money-basics` | Plain-English glossary |
 | `/mcp` | Public MCP server for AI agents |
 | `/es/*` | Full Spanish mirror |
+
+### How Codex and GPT-5.6 were used
+
+Hodlchi was built end-to-end with **OpenAI Codex-style agentic coding** inside
+Lovable, using **GPT-5.6** as the primary reasoning + code-generation model.
+
+- **Curriculum** — 20 lessons across 5 paths (`src/lib/lessons-data.ts`) plus
+  the Money Basics glossary (`src/lib/money-basics.ts`).
+- **Spanish localization** — full translation of curriculum, UI strings, and
+  SEO metadata (`src/lib/lessons-data-es.ts`, `src/lib/money-basics-es.ts`,
+  `src/lib/i18n-strings.ts`).
+- **Penny's mood + memory** — `deriveMood` state machine and
+  personality-specific dialog (`src/lib/hodlchi-store.tsx`,
+  `src/lib/penny-greetings.ts`, `src/lib/reflections.ts`).
+- **Procedural Web Audio** sound design (`src/lib/sfx.ts`), cinematic
+  evolution (`EvolveCinematic.tsx`), and idle-life micro-animations
+  (`useIdleLife.ts`).
+- **MCP tool schemas** — public curriculum tools at `/mcp`.
+
+**Model routing:** `openai/gpt-5.6-sol` for hard reasoning (curriculum, i18n,
+mood state machine); `openai/gpt-5.6-terra` for everyday coding; Lovable AI
+Gateway for in-app AI (no user API key required).
 
 ---
 
@@ -206,5 +213,5 @@ recommendation to buy, sell, or hold any asset.
 
 ## 📄 License
 
-Hodlchi is source-available but not currently released under an
-open-source license. All rights reserved © Hodlchi.
+Hodlchi is source-available but not currently released under an open-source
+license. All rights reserved © Hodlchi.
