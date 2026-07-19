@@ -593,6 +593,12 @@ export function Home() {
               >
                 Demo mode
               </button>
+              <Link
+                to="/debug"
+                className="rounded-full border border-foreground/15 bg-white px-3 py-1.5 text-[11px] font-semibold"
+              >
+                Analytics
+              </Link>
             </div>
           )}
         </div>
