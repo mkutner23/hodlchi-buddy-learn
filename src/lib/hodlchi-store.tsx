@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 export type Personality = "ape" | "turtle" | "fox";
 export type Mood =
@@ -30,6 +30,25 @@ export interface Reflection {
   ts: number;
 }
 
+export interface PennyMemory {
+  firstHatchedAt: number | null; // birthday
+  firstLessonAt: number | null;
+  firstLessonKey: string | null;
+  firstStreakAt: number | null; // ts when streak first hit >= 2
+  firstInvestingAt: number | null;
+  firstEvolutionAt: number | null;
+  visitCount: number;
+  lastLoginAt: number | null;
+}
+
+export type FeedbackRating = "love" | "good" | "ok" | "confusing";
+
+export interface AnalyticsEvent {
+  name: string;
+  ts: number;
+  meta?: Record<string, string | number | boolean | null>;
+}
+
 export interface HodlchiState {
   onboarded: boolean;
   name: string;
@@ -41,11 +60,25 @@ export interface HodlchiState {
   lastActiveDay: string | null;
   completedLessons: string[]; // "pathId:lessonId"
   mood: Mood;
-  moodExpiresAt: number | null; // timestamp; after this, mood is derived from context
-  lastQuizPct: number | null; // 0..1 last quiz score
+  moodExpiresAt: number | null;
+  lastQuizPct: number | null;
   acknowledgedStage: Stage;
   reflections: Reflection[];
+  memory: PennyMemory;
+  events: AnalyticsEvent[]; // capped, most-recent last
+  feedback: { firstLesson: FeedbackRating | null };
 }
+
+const DEFAULT_MEMORY: PennyMemory = {
+  firstHatchedAt: null,
+  firstLessonAt: null,
+  firstLessonKey: null,
+  firstStreakAt: null,
+  firstInvestingAt: null,
+  firstEvolutionAt: null,
+  visitCount: 0,
+  lastLoginAt: null,
+};
 
 const DEFAULT_STATE: HodlchiState = {
   onboarded: false,
@@ -62,6 +95,9 @@ const DEFAULT_STATE: HodlchiState = {
   lastQuizPct: null,
   acknowledgedStage: "Baby",
   reflections: [],
+  memory: { ...DEFAULT_MEMORY },
+  events: [],
+  feedback: { firstLesson: null },
 };
 
 const STORAGE_KEY = "hodlchi-state-v1";
@@ -71,7 +107,14 @@ function loadState(): HodlchiState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_STATE;
-    return { ...DEFAULT_STATE, ...JSON.parse(raw) };
+    const parsed = JSON.parse(raw) as Partial<HodlchiState>;
+    return {
+      ...DEFAULT_STATE,
+      ...parsed,
+      memory: { ...DEFAULT_MEMORY, ...(parsed.memory ?? {}) },
+      feedback: { ...DEFAULT_STATE.feedback, ...(parsed.feedback ?? {}) },
+      events: Array.isArray(parsed.events) ? parsed.events : [],
+    };
   } catch {
     return DEFAULT_STATE;
   }
@@ -135,6 +178,9 @@ interface Ctx {
   demoMode: () => void;
   isLessonComplete: (pathId: string, lessonId: string) => boolean;
   addReflection: (pathId: string, lessonId: string, text: string) => void;
+  logEvent: (name: string, meta?: AnalyticsEvent["meta"]) => void;
+  submitFeedback: (rating: FeedbackRating) => void;
+  favoritePath: () => string | null;
 }
 
 export function stageIndex(stage: Stage): number {
@@ -180,28 +226,49 @@ export function deriveMood(state: HodlchiState, now: number = Date.now()): Mood 
 const HodlchiContext = createContext<Ctx | null>(null);
 
 export function HodlchiProvider({ children }: { children: ReactNode }) {
-  // Initialize synchronously from localStorage so route guards (e.g. dashboard's
-  // "redirect if !onboarded") see the persisted state on first render rather
-  // than racing against a post-mount setState.
   const [state, setState] = useState<HodlchiState>(() => loadState());
-  const [ready, setReady] = useState(true);
+  const [ready] = useState(true);
 
   useEffect(() => {
     if (ready) saveState(state);
   }, [state, ready]);
 
+  // One-per-session visit tick: bump visitCount + lastLoginAt and log app_visit.
+  const visitedRef = useRef(false);
+  useEffect(() => {
+    if (visitedRef.current) return;
+    visitedRef.current = true;
+    setState((s) => ({
+      ...s,
+      memory: {
+        ...s.memory,
+        visitCount: s.memory.visitCount + 1,
+        lastLoginAt: Date.now(),
+      },
+      events: appendEvent(s.events, { name: "app_visit", ts: Date.now() }),
+    }));
+  }, []);
+
   const value = useMemo<Ctx>(
     () => ({
       state,
       setOnboarding: ({ name, egg, personality }) =>
-        setState((s) => ({
-          ...s,
-          onboarded: true,
-          name,
-          egg,
-          personality,
-          mood: "happy",
-        })),
+        setState((s) => {
+          const now = Date.now();
+          return {
+            ...s,
+            onboarded: true,
+            name,
+            egg,
+            personality,
+            mood: "happy",
+            memory: {
+              ...s.memory,
+              firstHatchedAt: s.memory.firstHatchedAt ?? now,
+            },
+            events: appendEvent(s.events, { name: "penny_hatched", ts: now, meta: { egg, personality } }),
+          };
+        }),
       completeLesson: (pathId, lessonId, correctCount, total) => {
         const key = `${pathId}:${lessonId}`;
         setState((s) => {
@@ -216,10 +283,22 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
             streak = s.lastActiveDay === yesterday ? s.streak + 1 : 1;
           }
           const pct = total > 0 ? correctCount / total : 0;
-          // Celebrate a perfect run; feel proud on a strong pass;
-          // look a bit confused on a shaky one.
           const mood: Mood =
             pct === 1 ? "celebrating" : pct >= 0.5 ? "proud" : "confused";
+          const now = Date.now();
+          const isFirstLesson = !already && s.completedLessons.length === 0;
+          const isFirstInvesting =
+            pathId === "investing" && s.memory.firstInvestingAt === null;
+          const hitSeven = streak === 7 && s.streak !== 7;
+          let events = s.events;
+          events = appendEvent(events, {
+            name: "lesson_completed",
+            ts: now,
+            meta: { pathId, lessonId, correctCount, total },
+          });
+          if (isFirstLesson) events = appendEvent(events, { name: "first_lesson_completed", ts: now, meta: { pathId, lessonId } });
+          if (isFirstInvesting) events = appendEvent(events, { name: "first_investing_lesson", ts: now });
+          if (hitSeven) events = appendEvent(events, { name: "seven_day_streak", ts: now });
           return {
             ...s,
             xp,
@@ -230,14 +309,36 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
             moodExpiresAt: Date.now() + 8000,
             lastQuizPct: pct,
             completedLessons: already ? s.completedLessons : [...s.completedLessons, key],
+            memory: {
+              ...s.memory,
+              firstLessonAt: s.memory.firstLessonAt ?? (isFirstLesson ? now : s.memory.firstLessonAt),
+              firstLessonKey: s.memory.firstLessonKey ?? (isFirstLesson ? key : s.memory.firstLessonKey),
+              firstStreakAt: s.memory.firstStreakAt ?? (streak >= 2 ? now : null),
+              firstInvestingAt: isFirstInvesting ? now : s.memory.firstInvestingAt,
+            },
+            events,
           };
         });
       },
       flashMood: (mood, durationMs = 1500) =>
         setState((s) => ({ ...s, mood, moodExpiresAt: Date.now() + durationMs })),
       evolve: () =>
-        setState((s) => ({ ...s, acknowledgedStage: stageForXp(s.xp), mood: "happy" })),
-      reset: () => setState({ ...DEFAULT_STATE }),
+        setState((s) => {
+          const now = Date.now();
+          const nextStage = stageForXp(s.xp);
+          return {
+            ...s,
+            acknowledgedStage: nextStage,
+            mood: "celebrating",
+            moodExpiresAt: now + 6000,
+            memory: {
+              ...s.memory,
+              firstEvolutionAt: s.memory.firstEvolutionAt ?? now,
+            },
+            events: appendEvent(s.events, { name: "evolution_reached", ts: now, meta: { stage: nextStage } }),
+          };
+        }),
+      reset: () => setState({ ...DEFAULT_STATE, memory: { ...DEFAULT_MEMORY }, events: [], feedback: { firstLesson: null } }),
       demoMode: () =>
         setState({
           ...DEFAULT_STATE,
@@ -251,6 +352,9 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
           lastActiveDay: todayKey(),
           mood: "happy",
           completedLessons: ["saving:s1", "saving:s2", "investing:i1"],
+          memory: { ...DEFAULT_MEMORY, firstHatchedAt: Date.now() - 3 * 86400000, firstLessonAt: Date.now() - 2 * 86400000, firstLessonKey: "saving:s1", firstInvestingAt: Date.now() - 86400000, visitCount: 4, lastLoginAt: Date.now() },
+          events: [],
+          feedback: { firstLesson: null },
         }),
       isLessonComplete: (pathId, lessonId) =>
         state.completedLessons.includes(`${pathId}:${lessonId}`),
@@ -265,11 +369,37 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
           ].slice(0, 50),
         }));
       },
+      logEvent: (name, meta) =>
+        setState((s) => ({ ...s, events: appendEvent(s.events, { name, ts: Date.now(), meta }) })),
+      submitFeedback: (rating) =>
+        setState((s) => ({
+          ...s,
+          feedback: { ...s.feedback, firstLesson: rating },
+          events: appendEvent(s.events, { name: "feedback_submitted", ts: Date.now(), meta: { rating, surface: "first_lesson" } }),
+        })),
+      favoritePath: () => {
+        const counts: Record<string, number> = {};
+        for (const k of state.completedLessons) {
+          const p = k.split(":")[0];
+          counts[p] = (counts[p] ?? 0) + 1;
+        }
+        let best: string | null = null;
+        let bestN = 0;
+        for (const [p, n] of Object.entries(counts)) {
+          if (n > bestN) { best = p; bestN = n; }
+        }
+        return best;
+      },
     }),
     [state],
   );
 
   return <HodlchiContext.Provider value={value}>{children}</HodlchiContext.Provider>;
+}
+
+function appendEvent(events: AnalyticsEvent[], ev: AnalyticsEvent): AnalyticsEvent[] {
+  const next = [...events, ev];
+  return next.length > 200 ? next.slice(next.length - 200) : next;
 }
 
 export function useHodlchi() {

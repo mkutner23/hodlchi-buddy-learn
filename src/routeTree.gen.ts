@@ -14,6 +14,7 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as FinancialLiteracyForEveryoneRouteImport } from './routes/financial-literacy-for-everyone'
 import { Route as EsRouteImport } from './routes/es'
+import { Route as DebugRouteImport } from './routes/debug'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CertificateRouteImport } from './routes/certificate'
 import { Route as IndexRouteImport } from './routes/index'
@@ -63,6 +64,11 @@ const FinancialLiteracyForEveryoneRoute =
 const EsRoute = EsRouteImport.update({
   id: '/es',
   path: '/es',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DebugRoute = DebugRouteImport.update({
+  id: '/debug',
+  path: '/debug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -196,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
   '/dashboard': typeof DashboardRoute
+  '/debug': typeof DebugRoute
   '/es': typeof EsRouteWithChildren
   '/financial-literacy-for-everyone': typeof FinancialLiteracyForEveryoneRoute
   '/mcp': typeof McpRoute
@@ -227,6 +234,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
   '/dashboard': typeof DashboardRoute
+  '/debug': typeof DebugRoute
   '/financial-literacy-for-everyone': typeof FinancialLiteracyForEveryoneRoute
   '/mcp': typeof McpRoute
   '/onboarding': typeof OnboardingRoute
@@ -258,6 +266,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/certificate': typeof CertificateRoute
   '/dashboard': typeof DashboardRoute
+  '/debug': typeof DebugRoute
   '/es': typeof EsRouteWithChildren
   '/financial-literacy-for-everyone': typeof FinancialLiteracyForEveryoneRoute
   '/mcp': typeof McpRoute
@@ -291,6 +300,7 @@ export interface FileRouteTypes {
     | '/'
     | '/certificate'
     | '/dashboard'
+    | '/debug'
     | '/es'
     | '/financial-literacy-for-everyone'
     | '/mcp'
@@ -322,6 +332,7 @@ export interface FileRouteTypes {
     | '/'
     | '/certificate'
     | '/dashboard'
+    | '/debug'
     | '/financial-literacy-for-everyone'
     | '/mcp'
     | '/onboarding'
@@ -352,6 +363,7 @@ export interface FileRouteTypes {
     | '/'
     | '/certificate'
     | '/dashboard'
+    | '/debug'
     | '/es'
     | '/financial-literacy-for-everyone'
     | '/mcp'
@@ -384,6 +396,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CertificateRoute: typeof CertificateRoute
   DashboardRoute: typeof DashboardRoute
+  DebugRoute: typeof DebugRoute
   EsRoute: typeof EsRouteWithChildren
   FinancialLiteracyForEveryoneRoute: typeof FinancialLiteracyForEveryoneRoute
   McpRoute: typeof McpRoute
@@ -436,6 +449,13 @@ declare module '@tanstack/react-router' {
       path: '/es'
       fullPath: '/es'
       preLoaderRoute: typeof EsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/debug': {
+      id: '/debug'
+      path: '/debug'
+      fullPath: '/debug'
+      preLoaderRoute: typeof DebugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -643,6 +663,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CertificateRoute: CertificateRoute,
   DashboardRoute: DashboardRoute,
+  DebugRoute: DebugRoute,
   EsRoute: EsRouteWithChildren,
   FinancialLiteracyForEveryoneRoute: FinancialLiteracyForEveryoneRoute,
   McpRoute: McpRoute,

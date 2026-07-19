@@ -1,6 +1,6 @@
 import { createFileRoute, notFound, useNavigate, useParams } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PATHS, PATH_ACCENT, getLocalizedPath } from "@/lib/lessons-data";
 import { useHodlchi, deriveMood } from "@/lib/hodlchi-store";
 import { HodlchiAvatar } from "@/components/HodlchiAvatar";
@@ -60,7 +60,7 @@ type Phase = "intro" | "quiz" | "done";
 export function LessonView() {
   const { pathId, lessonId } = useParams({ strict: false }) as { pathId: string; lessonId: string };
   const nav = useNavigate();
-  const { state, completeLesson, flashMood, addReflection } = useHodlchi();
+  const { state, completeLesson, flashMood, addReflection, logEvent, submitFeedback } = useHodlchi();
   const { locale, t } = useI18n();
   const path = getLocalizedPath(pathId as any, locale) ?? PATHS.find((p) => p.id === pathId);
   const lesson = path?.lessons.find((l) => l.id === lessonId);
@@ -78,6 +78,15 @@ export function LessonView() {
 
   const q = lesson.quiz[qIdx];
   const isCorrect = selected !== null && selected === q?.answer;
+
+  // Log first_lesson_started the first time a user enters the quiz phase of their very first lesson.
+  useEffect(() => {
+    if (phase !== "quiz") return;
+    if (state.completedLessons.length !== 0) return;
+    logEvent("first_lesson_started", { pathId: path.id, lessonId: lesson.id });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
+
 
   const check = () => {
     if (selected === null) return;
@@ -326,6 +335,41 @@ export function LessonView() {
               <Stat label={t("lesson.result.streak")} value={`🔥 ${state.streak}`} />
               <Stat label={t("lesson.result.correct")} value={`✅ ${correctCount}/${lesson.quiz.length}`} />
             </div>
+
+            {/* First-lesson feedback — one tap, only after the very first lesson. */}
+            {state.completedLessons.length === 1 && state.feedback.firstLesson === null && (
+              <div className="mt-6 rounded-3xl bg-white p-5 text-left shadow-soft">
+                <div className="text-[10px] font-bold uppercase tracking-widest" style={{ color: accent.deep }}>
+                  {locale === "es" ? "Retroalimentación rápida" : "Quick feedback"}
+                </div>
+                <p className="mt-1 text-[15px] font-bold leading-snug">
+                  {locale === "es" ? "¿Cómo estuvo esa lección?" : "How was that lesson?"}
+                </p>
+                <div className="mt-3 grid grid-cols-4 gap-2">
+                  {([
+                    { r: "love", e: "😀", en: "Loved it", es: "Me encantó" },
+                    { r: "good", e: "🙂", en: "Good", es: "Buena" },
+                    { r: "ok", e: "😐", en: "Okay", es: "Regular" },
+                    { r: "confusing", e: "🙁", en: "Confusing", es: "Confusa" },
+                  ] as const).map((opt) => (
+                    <button
+                      key={opt.r}
+                      onClick={() => { submitFeedback(opt.r); sfx.pop(); }}
+                      className="flex flex-col items-center gap-1 rounded-2xl border-2 border-foreground/15 bg-white px-2 py-3 text-[11px] font-semibold transition active:scale-95"
+                    >
+                      <span className="text-2xl leading-none">{opt.e}</span>
+                      <span>{locale === "es" ? opt.es : opt.en}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {state.completedLessons.length === 1 && state.feedback.firstLesson !== null && (
+              <div className="mt-6 rounded-2xl bg-primary/15 p-3 text-sm font-semibold text-primary-deep text-center">
+                {locale === "es" ? "¡Gracias! Penny lo tendrá en cuenta. 💚" : "Thanks! Penny will keep that in mind. 💚"}
+              </div>
+            )}
+
 
             {/* Optional, non-graded reflection — bridges lesson to real life */}
             <div className="mt-6 rounded-3xl bg-white p-5 text-left shadow-soft">
