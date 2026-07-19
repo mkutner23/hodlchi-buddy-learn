@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { useRouterState, useServerFn } from "@tanstack/react-router";
+import { useRouterState } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { redeemInviteCode } from "@/lib/invites.functions";
 import { HodlchiLogo } from "@/components/HodlchiLogo";
 
