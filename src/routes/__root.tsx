@@ -105,7 +105,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
               name: "Hodlchi",
               url: "https://hodlchi.com",
               description:
-                "Hodlchi is the Duolingo of Money — bite-size financial literacy lessons that grow a cute virtual companion.",
+                "Hodlchi is a virtual pet whose life gets better as your financial life gets better. 5-minute lessons. Daily habits. A companion that grows with you.",
             },
             {
               "@type": "WebSite",
