@@ -81,7 +81,7 @@ export function Landing() {
             {es ? "Solo educativo. Sin trading, wallets ni asesoría de inversión." : "Educational only. No trading, wallets, or investment advice."}
           </p>
           <p className="mt-2 text-[11px] font-semibold uppercase tracking-widest text-foreground/50">
-            {es ? "Conoce a tu compañero de dinero" : "Meet your Money Companion"}
+            {es ? "Conoce a tu mascota de dinero virtual" : "Meet your virtual money pet"}
           </p>
         </section>
 
