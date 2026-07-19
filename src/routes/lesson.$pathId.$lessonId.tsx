@@ -79,6 +79,15 @@ export function LessonView() {
   const q = lesson.quiz[qIdx];
   const isCorrect = selected !== null && selected === q?.answer;
 
+  // Log first_lesson_started the first time a user enters the quiz phase of their very first lesson.
+  useEffect(() => {
+    if (phase !== "quiz") return;
+    if (state.completedLessons.length !== 0) return;
+    logEvent("first_lesson_started", { pathId: path.id, lessonId: lesson.id });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase]);
+
+
   const check = () => {
     if (selected === null) return;
     setLocked(true);
