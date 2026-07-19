@@ -4,11 +4,15 @@
 
 <h1 align="center">🐣 Hodlchi</h1>
 
-<p align="center"><strong>The Duolingo of Money.</strong></p>
+<p align="center"><strong>A virtual pet whose life gets better as your financial life gets better.</strong></p>
 
 <p align="center">
-  Raise <strong>Penny</strong>, your AI financial companion, while building
-  real-world money habits in just <strong>five minutes a day</strong>.
+  Hodlchi is a financial education app where you build better money habits
+  by raising <strong>Penny</strong>, an AI companion who grows with you.
+</p>
+
+<p align="center">
+  <em>Feel more confident about money — one small win at a time.</em>
 </p>
 
 <p align="center">
