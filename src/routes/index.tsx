@@ -96,10 +96,10 @@ export function Landing() {
 
         <section className="mt-10 rounded-2xl bg-foreground p-5 text-center shadow-pop">
           <p className="text-lg font-extrabold text-primary">
-            {es ? "5 minutos hoy. Dinero más inteligente mañana." : "5 minutes today. Smarter money tomorrow."}
+            {es ? "5 minutos hoy. Más confianza mañana." : "5 minutes today. More confidence tomorrow."}
           </p>
           <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-primary/70">
-            {es ? "Diseñado para crear hábitos financieros de por vida" : "Designed to build lifelong money habits"}
+            {es ? "Diseñado para dar confianza con el dinero de por vida" : "Designed to build lifelong money confidence"}
           </p>
         </section>
 
