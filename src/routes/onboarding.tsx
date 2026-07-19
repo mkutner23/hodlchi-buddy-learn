@@ -288,10 +288,61 @@ export function Onboarding() {
             </div>
           )}
 
+          {step === 4 && (
+            <div className="animate-pop">
+              <h1 className="text-3xl font-extrabold">
+                {es ? `${displayName} tiene hambre` : `${displayName} is hungry`}
+              </h1>
+              <p className="mt-2 text-foreground/70">
+                {es
+                  ? "Cada lección de 5 minutos alimenta a tu Hodlchi y te da confianza con el dinero."
+                  : "Every 5-minute lesson feeds your Hodlchi and grows your confidence with money."}
+              </p>
+
+              <div className="mt-8 flex items-start gap-3">
+                <div className="relative">
+                  <HodlchiAvatar egg={egg} personality={personality} stage="Baby" size={120} bob />
+                  <span
+                    className="absolute -right-2 -top-2 text-3xl animate-wiggle"
+                    aria-hidden
+                  >
+                    🍎
+                  </span>
+                </div>
+                <div className="relative mt-3 rounded-2xl border-2 border-foreground/10 bg-white/90 px-4 py-3 text-sm font-semibold shadow-soft">
+                  <span
+                    className="absolute left-[-8px] top-4 h-3 w-3 rotate-45 border-b-2 border-l-2 border-foreground/10 bg-white/90"
+                    aria-hidden
+                  />
+                  {es
+                    ? `¿Me das mi primer bocado? Empecemos con lo básico del ahorro.`
+                    : `Feed me my first bite? Let's start with the basics of saving.`}
+                </div>
+              </div>
+
+              <div className="mt-6 rounded-2xl border-2 border-foreground/10 bg-white/70 p-4">
+                <div className="text-xs uppercase tracking-wide text-foreground/60">
+                  {es ? "Primera lección" : "First lesson"}
+                </div>
+                <div className="mt-1 flex items-center justify-between">
+                  <div>
+                    <div className="font-bold">
+                      {es ? "Por qué ahorrar importa" : "Why Saving Matters"}
+                    </div>
+                    <div className="text-xs text-foreground/60">
+                      {es ? "3 preguntas · ~3 min" : "3 questions · ~3 min"}
+                    </div>
+                  </div>
+                  <div className="text-2xl">🍎</div>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
 
         <div className="mt-6 flex gap-3">
-          {step > 0 && step !== 2 && (
+          {step > 0 && step !== 2 && step !== 4 && (
             <button
               onClick={() => setStep(step - 1)}
               className="rounded-2xl border-2 border-foreground/15 bg-white/70 px-5 py-4 font-semibold"
@@ -307,8 +358,10 @@ export function Onboarding() {
             {step === 0 && (es ? "Continuar" : "Continue")}
             {step === 1 && (es ? "¡A incubar!" : "Hatch!")}
             {step === 2 && (hatchCTAReady ? (es ? `Conoce a ${displayName} →` : `Meet ${displayName} →`) : (es ? "Incubando…" : "Hatching…"))}
-            {step === 3 && t("onboarding.start_journey")}
+            {step === 3 && (es ? "Continuar" : "Continue")}
+            {step === 4 && (es ? `Alimentar a ${displayName} 🍎` : `Feed ${displayName} 🍎`)}
           </button>
+
         </div>
       </div>
     </main>
