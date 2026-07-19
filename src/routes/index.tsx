@@ -120,7 +120,7 @@ export function Landing() {
             />
             <FeatureCard
               emoji="🔥"
-              title={es ? "Construye un hábito diario de dinero que dura" : "Build a daily money habit that lasts"}
+              title={es ? "Gana confianza con el dinero, día a día" : "Build daily confidence with money"}
               body={es ? "Rachas, retos diarios y evoluciones convierten 5 minutos al día en confianza real." : "Streaks, daily challenges, and evolutions turn 5 minutes a day into real confidence."}
             />
           </div>
