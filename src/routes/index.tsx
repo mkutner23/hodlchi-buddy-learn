@@ -43,31 +43,40 @@ export function Landing() {
         </header>
 
         <section className="mt-8 text-center">
-          <h1 className="font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
-            {t("landing.hero.title_1")}<br />
-            {es ? "Cría a tu " : "Raise your "}
-            <span className="text-primary-deep">Hodlchi.</span>
-          </h1>
-          <p className="mx-auto mt-4 max-w-md text-center text-base text-foreground/80">
-            {t("landing.hero.subtitle")}
-          </p>
-
-          <div className="mt-8 grid place-items-center">
+          <div className="mt-4 grid place-items-center">
             <div className="relative">
               <span className="pointer-events-none absolute -left-6 top-4 text-xl animate-sparkle-a">✨</span>
               <span className="pointer-events-none absolute -right-4 top-14 text-lg animate-sparkle-b">✨</span>
               <span className="pointer-events-none absolute left-6 -bottom-2 text-base animate-sparkle-c">💚</span>
               <div className="animate-wiggle">
-                <HodlchiLogo size={170} />
+                <HodlchiLogo size={190} />
               </div>
             </div>
           </div>
 
+          {/* Penny greets first — she is the hero */}
+          <div className="relative mx-auto mt-4 inline-block max-w-[22rem] rounded-2xl bg-white px-5 py-3 text-left shadow-pop">
+            <span className="mr-1 font-display font-extrabold">Penny:</span>
+            <span className="text-foreground/80 text-[15px]">
+              {es ? "¡Hola! Soy Penny. ¿Me incubas?" : "Hi! I'm Penny. Will you hatch me?"}
+            </span>
+            <span className="absolute -top-1.5 left-10 h-3 w-3 rotate-45 bg-white" />
+          </div>
+
+          <h1 className="mt-6 font-display text-3xl font-extrabold leading-[1.05] tracking-tight sm:text-4xl">
+            {t("landing.hero.title_1")}<br />
+            {es ? "Cría a tu " : "Raise your "}
+            <span className="text-primary-deep">Hodlchi.</span>
+          </h1>
+          <p className="mx-auto mt-3 max-w-md text-center text-[15px] text-foreground/80">
+            {t("landing.hero.subtitle")}
+          </p>
+
           <Link
             to="/onboarding"
-            className="mt-8 inline-flex w-full max-w-sm items-center justify-center rounded-2xl bg-foreground px-6 py-4 text-base font-bold text-primary shadow-pop transition active:scale-[0.98]"
+            className="mt-7 inline-flex w-full max-w-sm items-center justify-center rounded-2xl bg-foreground px-6 py-4 text-base font-bold text-primary shadow-pop transition active:scale-[0.98]"
           >
-            {t("landing.hero.cta_hatch")} →
+            {es ? "Incuba a Penny" : "Hatch Penny"} →
           </Link>
 
           <p className="mt-3 text-xs text-foreground/60">

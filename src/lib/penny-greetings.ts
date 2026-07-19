@@ -83,7 +83,11 @@ export function pickContextualGreeting(
   state: HodlchiState,
   now: number = Date.now(),
 ): Greeting | null {
-  const today = new Date(now).toISOString().slice(0, 10);
+  const nowDate = new Date(now);
+  const today = nowDate.toISOString().slice(0, 10);
+  const hour = nowDate.getHours();
+  const partOfDay: "morning" | "afternoon" | "evening" =
+    hour < 5 ? "evening" : hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
   const doneToday = state.lastActiveDay === today;
   const daysSince = state.lastActiveDay ? daysBetween(state.lastActiveDay, now) : null;
   const doneLessons = state.completedLessons.length;
@@ -178,5 +182,29 @@ export function pickContextualGreeting(
     };
   }
 
+  // 9. Time-of-day nudge — Penny reflects the hour when nothing else fits.
+  if (!doneToday) {
+    if (partOfDay === "morning") {
+      return {
+        key: `morning-${today}`,
+        line: "Morning! I'm hungry — one lesson to start the day?",
+        tone: "hungry",
+      };
+    }
+    if (partOfDay === "evening") {
+      return {
+        key: `evening-${today}`,
+        line: "Getting sleepy… one quick lesson before bed? 🌙",
+        tone: "sleepy",
+      };
+    }
+    return {
+      key: `afternoon-${today}`,
+      line: "Afternoon check-in — feed me a lesson? 🍎",
+      tone: "happy",
+    };
+  }
+
   return null;
 }
+
