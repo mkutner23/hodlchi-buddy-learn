@@ -405,6 +405,11 @@ export function Home() {
 
         <SmileCheck />
 
+        <PennyRemembers />
+
+        <HelpPennyGrow />
+
+
 
 
         {/* First-time explainer */}
