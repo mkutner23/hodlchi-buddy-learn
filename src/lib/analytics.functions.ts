@@ -74,7 +74,7 @@ export interface AnalyticsSummary {
     cohorts: Array<{ cohort: string; size: number; d1: number; d7: number; d30: number }>;
     overall: { d1: number; d7: number; d30: number };
   };
-  recentEvents: Array<{ name: string; created_at: string; device_id: string; meta: unknown }>;
+  recentEvents: Array<{ name: string; created_at: string; device_id: string; meta: Record<string, string | number | boolean | null> }>;
   feedback: Array<{ rating: string; count: number }>;
 }
 
