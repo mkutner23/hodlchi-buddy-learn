@@ -81,7 +81,9 @@ const DEFAULT_MEMORY: PennyMemory = {
   firstEvolutionAt: null,
   visitCount: 0,
   lastLoginAt: null,
+  longestStreak: 0,
 };
+
 
 const DEFAULT_STATE: HodlchiState = {
   onboarded: false,
