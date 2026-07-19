@@ -323,8 +323,10 @@ export function HodlchiProvider({ children }: { children: ReactNode }) {
               firstLessonKey: s.memory.firstLessonKey ?? (isFirstLesson ? key : s.memory.firstLessonKey),
               firstStreakAt: s.memory.firstStreakAt ?? (streak >= 2 ? now : null),
               firstInvestingAt: isFirstInvesting ? now : s.memory.firstInvestingAt,
+              longestStreak: Math.max(s.memory.longestStreak ?? 0, streak),
             },
             events,
+
           };
         });
       },
